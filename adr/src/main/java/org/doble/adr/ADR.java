@@ -23,12 +23,14 @@ import org.doble.annotations.*;
  */
 public class ADR   {
 
-	static private Properties properties = new Properties();
+	//static private Properties properties = new Properties();  //TODO remove
 	
 	final static public int MAX_ID_LENGTH = 4;
 	final static String ADR_DIR_NAME = ".adr";
 	
-
+	public static FileSystem fileSystem; 
+	
+	
 
 	/** ADR tool main entry
 	 * @param args  Command line arguments
@@ -36,7 +38,8 @@ public class ADR   {
 	 */
 	public static void main(String[] args) {
 		
-		// Instantiate the main class. 
+		// Instantiate the main class using the default file system
+		ADR.fileSystem = FileSystems.getDefault();
 		ADR adr = new ADR(); 
 		
 		// Run the commands specified in arguments.
