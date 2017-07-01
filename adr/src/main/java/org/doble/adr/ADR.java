@@ -17,6 +17,10 @@ import org.doble.annotations.*;
  * @author adoble
  *
  */
+/**
+ * @author adoble
+ *
+ */
 public class ADR   {
 
 	static private Properties properties = new Properties();
@@ -26,11 +30,9 @@ public class ADR   {
 	
 
 
-	/**
-	 * @param args
+	/** ADR tool main entry
+	 * @param args  Command line arguments
 	 * 
-	 * 
-	 * TODO  Refactor from static class to object.
 	 */
 	public static void main(String[] args) {
 		
@@ -81,12 +83,7 @@ public class ADR   {
 	    //String relPath = packageName.replace('.', '/');   // FIXME Remove
 	    HashMap<String, Class<?>> commandMap = new HashMap<String, Class<?>>();
 	    
-	   
-	    
-	    //URL resource = Thread.currentThread().getContextClassLoader().getResource(relPath);
-	    //URL resource = getClass().getClassLoader().getResource(relPath);
-	    
-	    
+	
 		Reflections reflections = new Reflections("org.doble.command");  // FIXME try and remove the explicit package name
 		Set<Class<?>> commands = 
 			    reflections.getTypesAnnotatedWith(org.doble.annotations.Cmd.class);
@@ -99,45 +96,16 @@ public class ADR   {
 
 
 		return commandMap; 
-		
-		
+
 	}
 
-	static public Properties loadProperties() throws RootPathNotFound {
-		properties = new Properties();		
-		
-		// Get the root directory by looking for an .adr directory
-		
-		Path rootPath = getRootPath(); 
-		
-		Path propertiesRelPath  = FileSystems.getDefault().getPath(ADR.ADR_DIR_NAME, "adr.properties");
-		
-		Path propertiesPath = rootPath.resolve(propertiesRelPath);
-		
-		try {
-			if (Files.exists(propertiesPath)) {
-				FileInputStream inProperties = new FileInputStream(propertiesPath.toFile());
-				properties.load(inProperties);
-				inProperties.close();
-			} else {
-				// Set the default values. This should be stored when adr init is called, 
-				properties.setProperty("docPath", "doc/adr");
-			}
-		} catch (Exception  e) {
-			System.err.println("FATAL: The properties file could not be read.");
-			System.exit(1);
-		} 
-		
-		return properties;
-		
-		
-	}
+
 	
 	/** 
 	 * Get the root directory containing the .adr directory
 	 * @return Path The root directory  or null if not found
 	 */
-	static private Path getRootPath() throws RootPathNotFound {
+	static public Path getRootPath() throws RootPathNotFound {
 		
 		// Start in the directory where adr has been run.
 		String pathName = System.getProperty("user.dir");

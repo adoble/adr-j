@@ -23,7 +23,7 @@ import org.doble.annotations.Cmd;
 		help= "Lists the architecture decision records"
 		)
 public class CommandList extends Command {
-	private Properties properties; 
+	private ADRProperties properties = new ADRProperties(); 
 
 	/**
 	 * 
@@ -31,7 +31,7 @@ public class CommandList extends Command {
 	public CommandList() {
 		try {
 			// Load the properties
-			properties = ADR.loadProperties();
+			properties.load();
 			
 		} catch (RootPathNotFound e) {
 			System.err.println("Fatal: The .adr directory cannot be found in this or parent directories.");

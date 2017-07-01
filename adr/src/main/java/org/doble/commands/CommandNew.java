@@ -43,7 +43,7 @@ import org.doble.annotations.*;
 public class CommandNew extends Command  {
     
 	private enum CommandStates  {PARSE, SUPERCEDES, LINK, RECORD};
-	Properties properties;
+	ADRProperties properties = new ADRProperties();
 
 	/**
 	 * 
@@ -51,7 +51,7 @@ public class CommandNew extends Command  {
 	public CommandNew() {
 		try {
 			// Load the properties
-			properties = ADR.loadProperties();
+			properties.load();
 			
 		} catch (RootPathNotFound e) {
 			System.err.println("Fatal: The .adr directory cannot be found in this or parent directories.");
