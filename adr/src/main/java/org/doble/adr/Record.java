@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+
+
 public class Record  {
 	public int id;
 	public String name = "";
@@ -18,7 +20,7 @@ public class Record  {
 	
 	private class Link {
 		
-		Link(Integer id, String comment, String reverseComment) {
+		Link(Integer id, String comment, String reverseComment) { 
 			this.id = id;
 			this.comment = comment;
 			this.reverseComment = reverseComment;
@@ -99,7 +101,7 @@ public class Record  {
 		
 		// If there are (reverse) links to other ADR files then add them. 
 		for (Link link: links) {
-			addReverseLink(docsPath, link);
+			addReverseLink(docsPath, link); 
 		}
 		
 		

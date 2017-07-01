@@ -33,6 +33,16 @@ public class ADR   {
 	 * TODO  Refactor from static class to object.
 	 */
 	public static void main(String[] args) {
+		
+		// Instantiate the main class. 
+		ADR adr = new ADR(); 
+		
+		// Run the commands specified in arguments.
+		adr.run(args);
+	
+	}
+
+	private  void run(String[] args) {
 		Map<String, Class<?>> commandMap; 
 		Command commandNull = new CommandNull();
 		Command command = commandNull;
@@ -64,10 +74,9 @@ public class ADR   {
 				System.out.println("   " + commandName);
 			}
 		}
-	
 	}
 	
-	public static Map<String, Class<?>> buildCommandMap (String packageName)  {
+	static public Map<String, Class<?>> buildCommandMap (String packageName)  {
 	    //String commandName; // FIXME Remove
 	    //String relPath = packageName.replace('.', '/');   // FIXME Remove
 	    HashMap<String, Class<?>> commandMap = new HashMap<String, Class<?>>();
@@ -88,39 +97,7 @@ public class ADR   {
 			commandMap.put(annotation.name(), c);
 		    }
 
-	    
-//		File commandsDir = null;
-//		try {
-		
-//			commandsDir = new File(resource.toURI());   // ERROR this is not a file, but can be something in the jar (if it is packaged as an executable jar
-//			                                            // TODO Maybe use the Reflections library instead (https://github.com/ronmamo/reflections)
-//			
-//			
-//			for (File file : commandsDir.listFiles(new FilenameFilter() {
-//				public boolean accept(File dir, String name) {
-//					return name.endsWith(".class");
-//				}
-//			})) {
-//				String className = packageName + "." + file.getName(); 
-//				className = className.substring(0, className.length() - 6);  // Remove the .class suffix
-//				Class<?> commandClass = Class.forName(className);
-//				
-//				Cmd annotation = commandClass.getAnnotation(Cmd.class);
-//				
-//				if (annotation instanceof org.doble.annotations.Cmd) {  // TODO see if we can remove the package name
-//					commandName = annotation.name();
-//					commandMap.put(commandName, commandClass);
-//				} 
-//				
-//			}
-//		} catch (URISyntaxException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			// TODO 
-//			e.printStackTrace();
-//		}
-	
+
 		return commandMap; 
 		
 		
@@ -160,7 +137,7 @@ public class ADR   {
 	 * Get the root directory containing the .adr directory
 	 * @return Path The root directory  or null if not found
 	 */
-	private static Path getRootPath() throws RootPathNotFound {
+	static private Path getRootPath() throws RootPathNotFound {
 		
 		// Start in the directory where adr has been run.
 		String pathName = System.getProperty("user.dir");

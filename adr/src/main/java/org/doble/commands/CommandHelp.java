@@ -31,7 +31,7 @@ public class CommandHelp extends Command {
 
 		// Build the map of the adr commands keyed with the command name.
 		// All the commands are in the specified package.
-		commandMap = ADR.buildCommandMap("org.doble.commands");  // FIXME use the reflections library and donÖt look for explicit packages
+		commandMap = ADR.buildCommandMap("org.doble.commands");  // FIXME use the reflections library and don't look for explicit packages
 		
 		// Now iterate through and print the usage 
 		try {
