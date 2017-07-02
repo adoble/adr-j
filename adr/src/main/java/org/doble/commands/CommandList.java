@@ -36,15 +36,17 @@ public class CommandList extends Command {
 		} catch (RootPathNotFound e) {
 			System.err.println("Fatal: The .adr directory cannot be found in this or parent directories.");
 			System.err.println("Has the command adr init been run?");
-			System.exit(1);
-		} 
+		} catch(ADRException e) {
+			// Error has already been handled
+		}
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see commands.Command#command(java.lang.String[])
 	 */
 	@Override
-	public void command(String[] args) {
+	public void command(String[] args) throws ADRException {
 		
 		try {
 			Path docsPath = ADR.getFileSystem().getPath(properties.getProperty("root"),
@@ -62,7 +64,7 @@ public class CommandList extends Command {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.err.println("FATAL: The ADR could not be saved!");
-			System.exit(1);
+			throw new ADRException();
 		}  
 		
 

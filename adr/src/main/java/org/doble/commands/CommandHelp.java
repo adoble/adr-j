@@ -25,7 +25,7 @@ public class CommandHelp extends Command {
 	 * @see commands.Command#command(java.lang.String[])
 	 */
 	@Override
-	public void command(String[] args) {
+	public void command(String[] args) throws ADRException {
 		Map<String, Class<?>> commandMap;
 		Command command = new CommandNull(); 
 
@@ -49,7 +49,7 @@ public class CommandHelp extends Command {
 		} catch (Exception e) {
 			System.out.println("FATAL: Cannot create the command class for producing help messages.");
 			e.printStackTrace(System.err);
-			System.exit(1);
+			throw new ADRException();
 		}
 		
 

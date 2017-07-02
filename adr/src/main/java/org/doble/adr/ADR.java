@@ -17,10 +17,6 @@ import org.doble.annotations.*;
  * @author adoble
  *
  */
-/**
- * @author adoble
- *
- */
 public class ADR   {
 
 	//static private Properties properties = new Properties();  //TODO remove
@@ -44,11 +40,22 @@ public class ADR   {
 		ADR adr = new ADR(); 
 
 		// Run the commands specified in arguments.
-		adr.run(args);
+		try {
+			adr.run(args);
+		}
+		catch (ADRException e) {
+			// Previous error handled by the commands error handling mechanism 
+			// so just exit with error code
+			System.exit(1);
+		}
+		catch (Exception e) {
+			// Unexpected exception so print stack trace
+			e.printStackTrace(System.err);
+		}
 
 	}
 
-	private  void run(String[] args) {
+	public void run(String[] args) throws ADRException {
 		Map<String, Class<?>> commandMap; 
 		Command commandNull = new CommandNull();
 		Command command = commandNull;
@@ -71,7 +78,7 @@ public class ADR   {
 				command.command(subCmdArgs);
 			} catch (Exception e) {
 				System.out.println("FATAL: Unknown command. Use\n   adr help \nfor more information. ");
-				System.exit(1);
+				throw new ADRException();
 			}
 		} else {
 			System.out.println("ERROR: Specify a command. For instance:");

@@ -14,9 +14,9 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ ADRTest.class})
-/*@SuiteClasses({ ADRTest.class,
-	org.doble.adr.CommandHelpTest.class})*/
+
+@SuiteClasses({ ADRTest.class,
+	org.doble.adr.CommandHelpTest.class})
 
 public class AllTests {
  

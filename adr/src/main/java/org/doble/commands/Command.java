@@ -5,13 +5,15 @@ package org.doble.commands;
 
 import org.doble.annotations.Cmd;
 
+import org.doble.adr.ADRException;
+
 /**
  * @author adoble
  *
  */
 public abstract class Command {
 		
-	public abstract void command(String[] args);
+	public abstract void command(String[] args) throws ADRException ;
 	
 	
 	/** 

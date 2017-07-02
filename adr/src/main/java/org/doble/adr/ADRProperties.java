@@ -33,7 +33,7 @@ public class ADRProperties extends Properties{
 	 * @return A Properties object with the data contained in the properties file
 	 * @throws RootPathNotFound is the root path does not exist. 
 	 */
-     public void load() throws RootPathNotFound {
+     public void load() throws RootPathNotFound, ADRException {
 		//properties = new Properties();		
 		
 		// Get the root directory by looking for an .adr directory
@@ -55,7 +55,7 @@ public class ADRProperties extends Properties{
 			}
 		} catch (Exception  e) {
 			System.err.println("FATAL: The properties file could not be read.");
-			System.exit(1);
+			throw new ADRException();
 		} 
 		
 		

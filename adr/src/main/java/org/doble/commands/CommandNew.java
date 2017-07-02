@@ -56,8 +56,9 @@ public class CommandNew extends Command  {
 		} catch (RootPathNotFound e) {
 			System.err.println("Fatal: The .adr directory cannot be found in this or parent directories.");
 			System.err.println("Has the command adr init been run?");
-			System.exit(1);
-		} 
+		} catch (ADRException e) {
+			// The error has already been handled.
+		}
 		
 
 		 
@@ -69,7 +70,7 @@ public class CommandNew extends Command  {
 	 * @see commands.Command#command(java.lang.String[])
 	 */
 	@Override
-	public void command(String[] args) {
+	public void command(String[] args) throws ADRException {
 		String link = ""; 
 		
 		Record record = new Record();
@@ -78,7 +79,7 @@ public class CommandNew extends Command  {
 			if (args.length == 0) {
 				System.err.println("ERROR: Try giving the ADR a description.");
 				System.err.println(this.getUsage());
-				System.exit(1);
+				throw new ADRException();
 			} else {
 				CommandStates commandState = CommandStates.PARSE;
 				for (String arg : args) {
@@ -111,19 +112,19 @@ public class CommandNew extends Command  {
 				if (commandState == CommandStates.SUPERCEDES) {
 					System.err.println("ERROR: -s option requires an ADR reference.");
 					System.out.println("Usage: " + getUsage());
-					System.exit(1);
+					throw new ADRException();
 				}
 				if (commandState == CommandStates.LINK) {
 					System.err.println("ERROR: -l option requires an ADR reference.");
 					System.out.println("Usage: " + getUsage());
-					System.exit(1);
+					throw new ADRException();
 				}
 
 			}
 		} catch (NumberFormatException e) {
 			System.err.println("ERROR: Invalid ADR reference for the option -s");
 			System.err.println(this.getUsage());
-			System.exit(1);
+			throw new ADRException();
 		}
 		
 		
@@ -139,14 +140,14 @@ public class CommandNew extends Command  {
 		} catch (LinkSpecificationException e) {
 			System.err.println("ERROR: -l parameter incorrectly formed.");
 	    	System.out.println("Usage: " + getUsage());
-	    	System.exit(1);
+	    	throw new ADRException();
 		}	
 				
 		createADR(record);
 	}
 
 	//private void createADR(String adrName, Record record) {
-	private void createADR(Record record) {
+	private void createADR(Record record) throws ADRException {
 		
        //Save the record
 		String adrFileName = "";   // The path to the file containing the ADR 
@@ -157,7 +158,7 @@ public class CommandNew extends Command  {
 			adrFileName = adrPath.toString();
 		} catch (FileNotFoundException|UnsupportedEncodingException e) {
 			System.err.println("FATAL: Unable to store ADR, reason: " + e.getMessage());
-			System.exit(1);
+			throw new ADRException();
 		} catch (ADRNotFoundException e) {
 			System.err.println("FATAL: " + e.getMessage());
 		}
@@ -173,7 +174,7 @@ public class CommandNew extends Command  {
 			System.err.println("ERROR: Editor for the ADR has not been found in the environment variables.");
 			System.out.println(
 					"Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?");
-			System.exit(1);
+			throw new ADRException();
 		}
 		
 		

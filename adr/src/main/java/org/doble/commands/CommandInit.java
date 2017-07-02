@@ -40,7 +40,7 @@ public class CommandInit extends Command {
 	 * @see commands.Command#command(java.lang.String[])
 	 */
 	@Override
-	public void command(String[] args) {
+	public void command(String[] args) throws ADRException {
 		FileOutputStream outProperties;
 		
 		boolean force = false; 
@@ -113,10 +113,10 @@ public class CommandInit extends Command {
 
 		} catch (ADRNotFoundException e) {
 			System.err.println("FATAL: " + e.getMessage());
-			System.exit(1); //TODO should this be at this level? 
+			throw new ADRException();
 		} catch (IOException e) {
 			System.err.println("FATAL: initialise failed, reason: " + e.getMessage());
-			System.exit(1); //TODO should this be at this level? 
+			throw new ADRException();
 		}
 
 	}

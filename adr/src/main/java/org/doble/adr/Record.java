@@ -86,7 +86,7 @@ public class Record  {
 	 * 
 	 * @param docsPath The directory where the ADRs are.
 	 */
-	public Path store(Path docsPath) throws FileNotFoundException, UnsupportedEncodingException, ADRNotFoundException {
+	public Path store(Path docsPath) throws FileNotFoundException, UnsupportedEncodingException, ADRNotFoundException, ADRException  {
 		// Create a file name for the ADR
 		String fileName = lowercaseFirstCharacter(this.name);
 		fileName = fileName.replace(' ', '-');    // Replace blanks with hyphens
@@ -116,7 +116,7 @@ public class Record  {
 	 * @param docsPath The path where the ADRs are..
 	 * @param link The ADR record file where the reverse link reference is to be added.
 	 */
-	private void addReverseLink(Path docsPath, Link link) {
+	private void addReverseLink(Path docsPath, Link link) throws ADRException {
 			
 		// Find and open the file where the reverse link comment should be placed.
 		Path adrPath = ADR.getFileSystem().getPath(docsPath.toString());
@@ -145,7 +145,7 @@ public class Record  {
 			}
 			else {
 				System.err.print("FATAL: More than one matching ADR file found for the reverse link.");
-				System.exit(1);
+				throw new ADRException();
 			}
 				
 		} catch (IOException e) {
