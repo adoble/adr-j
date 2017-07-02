@@ -92,7 +92,7 @@ public class Record  {
 		fileName = fileName.replace(' ', '-');    // Replace blanks with hyphens
 		String idFormatted = String.format("%04d", this.id);
 		fileName = idFormatted + '-' + fileName + ".md";  // Compose full file name
-		Path p = FileSystems.getDefault().getPath(docsPath.toString(), fileName);
+		Path p = ADR.getFileSystem().getPath(docsPath.toString(), fileName);
 				
 		// Now write the ADR
 		PrintWriter adrWriter = new PrintWriter(p.toFile() , "UTF-8");
@@ -119,7 +119,7 @@ public class Record  {
 	private void addReverseLink(Path docsPath, Link link) {
 			
 		// Find and open the file where the reverse link comment should be placed.
-		Path adrPath = FileSystems.getDefault().getPath(docsPath.toString());
+		Path adrPath = ADR.getFileSystem().getPath(docsPath.toString());
         try (Stream<Path> stream = Files.list(adrPath)) {
 			
 			Path[] paths = stream.filter(ADRFilter.filter(link.id)).toArray(Path[]::new);

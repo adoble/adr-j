@@ -47,7 +47,7 @@ public class CommandList extends Command {
 	public void command(String[] args) {
 		
 		try {
-			Path docsPath = FileSystems.getDefault().getPath(properties.getProperty("root"),
+			Path docsPath = ADR.getFileSystem().getPath(properties.getProperty("root"),
 			                                                 properties.getProperty("docPath"));
 			
 			File docsDir = docsPath.toFile();

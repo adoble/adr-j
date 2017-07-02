@@ -40,7 +40,7 @@ public class ADRProperties extends Properties{
 		
 		Path rootPath = ADR.getRootPath(); 
 		
-		Path propertiesRelPath  = FileSystems.getDefault().getPath(ADR.ADR_DIR_NAME, "adr.properties");
+		Path propertiesRelPath  = ADR.getFileSystem().getPath(ADR.ADR_DIR_NAME, "adr.properties");
 		
 		Path propertiesPath = rootPath.resolve(propertiesRelPath);
 		

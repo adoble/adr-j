@@ -151,7 +151,7 @@ public class CommandNew extends Command  {
        //Save the record
 		String adrFileName = "";   // The path to the file containing the ADR 
 		try {
-			Path docsPath = ADR.fileSystem.getPath(properties.getProperty("root"),
+			Path docsPath = ADR.getFileSystem().getPath(properties.getProperty("root"),
 			                                                 properties.getProperty("docPath"));
 			Path adrPath = record.store(docsPath);
 			adrFileName = adrPath.toString();
@@ -203,8 +203,7 @@ public class CommandNew extends Command  {
 		int highestIndex = 0; 
 		
 		
-		//Path adrPath = FileSystems.getDefault().getPath(properties.getProperty("docPath"));
-		Path adrPath = ADR.fileSystem.getPath(properties.getProperty("docPath"));
+		Path adrPath = ADR.getFileSystem().getPath(properties.getProperty("docPath"));
 		File adrDir = adrPath.toFile();
 		
 		FilenameFilter  filter = new ADRFilenameFilter();

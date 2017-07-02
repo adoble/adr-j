@@ -69,7 +69,7 @@ public class CommandInit extends Command {
 	
 		try {
 			String rootPathName = System.getProperty("user.dir");
-			Path adrPath = FileSystems.getDefault().getPath(".", ".adr");
+			Path adrPath = ADR.getFileSystem().getPath(".", ".adr");
 
 			properties.setProperty("root", rootPathName);
 
@@ -83,13 +83,13 @@ public class CommandInit extends Command {
 
 			
 			// Create a properties file
-			Path propPath = FileSystems.getDefault().getPath(rootPathName, ".adr/adr.properties");
+			Path propPath = ADR.getFileSystem().getPath(rootPathName, ".adr/adr.properties");
 			outProperties = new FileOutputStream(propPath.toString());
 			properties.store(outProperties, null);
 			outProperties.close();
 
 			// Now create the docs directory which contains the adr directory
-			Path docsPath = FileSystems.getDefault().getPath(properties.getProperty("root"),
+			Path docsPath = ADR.getFileSystem().getPath(properties.getProperty("root"),
 					                                         properties.getProperty("docPath"));
 			System.out.println("Creating ADR directory at " + docsPath);
 			File docsDir = new File(docsPath.toString());
