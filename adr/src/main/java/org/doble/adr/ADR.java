@@ -37,15 +37,37 @@ public class ADR   {
 
 		// Instantiate the main class using the default file system
 		ADR.fileSystem = FileSystems.getDefault();
-		ADR adr = new ADR(); 
+		
+		// Determine the editor
+		String editorCommand = System.getenv("EDITOR"); 
+		if (editorCommand == null) {
+			// Try VISUAL
+			editorCommand = System.getenv("VISUAL");
+		}
+		if (editorCommand == null) {
+			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
+				    	+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
+			System.exit(1);
+		} 
+		
+		
+		ADR adr = new ADR();   //TODO env -> ADR constructor
+		
+		// Set up the environment that the tool runs in. 
+		Environment env = new Environment.Builder(FileSystems.getDefault())
+				.out(System.out)
+				.err(System.err)
+				.in(System.in)
+				.userDir(System.getProperty("user.dir"))
+				.editor(editorCommand)
+				.build();
 
 		// Run the commands specified in arguments.
 		try {
-			adr.run(args);
+			adr.run(args, env);
 		}
 		catch (ADRException e) {
-			// Previous error handled by the commands error handling mechanism 
-			// so just exit with error code
+			env.err.println(e.getMessage());
 			System.exit(1);
 		}
 		catch (Exception e) {
@@ -55,11 +77,12 @@ public class ADR   {
 
 	}
 
-	public void run(String[] args) throws ADRException {
+	public void run(String[] args, Environment env) throws ADRException {
 		Map<String, Class<?>> commandMap; 
-		Command commandNull = new CommandNull();
+		Command commandNull = new CommandNull(env);
 		Command command = commandNull;
-
+		
+		
 		// Build the map of the adr commands keyed with the command name.
 		// All the commands are in the specified package. 
 		commandMap = buildCommandMap("org.doble.commands");
@@ -72,19 +95,19 @@ public class ADR   {
 				Class<?> commandClass = commandMap.get(args[0]);
 				// Create the command object
 				@SuppressWarnings("unchecked")
-				Constructor<Command> ctor = (Constructor<Command>) commandClass.getConstructor();
-				command = ctor.newInstance();
+				Constructor<Command> ctor = (Constructor<Command>) commandClass.getConstructor(Environment.class);
+				//command = ctor.newInstance();  //TODO remove
+				command = ctor.newInstance(env);
 				// Execute the command
 				command.command(subCmdArgs);
 			} catch (Exception e) {
-				System.out.println("FATAL: Unknown command. Use\n   adr help \nfor more information. ");
-				throw new ADRException();
+				throw new ADRException("FATAL: Unknown command. Use\n   adr help \nfor more information.");
 			}
 		} else {
-			System.out.println("ERROR: Specify a command. For instance:");
+			env.out.println("ERROR: Specify a command. For instance:");
 			Set<String> keys = commandMap.keySet();
 			for (String commandName : keys) {
-				System.out.println("   " + commandName);
+				env.out.println("   " + commandName);
 			}
 		}
 	}
@@ -116,11 +139,14 @@ public class ADR   {
 	 * Get the root directory containing the .adr directory
 	 * @return Path The root directory  or null if not found
 	 */
-	static public Path getRootPath() throws RootPathNotFound {
+	static public Path getRootPath(Environment env) throws RootPathNotFound {
 
 		// Start in the directory where adr has been run.
-		String pathName = System.getProperty("user.dir");
-		Path path = ADR.getFileSystem().getPath(pathName);
+//		String pathName = System.getProperty("user.dir");
+//		Path path = ADR.getFileSystem().getPath(pathName);
+		
+		Path path = env.dir;
+		
 		Path adrFilePath; 
 		while (path != null) {
 			adrFilePath = path.resolve(ADR.ADR_DIR_NAME);
@@ -138,18 +164,18 @@ public class ADR   {
 
 	}
 
-	/** Get the file system that the adr tool uses. 
+/*	*//** Get the file system that the adr tool uses. 
 	 * @return the fileSystem
-	 */
+	 *//*
 	public static FileSystem getFileSystem() {
 		return fileSystem;
-	}
+	}*/
 
-	/** Specifiy the file system that the adr tool uses.
+/*	*//** Specifiy the file system that the adr tool uses.
 	 * @param fileSystem the fileSystem to set
-	 */
+	 *//*
 	public static void setFileSystem(FileSystem fileSystem) {
 		ADR.fileSystem = fileSystem;
-	}
+	}*/
 
 } // -- ADR

@@ -86,16 +86,19 @@ public class Record  {
 	 * 
 	 * @param docsPath The directory where the ADRs are.
 	 */
-	public Path store(Path docsPath) throws FileNotFoundException, UnsupportedEncodingException, ADRNotFoundException, ADRException  {
+	public Path store(Path docsPath) throws IOException, FileNotFoundException, UnsupportedEncodingException, ADRNotFoundException, ADRException  {
 		// Create a file name for the ADR
 		String fileName = lowercaseFirstCharacter(this.name);
 		fileName = fileName.replace(' ', '-');    // Replace blanks with hyphens
 		String idFormatted = String.format("%04d", this.id);
 		fileName = idFormatted + '-' + fileName + ".md";  // Compose full file name
-		Path p = ADR.getFileSystem().getPath(docsPath.toString(), fileName);
+		//Path p = env.fileSystem.getPath(docsPath.toString(), fileName);
+		Path p = docsPath.resolve(fileName); // Full path of the ADR file in the document path
 				
 		// Now write the ADR
-		PrintWriter adrWriter = new PrintWriter(p.toFile() , "UTF-8");
+		
+		PrintWriter adrWriter = new PrintWriter(Files.newBufferedWriter(p));
+		
 		adrWriter.print(this.generate());		
 		adrWriter.close();
 		
@@ -119,8 +122,9 @@ public class Record  {
 	private void addReverseLink(Path docsPath, Link link) throws ADRException {
 			
 		// Find and open the file where the reverse link comment should be placed.
-		Path adrPath = ADR.getFileSystem().getPath(docsPath.toString());
-        try (Stream<Path> stream = Files.list(adrPath)) {
+		//Path adrPath = env.fileSystem.getPath(docsPath.toString());
+        //try (Stream<Path> stream = Files.list(adrPath)) {
+		try (Stream<Path> stream = Files.list(docsPath)) {
 			
 			Path[] paths = stream.filter(ADRFilter.filter(link.id)).toArray(Path[]::new);
 			if (paths.length == 1 ) {
@@ -144,8 +148,7 @@ public class Record  {
 				
 			}
 			else {
-				System.err.print("FATAL: More than one matching ADR file found for the reverse link.");
-				throw new ADRException();
+				throw new ADRException("FATAL: More than one matching ADR file found for the reverse link.");
 			}
 				
 		} catch (IOException e) {

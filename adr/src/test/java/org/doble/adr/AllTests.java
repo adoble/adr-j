@@ -6,7 +6,6 @@ package org.doble.adr;
  * 
  */
 
-
 // TODO use a file mock as in https://github.com/google/jimfs
 
 import org.junit.runner.RunWith;
@@ -15,9 +14,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 
-@SuiteClasses({ ADRTest.class,
-	org.doble.adr.CommandHelpTest.class})
+@SuiteClasses({ org.doble.adr.EnvironmentTest.class, 
+	            org.doble.adr.CommandHelpTest.class,
+		        org.doble.adr.CommandInitTest.class })
 
 public class AllTests {
- 
+
 }

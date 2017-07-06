@@ -3,6 +3,8 @@
  */
 package org.doble.commands;
 
+import org.doble.adr.Environment;
+
 /**
  * A command that does nothing.
  * @author adoble
@@ -11,7 +13,7 @@ package org.doble.commands;
 public class CommandNull extends Command {
 	private final String usage = "Usage: \n adr null";
     private final String help = "Only used internally .";
-	public CommandNull() {}
+	public CommandNull(Environment env) { super(env); }
 	
 	
 	/* (non-Javadoc)

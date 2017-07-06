@@ -43,22 +43,25 @@ import org.doble.annotations.*;
 public class CommandNew extends Command  {
     
 	private enum CommandStates  {PARSE, SUPERCEDES, LINK, RECORD};
-	ADRProperties properties = new ADRProperties();
+	ADRProperties properties;
 
 	/**
 	 * 
 	 */
-	public CommandNew() {
+	public CommandNew(Environment env) throws ADRException {
+		super(env);
+		
+		properties = new ADRProperties(env);
 		try {
 			// Load the properties
 			properties.load();
 			
 		} catch (RootPathNotFound e) {
-			System.err.println("Fatal: The .adr directory cannot be found in this or parent directories.");
-			System.err.println("Has the command adr init been run?");
-		} catch (ADRException e) {
-			// The error has already been handled.
-		}
+			String msg = "Fatal: The .adr directory cannot be found in this or parent directories.\n"
+					+ "Has the command adr init been run?";
+			throw new ADRException(msg);
+					
+		} 
 		
 
 		 
@@ -77,9 +80,9 @@ public class CommandNew extends Command  {
 				
 		try {
 			if (args.length == 0) {
-				System.err.println("ERROR: Try giving the ADR a description.");
-				System.err.println(this.getUsage());
-				throw new ADRException();
+				String msg = "ERROR: Try giving the ADR a description.\n";
+				msg += this.getUsage();
+				throw new ADRException(msg);
 			} else {
 				CommandStates commandState = CommandStates.PARSE;
 				for (String arg : args) {
@@ -110,21 +113,21 @@ public class CommandNew extends Command  {
 					}
 				}
 				if (commandState == CommandStates.SUPERCEDES) {
-					System.err.println("ERROR: -s option requires an ADR reference.");
-					System.out.println("Usage: " + getUsage());
-					throw new ADRException();
+					String msg =  "ERROR: -s option requires an ADR reference.\n";
+					msg += "Usage: " + getUsage();
+					throw new ADRException(msg);
 				}
 				if (commandState == CommandStates.LINK) {
-					System.err.println("ERROR: -l option requires an ADR reference.");
-					System.out.println("Usage: " + getUsage());
-					throw new ADRException();
+					String msg = "ERROR: -l option requires an ADR reference.\n";
+					msg += "Usage: " + getUsage();
+					throw new ADRException(msg);
 				}
 
 			}
 		} catch (NumberFormatException e) {
-			System.err.println("ERROR: Invalid ADR reference for the option -s");
-			System.err.println(this.getUsage());
-			throw new ADRException();
+			String msg = "ERROR: Invalid ADR reference for the option -s \n";
+			msg += this.getUsage();
+			throw new ADRException(msg);
 		}
 		
 		
@@ -138,9 +141,9 @@ public class CommandNew extends Command  {
 		try {
 			record.addLink(link);
 		} catch (LinkSpecificationException e) {
-			System.err.println("ERROR: -l parameter incorrectly formed.");
-	    	System.out.println("Usage: " + getUsage());
-	    	throw new ADRException();
+			String msg = "ERROR: -l parameter incorrectly formed.";
+			msg += "Usage: " + getUsage();
+	    	throw new ADRException(msg);
 		}	
 				
 		createADR(record);
@@ -152,47 +155,46 @@ public class CommandNew extends Command  {
        //Save the record
 		String adrFileName = "";   // The path to the file containing the ADR 
 		try {
-			Path docsPath = ADR.getFileSystem().getPath(properties.getProperty("root"),
+			Path docsPath = env.fileSystem.getPath(properties.getProperty("root"),
 			                                                 properties.getProperty("docPath"));
 			Path adrPath = record.store(docsPath);
 			adrFileName = adrPath.toString();
-		} catch (FileNotFoundException|UnsupportedEncodingException e) {
-			System.err.println("FATAL: Unable to store ADR, reason: " + e.getMessage());
-			throw new ADRException();
-		} catch (ADRNotFoundException e) {
-			System.err.println("FATAL: " + e.getMessage());
+		} catch (IOException e) {
+			throw new ADRException("FATAL: Unable to store ADR, reason: " + e.getMessage());
+		} catch (ADRNotFoundException e) {   //TODO check the need for an extra ADR exception type
+			throw new ADRException("FATAL: " + e.getMessage());
 		}
 
 		
 		// And now start up the editor
-		String editorCommand = System.getenv("EDITOR");
+	/*	String editorCommand = System.getenv("EDITOR");  // FIXME move this to the environment class
 		if (editorCommand == null) {
 			// Try VISUAL
 			editorCommand = System.getenv("VISUAL");
 		}
 		if (editorCommand == null) {
-			System.err.println("ERROR: Editor for the ADR has not been found in the environment variables.");
-			System.out.println(
-					"Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?");
-			throw new ADRException();
-		}
+			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
+				    	+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
+			throw new ADRException(msg);
+		}*/
 		
 		
 		
 		//String editorCommand = "C:/Users/adoble/AppData/Local/atom/bin/atom.cmd";
+		// And now start up the editor
 		try {
-			System.out.println("Opening Editor on " + adrFileName + " ...");
+			env.out.println("Opening Editor on " + adrFileName + " ...");
 			Runtime runTime = Runtime.getRuntime();
-			String cmd = editorCommand + " " + adrFileName;
+			String cmd = env.editor + " " + adrFileName;
 			//Process process = runTime.exec(cmd);
 			runTime.exec(cmd);
 			
 		} catch (IOException e) {
-			System.err.println("FATAL: Could not open the editor.");
+			throw new ADRException("FATAL: Could not open the editor.");
 			
 		}
 		
-		System.out.println(adrFileName);  // Return the file name of the ADR
+		env.out.println(adrFileName);  // Return the file name of the ADR
 	}
 	
 	/**
@@ -204,7 +206,7 @@ public class CommandNew extends Command  {
 		int highestIndex = 0; 
 		
 		
-		Path adrPath = ADR.getFileSystem().getPath(properties.getProperty("docPath"));
+		Path adrPath = env.fileSystem.getPath(properties.getProperty("docPath"));
 		File adrDir = adrPath.toFile();
 		
 		FilenameFilter  filter = new ADRFilenameFilter();

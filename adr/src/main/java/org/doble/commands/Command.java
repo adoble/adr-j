@@ -3,17 +3,20 @@
  */
 package org.doble.commands;
 
+import org.doble.adr.*;
 import org.doble.annotations.Cmd;
-
-import org.doble.adr.ADRException;
 
 /**
  * @author adoble
  *
  */
 public abstract class Command {
+	@SuppressWarnings("unused")  // Used in a command sub-class
+	protected Environment env;
 		
-	public abstract void command(String[] args) throws ADRException ;
+	public Command(Environment env) { this.env = env; }
+	
+	public abstract void command(String[] args) throws ADRException;
 	
 	
 	/** 

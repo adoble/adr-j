@@ -20,6 +20,11 @@ import org.doble.annotations.Cmd;
      help="Help ,on the adr sub-commands."
      )
 public class CommandHelp extends Command {
+	
+	
+	public CommandHelp(Environment env) {
+		super(env);
+	}
 
 	/* (non-Javadoc)
 	 * @see commands.Command#command(java.lang.String[])
@@ -27,7 +32,7 @@ public class CommandHelp extends Command {
 	@Override
 	public void command(String[] args) throws ADRException {
 		Map<String, Class<?>> commandMap;
-		Command command = new CommandNull(); 
+		Command command = new CommandNull(env); 
 
 		// Build the map of the adr commands keyed with the command name.
 		// All the commands are in the specified package.
@@ -38,18 +43,16 @@ public class CommandHelp extends Command {
 			Collection<Class<?>> entries = commandMap.values();
 			for (Class<?> entry : entries) {
 				@SuppressWarnings("unchecked")
-				Constructor<Command> ctor = (Constructor<Command>) entry.getConstructor();
-				command = ctor.newInstance();
+				Constructor<Command> ctor = (Constructor<Command>) entry.getConstructor(Environment.class);
+				command = ctor.newInstance(env);
 
 				// Get the usage
-				System.out.println(command.getUsage());
-				System.out.println("   " + command.getShortHelp());
+				env.out.println(command.getUsage());
+				env.out.println("   " + command.getShortHelp());
 			}
 			
 		} catch (Exception e) {
-			System.out.println("FATAL: Cannot create the command class for producing help messages.");
-			e.printStackTrace(System.err);
-			throw new ADRException();
+			throw new ADRException("FATAL: Cannot create the command class for producing help messages.");
 		}
 		
 

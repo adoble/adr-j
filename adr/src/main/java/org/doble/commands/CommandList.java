@@ -5,9 +5,7 @@ package org.doble.commands;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.Properties;
+import java.nio.file.*;
 
 import org.doble.adr.*;
 import org.doble.annotations.Cmd;
@@ -23,19 +21,24 @@ import org.doble.annotations.Cmd;
 		help= "Lists the architecture decision records"
 		)
 public class CommandList extends Command {
-	private ADRProperties properties = new ADRProperties(); 
+	private ADRProperties properties; 
 
 	/**
 	 * 
 	 */
-	public CommandList() {
+	public CommandList(Environment env) throws ADRException{
+		super(env);
+		
+		properties = new ADRProperties(env);
 		try {
 			// Load the properties
 			properties.load();
 			
 		} catch (RootPathNotFound e) {
-			System.err.println("Fatal: The .adr directory cannot be found in this or parent directories.");
-			System.err.println("Has the command adr init been run?");
+			String msg = "Fatal: The .adr directory cannot be found in this or parent directories.\n";
+			msg += "Has the command adr init been run?";
+			throw new ADRException(msg);
+			
 		} catch(ADRException e) {
 			// Error has already been handled
 		}
@@ -49,7 +52,7 @@ public class CommandList extends Command {
 	public void command(String[] args) throws ADRException {
 		
 		try {
-			Path docsPath = ADR.getFileSystem().getPath(properties.getProperty("root"),
+			Path docsPath = env.fileSystem.getPath(properties.getProperty("root"),
 			                                                 properties.getProperty("docPath"));
 			
 			File docsDir = docsPath.toFile();
@@ -57,14 +60,12 @@ public class CommandList extends Command {
 			FilenameFilter filter = new ADRFilenameFilter();
 			
 			for (String adrFileName: docsDir.list(filter)) {
-				System.out.println(adrFileName);
+				env.out.println(adrFileName);
 			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.err.println("FATAL: The ADR could not be saved!");
-			throw new ADRException();
+			throw new ADRException("FATAL: The ADR could not be saved!");
 		}  
 		
 

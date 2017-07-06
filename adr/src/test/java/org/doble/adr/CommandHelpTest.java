@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import java.io.*;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,11 +25,9 @@ import com.google.common.jimfs.Jimfs;
  *
  */
 public class CommandHelpTest {
-    PrintStream out = new PrintStream(new ByteArrayOutputStream());
-    PrintStream err = new PrintStream(new ByteArrayOutputStream());
-    PrintStream originalOut; 
-    PrintStream originalErr; 
     private static FileSystem fileSystem;
+    private final String rootPath = "/project/adr";
+	
 
 	/**
 	 * @throws java.lang.Exception
@@ -36,8 +35,7 @@ public class CommandHelpTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		// Set up the mock file system
-		fileSystem = Jimfs.newFileSystem(Configuration.windows());
-		
+		fileSystem = Jimfs.newFileSystem(Configuration.unix());
 	}
 
 	/**
@@ -52,13 +50,7 @@ public class CommandHelpTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.originalOut = System.out;
-		System.setOut(this.out);
-		
-		this.originalErr = System.err;
-		System.setErr(this.err);
-		
-		
+
 	}
 
 	/**
@@ -66,30 +58,41 @@ public class CommandHelpTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		System.setOut(this.originalOut);
-		System.setErr(this.originalErr);
+
 	}
 
 	@Test
 	public void test() {
-		ADR.setFileSystem(fileSystem);
 		ADR adr = new ADR();
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+		
+		Environment env = new Environment.Builder(fileSystem)
+				.out(ps)
+				.err(System.err)
+				.in(System.in)
+				.userDir(rootPath)
+				.build();
+		
 		
 		String[] args = {"help"};
 		
 			try {
-				adr.run(args);
+				adr.run(args, env);   //TODO env --> ADR constructor
 			} catch (ADRException e) {
 				// TODO Auto-generated catch block
-				fail("ADR Exception raised");
+				fail("ADR Exception raised: " + e.getMessage());
 			}
 			
 		
 		
 		// read the output
-		String outData = out.toString();
+		String content = new String(baos.toByteArray());
 		
-		assertTrue(outData.length() > 0);
+		assertTrue(content.length() > 0);
+		
+		assertTrue(content.contains("Help"));  //At least this command is shown
 		
 	}
 

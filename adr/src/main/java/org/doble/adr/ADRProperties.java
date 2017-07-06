@@ -18,13 +18,16 @@ public class ADRProperties extends Properties{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//Properties properties;
+
+
+	Environment env;
 
 	/**
-	 * 
+	 * @param env The environment in which the tool is run in
 	 */
-	public ADRProperties() {
-		// TODO Auto-generated constructor stub
+	public ADRProperties(Environment env) {
+		
+		this.env = env;
 	}
 	
 	/** 
@@ -38,9 +41,9 @@ public class ADRProperties extends Properties{
 		
 		// Get the root directory by looking for an .adr directory
 		
-		Path rootPath = ADR.getRootPath(); 
+		Path rootPath = env.dir; 
 		
-		Path propertiesRelPath  = ADR.getFileSystem().getPath(ADR.ADR_DIR_NAME, "adr.properties");
+		Path propertiesRelPath  = env.fileSystem.getPath(ADR.ADR_DIR_NAME, "adr.properties");
 		
 		Path propertiesPath = rootPath.resolve(propertiesRelPath);
 		
@@ -54,8 +57,7 @@ public class ADRProperties extends Properties{
 				setProperty("docPath", "doc/adr");
 			}
 		} catch (Exception  e) {
-			System.err.println("FATAL: The properties file could not be read.");
-			throw new ADRException();
+			throw new ADRException("FATAL: The properties file could not be read.");
 		} 
 		
 		

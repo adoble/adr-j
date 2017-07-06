@@ -19,18 +19,19 @@ import org.doble.annotations.Cmd;
      usage="adr init [DIRECTORY]", 
      shorthelp= "Initialises the directory of architecture decision records.",
      help= "Initialises the directory of architecture decision records:\n\n" +
- 			" * creates a subdirectory of the current wor,king directory" +
+ 			" * creates a subdirectory of the current working directory" +
  			" * creates the first ADR in that subdirectory, recording the decision to" +
  			"   record architectural decisions with ADRs.\n\n" +
  			"If the DIRECTORY is not given, the ADRs are stored in the directory `doc/adr`."
 		)   
 public class CommandInit extends Command {
 
-	
 	private Properties properties;
 	
-	public CommandInit() {	
-		// Set the default properties 
+	
+	
+	public CommandInit(Environment env) {	
+		super(env);
 		properties = new Properties();
 		properties.setProperty("docPath", "doc/adr");
 	}
@@ -50,7 +51,7 @@ public class CommandInit extends Command {
 		case 1:
 			if (args[0].equals("-f")) {
 				force = true;
-				System.out.println("Forcing initialisation. Current ADRS may be lost!");
+				env.out.println("Forcing initialisation. Current ADRS may be lost!");
 			} else {
 				properties.setProperty("docPath", args[0]);
 			}
@@ -58,43 +59,50 @@ public class CommandInit extends Command {
 		case 2:
 			if (args[0].equals("-f")) {
 				force = true;
-				System.out.println("Forcing initialisation. Current ADRS will be lost!");
+				env.out.println("Forcing initialisation. Current ADRS will be lost!");
 			}
 			properties.setProperty("docPath", args[1]);
 			break;
 		case 3:
-			System.err.println("Unknown parameters");
-			return;
+			throw new ADRException("Unknown parameters");
 		}			
 	
 		try {
-			String rootPathName = System.getProperty("user.dir");
-			Path adrPath = ADR.getFileSystem().getPath(".", ".adr");
+			//String rootPathName = env.dir.toString();
+						
+			//Path adrPath = env.fileSystem.getPath(".", ".adr");
+			
+			Path adrPath = env.dir.resolve(".adr");
 
-			properties.setProperty("root", rootPathName);
+			//properties.setProperty("root", rootPathName);
+			properties.setProperty("root", adrPath.toString());
 
 			if (Files.notExists(adrPath) || force) {
-				File dir = new File(".adr");
-				dir.mkdir();
+				Files.createDirectories(adrPath);
+//				File dir = new File(".adr");
+//				dir.mkdir();
 			} else {
-				System.err.println("Already initialised");
-				return;
+				throw new ADRException("Directory is already initialised for ADR.");
 			}
 
 			
 			// Create a properties file
-			Path propPath = ADR.getFileSystem().getPath(rootPathName, ".adr/adr.properties");
-			outProperties = new FileOutputStream(propPath.toString());
-			properties.store(outProperties, null);
-			outProperties.close();
+			//Path propPath = env.fileSystem.getPath(rootPathName, ".adr/adr.properties");
+			Path propPath = adrPath.resolve("adr.properties");
+			Files.createFile(propPath);
+			
+		    BufferedWriter writer =  Files.newBufferedWriter(propPath);
+			
+			properties.store(writer, null);
+			writer.close();
 
 			// Now create the docs directory which contains the adr directory
-			Path docsPath = ADR.getFileSystem().getPath(properties.getProperty("root"),
-					                                         properties.getProperty("docPath"));
-			System.out.println("Creating ADR directory at " + docsPath);
-			File docsDir = new File(docsPath.toString());
-			docsDir.mkdirs();
+			//Path docsPath = env.fileSystem.getPath(properties.getProperty("root"),  properties.getProperty("docPath"));
+			Path docsPath = env.dir.resolve(properties.getProperty("docPath"));
 			
+			env.out.println("Creating ADR directory at " + docsPath);
+			Files.createDirectories(docsPath);
+				
 			
 			// Now generate template for the first architectural decision record and update the id
 			Record record = new Record(); 
@@ -105,18 +113,16 @@ public class CommandInit extends Command {
 			
 			record.store(docsPath); 
 						
-			outProperties = new FileOutputStream(propPath.toString());
+			/*outProperties = new FileOutputStream(propPath.toString());
 			properties.store(outProperties, null);
-			outProperties.close(); 
+			outProperties.close(); */
 
 			
 
-		} catch (ADRNotFoundException e) {
-			System.err.println("FATAL: " + e.getMessage());
-			throw new ADRException();
+		} catch (ADRNotFoundException e) {   //TODO Check why we need an extra ADR exception type
+			throw new ADRException("FATAL: " + e.getMessage());
 		} catch (IOException e) {
-			System.err.println("FATAL: initialise failed, reason: " + e.getMessage());
-			throw new ADRException();
+			throw new ADRException("FATAL: initialise failed, reason: " + e.getMessage());
 		}
 
 	}

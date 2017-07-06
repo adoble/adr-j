@@ -4,13 +4,17 @@ import java.util.function.Predicate;
 
 public class ADRFilter {
 	
+    private static Environment env;
 
+	public ADRFilter(Environment env) {
+    	ADRFilter.env = env;
+    }
 	
 	public static Predicate<Path> filter() {
 
 		return p -> { 
 			String glob = "[0-9][0-9][0-9][0-9]*.md";
-			return ADR.getFileSystem().getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
+			return env.fileSystem.getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
 			
 		};
 
@@ -20,7 +24,7 @@ public class ADRFilter {
 
 		return p -> { 
 			String glob = adrID + "*.md";
-			return ADR.getFileSystem().getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
+			return env.fileSystem.getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
 			
 		};
 
@@ -30,7 +34,7 @@ public class ADRFilter {
 				return p -> { 
 			String formattedID = String.format("%04d", adrID);
 			String glob = formattedID + "*.md";
-			return ADR.getFileSystem().getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
+			return env.fileSystem.getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
 			
 		};
 
