@@ -27,13 +27,14 @@ import org.doble.annotations.Cmd;
 public class CommandInit extends Command {
 
 	private Properties properties;
+	final private String defaultADRDirectory = "doc/adr";
 	
 	
 	
 	public CommandInit(Environment env) {	
 		super(env);
 		properties = new Properties();
-		properties.setProperty("docPath", "doc/adr");
+		//properties.setProperty("docPath", "doc/adr");
 	}
 	
 
@@ -42,30 +43,19 @@ public class CommandInit extends Command {
 	 */
 	@Override
 	public void command(String[] args) throws ADRException {
-		FileOutputStream outProperties;
 		
-		boolean force = false; 
-		
-				
 		switch (args.length) {
+		case 0:
+			properties.setProperty("docPath", defaultADRDirectory); // Use the default value for the adr directory
+			break;
+
 		case 1:
-			if (args[0].equals("-f")) {
-				force = true;
-				env.out.println("Forcing initialisation. Current ADRS may be lost!");
-			} else {
-				properties.setProperty("docPath", args[0]);
-			}
+			properties.setProperty("docPath", args[0]);
 			break;
-		case 2:
-			if (args[0].equals("-f")) {
-				force = true;
-				env.out.println("Forcing initialisation. Current ADRS will be lost!");
-			}
-			properties.setProperty("docPath", args[1]);
-			break;
-		case 3:
-			throw new ADRException("Unknown parameters");
-		}			
+
+		default:
+			throw new ADRException("ERROR: Unknown parameters");
+		}		
 	
 		try {
 			//String rootPathName = env.dir.toString();
@@ -77,7 +67,7 @@ public class CommandInit extends Command {
 			//properties.setProperty("root", rootPathName);
 			properties.setProperty("root", adrPath.toString());
 
-			if (Files.notExists(adrPath) || force) {
+			if (Files.notExists(adrPath)) {
 				Files.createDirectories(adrPath);
 //				File dir = new File(".adr");
 //				dir.mkdir();
