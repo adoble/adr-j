@@ -20,7 +20,7 @@ public class CommandInitTest {
     private static FileSystem fileSystem;
     final static private String rootPath = "/project/adr";
     
-    Environment env;
+    private Environment env;
  
 
 
