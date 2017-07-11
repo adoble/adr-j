@@ -3,11 +3,10 @@
  */
 package org.doble.adr;
 
-import java.io.FileInputStream;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
+import java.io.BufferedReader;;
 
 /**
  * @author adoble
@@ -36,7 +35,7 @@ public class ADRProperties extends Properties{
 	 * @return A Properties object with the data contained in the properties file
 	 * @throws RootPathNotFound is the root path does not exist. 
 	 */
-     public void load() throws RootPathNotFound, ADRException {
+     public void load() throws ADRException {
 		//properties = new Properties();		
 		
 		// Get the root directory by looking for an .adr directory
@@ -49,15 +48,15 @@ public class ADRProperties extends Properties{
 		
 		try {
 			if (Files.exists(propertiesPath)) {
-				FileInputStream inProperties = new FileInputStream(propertiesPath.toFile());
-				load(inProperties);
-				inProperties.close();
+				BufferedReader propertiesReader = Files.newBufferedReader(propertiesPath);
+				load(propertiesReader);
+				propertiesReader.close();
 			} else {
 				// Set the default values. This should be stored when adr init is called, 
 				setProperty("docPath", "doc/adr");
 			}
-		} catch (Exception  e) {
-			throw new ADRException("FATAL: The properties file could not be read.");
+		} catch (Exception e) {
+			throw new ADRException("FATAL: The properties file could not be read.", e);
 		} 
 		
 		

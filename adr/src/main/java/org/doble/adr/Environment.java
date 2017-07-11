@@ -45,6 +45,9 @@ public class Environment {
 	
 	/** The command line to run the editor used for editing the ADRs */
 	public final String editor;  
+	
+	/** The runner used for firing up the editor */
+	public final EditorRunner editorRunner;
 
 	/**
 	 * Private Constructor so that only the builder can be used to 
@@ -58,6 +61,7 @@ public class Environment {
 		this.in = builder.inStream;
 		this.dir = builder.currentDirectory;
 		this.editor = builder.editorCommand;
+		this.editorRunner = builder.editorRunner;
 		
 	}
 
@@ -70,6 +74,7 @@ public class Environment {
 		private InputStream inStream;
 		private Path currentDirectory;
 		private String editorCommand;
+		private EditorRunner editorRunner;
 
 		public Builder(FileSystem fileSystem) {
 			this.fileSystem = fileSystem;
@@ -102,6 +107,11 @@ public class Environment {
          
 		public Builder editor(String editorCommand) {
 			this.editorCommand = editorCommand;
+			return this;
+		}
+		
+		public Builder editorRunner(EditorRunner editorRunner) {
+			this.editorRunner = editorRunner;
 			return this;
 		}
 		

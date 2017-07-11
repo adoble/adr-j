@@ -86,7 +86,7 @@ public class CommandInitTest {
 		}
 		
 		//Now see if the  standard docs directory has been created
-		pathName = rootPath + "/doc/adr";
+		pathName = rootPath + "/docs/adr";
 		try {
 			Path p = fileSystem.getPath(pathName);
 			boolean exists = Files.exists(p);
@@ -96,19 +96,9 @@ public class CommandInitTest {
 			fail("InvalidPathException raised on "+ pathName);
 		}
 		
+				
 		// Check if the ADR has been created
-		pathName = rootPath + "/doc/adr";
-		try {
-			Path p = fileSystem.getPath(pathName);
-			boolean exists = Files.exists(p);
-			assertTrue(exists);
-		} catch (InvalidPathException e) {
-			// TODO Auto-generated catch block
-			fail("InvalidPathException raised on "+ pathName);
-		}
-		
-		// Check if the ADR has been created
-		pathName = rootPath + "/doc/adr/0001-record-architecture-decisions.md";
+		pathName = rootPath + "/docs/adr/0001-record-architecture-decisions.md";
 		try {
 			Path p = fileSystem.getPath(pathName);
 			boolean exists = Files.exists(p);
@@ -119,7 +109,7 @@ public class CommandInitTest {
 		}
 		
 		// Do a sample check on the content
-		pathName = rootPath + "/doc/adr/0001-record-architecture-decisions.md";
+		pathName = rootPath + "/docs/adr/0001-record-architecture-decisions.md";
 		try {
 			Path p = fileSystem.getPath(pathName);
 			List<String> contents = Files.readAllLines(p);

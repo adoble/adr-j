@@ -17,9 +17,13 @@ public class ADRException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	//TODO check that this constructor for ADRException is used throughout
 	public ADRException(String msg) {
 		super(msg);
+	
+	}
+	
+	public ADRException(String msg, Throwable cause) {
+		super(msg, cause);
 	
 	}
 

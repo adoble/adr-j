@@ -22,7 +22,7 @@ import org.doble.annotations.Cmd;
 public class CommandHelp extends Command {
 	
 	
-	public CommandHelp(Environment env) {
+	public CommandHelp(Environment env) throws ADRException{
 		super(env);
 	}
 

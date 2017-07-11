@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.stream.Stream;
 
 import org.doble.adr.*;
 import org.doble.annotations.*;
@@ -44,7 +45,6 @@ public class CommandNew extends Command  {
     
 	private enum CommandStates  {PARSE, SUPERCEDES, LINK, RECORD};
 	ADRProperties properties;
-
 	/**
 	 * 
 	 */
@@ -52,18 +52,10 @@ public class CommandNew extends Command  {
 		super(env);
 		
 		properties = new ADRProperties(env);
-		try {
-			// Load the properties
-			properties.load();
-			
-		} catch (RootPathNotFound e) {
-			String msg = "Fatal: The .adr directory cannot be found in this or parent directories.\n"
-					+ "Has the command adr init been run?";
-			throw new ADRException(msg);
-					
-		} 
 		
-
+		// Load the properties
+	    properties.load();
+			
 		 
 	}
 
@@ -130,11 +122,8 @@ public class CommandNew extends Command  {
 			throw new ADRException(msg);
 		}
 		
-		
-	
-		
-		record.id = highestIndex() + 1;
-		record.status = "New";
+		record.id  =  highestIndex()  + 1;
+	 	record.status = "New";
 		record.date = DateFormat.getDateInstance().format(new Date());
 		record.name = record.name.trim();
 		
@@ -151,14 +140,17 @@ public class CommandNew extends Command  {
 
 	//private void createADR(String adrName, Record record) {
 	private void createADR(Record record) throws ADRException {
+		Path adrPath; // The ADR file that is created
 		
        //Save the record
-		String adrFileName = "";   // The path to the file containing the ADR 
-		try {
-			Path docsPath = env.fileSystem.getPath(properties.getProperty("root"),
-			                                                 properties.getProperty("docPath"));
-			Path adrPath = record.store(docsPath);
-			adrFileName = adrPath.toString();
+	try {
+			Path rootPath = ADR.getRootPath(env);
+			Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
+			
+//			Path docsPath = env.fileSystem.getPath(properties.getProperty("root"),
+//			                                                 properties.getProperty("docPath"));
+			adrPath = record.store(docsPath);
+			
 		} catch (IOException e) {
 			throw new ADRException("FATAL: Unable to store ADR, reason: " + e.getMessage());
 		} catch (ADRNotFoundException e) {   //TODO check the need for an extra ADR exception type
@@ -166,47 +158,38 @@ public class CommandNew extends Command  {
 		}
 
 		
-		// And now start up the editor
-	/*	String editorCommand = System.getenv("EDITOR");  // FIXME move this to the environment class
-		if (editorCommand == null) {
-			// Try VISUAL
-			editorCommand = System.getenv("VISUAL");
-		}
-		if (editorCommand == null) {
-			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
-				    	+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
-			throw new ADRException(msg);
-		}*/
+		
+		// And now start up the editor using the specified runner
+		EditorRunner runner = env.editorRunner;
+		
+		runner.run(adrPath);
 		
 		
-		
-		//String editorCommand = "C:/Users/adoble/AppData/Local/atom/bin/atom.cmd";
-		// And now start up the editor
-		try {
-			env.out.println("Opening Editor on " + adrFileName + " ...");
-			Runtime runTime = Runtime.getRuntime();
-			String cmd = env.editor + " " + adrFileName;
-			//Process process = runTime.exec(cmd);
-			runTime.exec(cmd);
-			
-		} catch (IOException e) {
-			throw new ADRException("FATAL: Could not open the editor.");
-			
-		}
-		
-		env.out.println(adrFileName);  // Return the file name of the ADR
+		env.out.println(adrPath.toString());  // Return the file name of the ADR
 	}
 	
 	/**
 	 * Find the highest index of the ADRs in the adr directory by iterating
 	 * through all the files
-	 * @return int The highest index found
+	 * @return int The highest index found. If no files are found returns 0.
 	 */
-	private int highestIndex() {
-		int highestIndex = 0; 
+	private int highestIndex() throws ADRException {  
+		//int highestIndex = 0; 
+		OptionalInt highestIndex; 
 		
+		Path docPath = env.fileSystem.getPath(properties.getProperty("docPath"));
+		Path rootPath = ADR.getRootPath(env);
+		Path adrPath = rootPath.resolve(docPath);
 		
-		Path adrPath = env.fileSystem.getPath(properties.getProperty("docPath"));
+		try {
+			highestIndex  = Files.list(adrPath).mapToInt(CommandNew::toInt).max();
+		} catch (IOException e) {
+			throw new ADRException("FATAL: Unable to determine the indexes of the ADRs.", e);
+		}
+				
+		return (highestIndex.isPresent()? highestIndex.getAsInt(): 0); 
+		
+/*		Path adrPath = env.fileSystem.getPath(properties.getProperty("docPath"));
 		File adrDir = adrPath.toFile();
 		
 		FilenameFilter  filter = new ADRFilenameFilter();
@@ -221,12 +204,20 @@ public class CommandNew extends Command  {
 		
 		
 		return highestIndex;
-		
+		*/
 		
 	}
 
 
-	
+	private static int toInt(Path p) {
+		String name = p.getFileName().toString();
+		
+		// Extract the first 4 characters
+		String id = name.substring(0, 3);
+		return new Integer(id);
+		
+		
+	}
 
 
 }

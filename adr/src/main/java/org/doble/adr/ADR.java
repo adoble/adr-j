@@ -1,8 +1,7 @@
 package org.doble.adr;
 
-import java.io.*;
+
 import java.lang.reflect.Constructor;
-import java.net.*;
 import java.nio.file.*;
 import java.util.*;
 
@@ -25,8 +24,13 @@ public class ADR   {
 	final static String ADR_DIR_NAME = ".adr";
 	private static FileSystem fileSystem; 
 
+	
+	/** The directory containing the .adr directory, i.e. the root of the project */
+	private static Optional<Path> rootPath = Optional.empty(); 
 
-
+    public ADR() {}
+    
+      
 	/** ADR tool main entry
 	 * 
 	 *
@@ -51,7 +55,7 @@ public class ADR   {
 		} 
 		
 		
-		ADR adr = new ADR();   //TODO env -> ADR constructor
+
 		
 		// Set up the environment that the tool runs in. 
 		Environment env = new Environment.Builder(FileSystems.getDefault())
@@ -61,6 +65,8 @@ public class ADR   {
 				.userDir(System.getProperty("user.dir"))
 				.editor(editorCommand)
 				.build();
+		
+		ADR adr = new ADR();   //TODO env -> ADR constructor
 
 		// Run the commands specified in arguments.
 		try {
@@ -137,45 +143,42 @@ public class ADR   {
 
 	/** 
 	 * Get the root directory containing the .adr directory
-	 * @return Path The root directory  or null if not found
+	 * @return Path The root directory
+	 * @throws ADRException Thrown if the root directory cannot be found
 	 */
-	static public Path getRootPath(Environment env) throws RootPathNotFound {
+	static public Path getRootPath(Environment env) throws ADRException  {
+	
+		// If the root path not been set then find it
+		if (!rootPath.isPresent()) {
+			// Find the root path, starting in the directory 
+			// where the ADR tool has been run.
+			Path path = env.dir;
+			
+			Path adrFilePath; 
+			while (path != null) {
+				adrFilePath = path.resolve(ADR.ADR_DIR_NAME);
 
-		// Start in the directory where adr has been run.
-//		String pathName = System.getProperty("user.dir");
-//		Path path = ADR.getFileSystem().getPath(pathName);
-		
-		Path path = env.dir;
-		
-		Path adrFilePath; 
-		while (path != null) {
-			adrFilePath = path.resolve(ADR.ADR_DIR_NAME);
-
-			if (Files.exists(adrFilePath)) {
-				return path; 
-
-			} else {
-				// Check the directory above 
-				path = path.getParent();
+				if (Files.exists(adrFilePath)) {
+					rootPath = Optional.of(path);
+					break;
+				} else {
+					// Check the directory above 
+					path = path.getParent();
+				}
 			}
 		}
-
-		throw new RootPathNotFound();
-
+		
+		if (!rootPath.isPresent()) {
+			String msg = "FATAL: The .adr directory cannot be found in this or parent directories.\n"
+					+ "Has the command adr init been run?";
+			throw new ADRException(msg);
+		}
+		
+		return rootPath.get();
+	
+	
 	}
 
-/*	*//** Get the file system that the adr tool uses. 
-	 * @return the fileSystem
-	 *//*
-	public static FileSystem getFileSystem() {
-		return fileSystem;
-	}*/
 
-/*	*//** Specifiy the file system that the adr tool uses.
-	 * @param fileSystem the fileSystem to set
-	 *//*
-	public static void setFileSystem(FileSystem fileSystem) {
-		ADR.fileSystem = fileSystem;
-	}*/
 
 } // -- ADR

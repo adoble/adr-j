@@ -26,22 +26,13 @@ public class CommandList extends Command {
 	/**
 	 * 
 	 */
-	public CommandList(Environment env) throws ADRException{
+	public CommandList(Environment env) throws ADRException {
 		super(env);
 		
 		properties = new ADRProperties(env);
-		try {
-			// Load the properties
-			properties.load();
 			
-		} catch (RootPathNotFound e) {
-			String msg = "Fatal: The .adr directory cannot be found in this or parent directories.\n";
-			msg += "Has the command adr init been run?";
-			throw new ADRException(msg);
-			
-		} catch(ADRException e) {
-			// Error has already been handled
-		}
+		// Load the properties
+		properties.load();
 		
 	}
 

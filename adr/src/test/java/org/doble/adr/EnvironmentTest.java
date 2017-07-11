@@ -15,6 +15,8 @@ public class EnvironmentTest {
 	private FileSystem fileSystem;
 	private final String ROOT_PATH = "/project/adr";
 	private Path rootPath; 
+	private String editor = "C:/Users/adoble/AppData/Local/atom/bin/atom.cmd";
+	private EditorRunner runner = new TestEditorRunner(null);
 
 	@Before
 	public void setUp() throws Exception {
@@ -37,13 +39,11 @@ public class EnvironmentTest {
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPath)
+				.editor(editor)
+				.editorRunner(runner)
 				.build();
 		
-/*	assertTrue(env.getFileSystem().equals(fileSystem));
-	assertTrue(env.getOutStream().equals(System.out));
-	assertTrue(env.getErrStream().equals(System.err));
-	assertTrue(env.getInStream().equals(System.in));
-	*/
+
 	assertTrue(env.fileSystem.equals(fileSystem));
 	assertTrue(env.out.equals(System.out));
 	assertTrue(env.err.equals(System.err));
@@ -52,8 +52,9 @@ public class EnvironmentTest {
 	Path p = env.dir;
 	String pname = p.toString();
 	assertTrue(pname.equals(ROOT_PATH));
-	}
 	
-
+	assertTrue(env.editor.equals(editor));
+	assertTrue(env.editorRunner.equals(runner));
+	}
 
 }

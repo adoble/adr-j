@@ -3,6 +3,7 @@
  */
 package org.doble.commands;
 
+import org.doble.adr.ADRException;
 import org.doble.adr.Environment;
 
 /**
@@ -13,7 +14,7 @@ import org.doble.adr.Environment;
 public class CommandNull extends Command {
 	private final String usage = "Usage: \n adr null";
     private final String help = "Only used internally .";
-	public CommandNull(Environment env) { super(env); }
+	public CommandNull(Environment env) throws ADRException { super(env);}
 	
 	
 	/* (non-Javadoc)
