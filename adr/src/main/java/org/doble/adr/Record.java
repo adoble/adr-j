@@ -16,7 +16,7 @@ public class Record  {
 	public String context = "Record the architectural decisions made on this project.";
 	public String decision = "We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions";
 	public String consequences = "See Michael Nygard's article, linked above.";
-	private ArrayList<Integer> supercedes  = new ArrayList<Integer>();
+	private ArrayList<Integer> supersedes  = new ArrayList<Integer>();
 	
 	private class Link {
 		
@@ -67,7 +67,7 @@ public class Record  {
 
 		String statusMsg = status + "\n\n";
 
-		for (Integer sc : supercedes) {
+		for (Integer sc : supersedes) {
 			statusMsg += "\nSupersedes the architecture decision record " + sc + "\n";
 			
 		}
@@ -111,6 +111,7 @@ public class Record  {
 		return p;
 	}
 	
+
 	
 	
 	/** Adds a reverse link reference to an ADR at the end of the Status section with the form
@@ -160,19 +161,19 @@ public class Record  {
 	}
 
 	/**
-	 * @return the supercedes records
+	 * @return the supersedes records
 	 */
-	public List<Integer> getSupercedes() {
-		ArrayList<Integer> listSupercedes = new ArrayList<Integer>(supercedes);
+	public List<Integer> getSupersedes() {
+		ArrayList<Integer> listSupersedes = new ArrayList<Integer>(supersedes);
 			
-		return listSupercedes;
+		return listSupersedes;
 	}
 
 	/**
-	 * @param supercede the supercede to set
+	 * @param supersede the supersede to set
 	 */
-	public void addSupercede(Integer supercede) {
-		supercedes.add(supercede);
+	public void addSupersede(Integer supersede) {
+		supersedes.add(supersede);
 	}
 	
 	

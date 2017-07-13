@@ -25,8 +25,7 @@ public class ADR   {
 	private static FileSystem fileSystem; 
 
 	
-	/** The directory containing the .adr directory, i.e. the root of the project */
-	private static Optional<Path> rootPath = Optional.empty(); 
+	
 
     public ADR() {}
     
@@ -142,15 +141,21 @@ public class ADR   {
 
 
 	/** 
-	 * Get the root directory containing the .adr directory
+	 * Get the root directory containing the .adr directory. 
 	 * @return Path The root directory
 	 * @throws ADRException Thrown if the root directory cannot be found
 	 */
 	static public Path getRootPath(Environment env) throws ADRException  {
-	
-		// If the root path not been set then find it
-		if (!rootPath.isPresent()) {
-			// Find the root path, starting in the directory 
+		// NOTE: This examines the directory for the root path each time, 
+		// rather than storing the value. This is necessary to avoid 
+		// ProviderMismatchExceptios later due to the filesystems that 
+		// created the Path being different. 
+		
+		// The directory containing the .adr directory, 
+		// i.e. the root of the project 
+		Optional<Path> rootPath = Optional.empty(); 
+			
+		// Find the root path, starting in the directory 
 			// where the ADR tool has been run.
 			Path path = env.dir;
 			
@@ -166,7 +171,7 @@ public class ADR   {
 					path = path.getParent();
 				}
 			}
-		}
+		
 		
 		if (!rootPath.isPresent()) {
 			String msg = "FATAL: The .adr directory cannot be found in this or parent directories.\n"
@@ -175,7 +180,7 @@ public class ADR   {
 		}
 		
 		return rootPath.get();
-	
+		
 	
 	}
 

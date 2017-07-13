@@ -17,7 +17,7 @@ import org.doble.annotations.*;
  *
  */
 @Cmd(name="new",
-     usage = "adr new [-s SUPERCEDED] [-l TARGET:LINK:REVERSE-LINK] TITLE_TEXT...",
+     usage = "adr new [-s SUPERSEDED] [-l TARGET:LINK:REVERSE-LINK] TITLE_TEXT...",
      shorthelp = "Creates a new, numbered ADR.",
      help = " Creates a new, numbered ADR.  The TITLE_TEXT arguments are concatenated to" +
 		" form the title of the new ADR.  The ADR is opened for editing in the" +
@@ -26,11 +26,11 @@ import org.doble.annotations.*;
 		" file name of the ADR is output to stdout, so the command can be used in" +
 		" scripts.\n\n" +
 		" Options:\n\n" +
-		" -s SUPERCEDED   A reference (number or partial filename) of a previous" +
-		"                 decision that the new decision supercedes. A Markdown link" +
-		"                 to the superceded ADR is inserted into the Status section." +
-		"                 The status of the superceded ADR is changed to record that" +
-		"                 it has been superceded by the new ADR.\n\n" +
+		" -s SUPERSEDED   A reference (number or partial filename) of a previous" +
+		"                 decision that the new decision supersedes. A Markdown link" +
+		"                 to the superseded ADR is inserted into the Status section." +
+		"                 The status of the superseded ADR is changed to record that" +
+		"                 it has been superseded by the new ADR.\n\n" +
 		" -l TARGET:LINK:REVERSE-LINK" +
 		"                 Links the new ADR to a previous ADR." +
 		"                 TARGET is a reference (number or partial filename) of a"  +
@@ -38,12 +38,12 @@ import org.doble.annotations.*;
 		"                 LINK is the description of the link created in the new ADR." +
 		"                 REVERSE-LINK is the description of the link created in the" +
 		"                 existing ADR that will refer to the new ADR.\n\n" +
-		" Multiple -s and -l options can be given, so that the new ADR can supercede"  +
+		" Multiple -s and -l options can be given, so that the new ADR can supersede"  +
 		" or link to multiple existing ADRs."
 		) 
 public class CommandNew extends Command  {
     
-	private enum CommandStates  {PARSE, SUPERCEDES, LINK, RECORD};
+	private enum CommandStates  {PARSE, SUPERSEDES, LINK, RECORD};
 	ADRProperties properties;
 	/**
 	 * 
@@ -82,7 +82,7 @@ public class CommandNew extends Command  {
 					switch (commandState) {
 					case PARSE:
 						if (arg.equals("-s")) {
-							commandState = CommandStates.SUPERCEDES;
+							commandState = CommandStates.SUPERSEDES;
 						}
 						else if (arg.equals("-l")) {
 							commandState = CommandStates.LINK;
@@ -91,8 +91,8 @@ public class CommandNew extends Command  {
 							record.name += arg + " ";
 						}
 						break;
-					case SUPERCEDES:
-						record.addSupercede(Integer.parseInt(arg));
+					case SUPERSEDES:
+						record.addSupersede(Integer.parseInt(arg));
 						commandState = CommandStates.PARSE;
 						break;
 					case LINK:
@@ -104,7 +104,7 @@ public class CommandNew extends Command  {
 						break;
 					}
 				}
-				if (commandState == CommandStates.SUPERCEDES) {
+				if (commandState == CommandStates.SUPERSEDES) {
 					String msg =  "ERROR: -s option requires an ADR reference.\n";
 					msg += "Usage: " + getUsage();
 					throw new ADRException(msg);
@@ -189,22 +189,7 @@ public class CommandNew extends Command  {
 				
 		return (highestIndex.isPresent()? highestIndex.getAsInt(): 0); 
 		
-/*		Path adrPath = env.fileSystem.getPath(properties.getProperty("docPath"));
-		File adrDir = adrPath.toFile();
-		
-		FilenameFilter  filter = new ADRFilenameFilter();
-		String[] fileNames = adrDir.list(filter);
-        String indexStr = "";
-        int index;
-        for (String filename: fileNames) {
-        	indexStr = filename.substring(0, ADR.MAX_ID_LENGTH);
-        	index = Integer.parseInt(indexStr);
-        	highestIndex = (index > highestIndex) ? index : highestIndex;                		
-        }
-		
-		
-		return highestIndex;
-		*/
+
 		
 	}
 
@@ -213,7 +198,7 @@ public class CommandNew extends Command  {
 		String name = p.getFileName().toString();
 		
 		// Extract the first 4 characters
-		String id = name.substring(0, 3);
+		String id = name.substring(0, 4);
 		return new Integer(id);
 		
 		
