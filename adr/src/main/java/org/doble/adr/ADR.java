@@ -18,8 +18,6 @@ import org.doble.annotations.*;
  */
 public class ADR   {
 
-	//static private Properties properties = new Properties();  //TODO remove
-
 	final static public int MAX_ID_LENGTH = 4;
 	final static String ADR_DIR_NAME = ".adr";
 	private static FileSystem fileSystem; 
@@ -101,7 +99,6 @@ public class ADR   {
 				// Create the command object
 				@SuppressWarnings("unchecked")
 				Constructor<Command> ctor = (Constructor<Command>) commandClass.getConstructor(Environment.class);
-				//command = ctor.newInstance();  //TODO remove
 				command = ctor.newInstance(env);
 				// Execute the command
 				command.command(subCmdArgs);
