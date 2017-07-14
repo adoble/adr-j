@@ -4,12 +4,7 @@ import java.util.function.Predicate;
 
 public class ADRFilter {
 	
-    private static Environment env;
 
-	public ADRFilter(Environment env) {
-    	ADRFilter.env = env;
-    }
-	
 	public static Predicate<Path> filter() {
 
 		return p -> { 
