@@ -173,6 +173,8 @@ public class CommandNewTest {
     		ArrayList<Path> expectedFiles = new ArrayList<Path>();
     		ArrayList<String> expectedFileNames = new ArrayList<String>();
     		
+    		Path supersededADRFile = fileSystem.getPath("/project/adr/docs/adr/0005-to-be-superseded.md");
+    		
     		for (int id = 0; id < adrNames.length; id++) {
     			String name = String.format("%04d", id + 2) + "-" + adrNames[id].replace(' ', '-').toLowerCase() + ".md";
     			Path path  = fileSystem.getPath(rootPathName, docsPath, name);
@@ -216,11 +218,13 @@ public class CommandNewTest {
 			// Check that the the new record mentions that it supersedes ADR 5
 			int supersededADRID = 5;
 			int newADRID = adrNames.length + 2;
-			String newADRFileName = String.format("%04d", newADRID) + "-" + newADRTitle.replace(' ', '-').toLowerCase() + ".md";
+			String newADRFileName = String.format("%04d", newADRID) + "-" + newADRTitle.replace(' ', '-').toLowerCase() + ".md"; 
+						
 			Path newADRFile = fileSystem.getPath(rootPathName, docsPath, newADRFileName);
 			long count = 0;
+			String link = "Supersedes the [architecture decision record "  + supersededADRID + "](" + supersededADRFile.getFileName() + ")";
 			try {
-				count = Files.lines(newADRFile).filter(s -> s.contains("Supersedes the architecture decision record "  + supersededADRID)).count();
+				count = Files.lines(newADRFile).filter(s -> s.contains(link)).count();
 			} catch (IOException e) {
 				fail(e.getMessage());
 			}
@@ -232,10 +236,8 @@ public class CommandNewTest {
 			count = 0;
 			try {				
 				
-				Path supersededADRFile = fileSystem.getPath("/project/adr/docs/adr/0005-to-be-superseded.md");
-									
-						
-				count = Files.lines(supersededADRFile).filter(s -> s.contains("Superseded by the architecture decision record "  + newADRID)).count();
+								
+				count = Files.lines(supersededADRFile).filter(s -> s.contains("Superseded by the [architecture decision record "  + newADRID + "](" + newADRFileName + ")")).count();
 				
 				assertEquals("The superseded ADR does not reference the ADR that superseded it in the text.", 1, count);
 				

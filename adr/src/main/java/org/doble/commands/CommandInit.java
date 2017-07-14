@@ -88,13 +88,13 @@ public class CommandInit extends Command {
 
 
 			// Now generate template for the first architectural decision record and update the id
-			Record record = new Record(); 
+			Record record = new Record(docsPath); 
 
 			record.id = 1;
 			record.name = "Record architecture decisions";
 			record.date = DateFormat.getDateInstance().format(new Date());
 
-			record.store(docsPath); 
+			record.store(); 
 
 			/*outProperties = new FileOutputStream(propPath.toString());
 			properties.store(outProperties, null);

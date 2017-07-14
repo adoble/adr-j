@@ -7,7 +7,6 @@ import java.io.*;
 import java.nio.file.*;
 import java.text.DateFormat;
 import java.util.*;
-import java.util.stream.Stream;
 
 import org.doble.adr.*;
 import org.doble.annotations.*;
@@ -68,7 +67,12 @@ public class CommandNew extends Command  {
 	public void command(String[] args) throws ADRException {
 		String link = ""; 
 		
-		Record record = new Record();
+		// Determine where the ADRs are stored and set uo the
+		// record object 
+		Path rootPath = ADR.getRootPath(env);
+		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
+		
+		Record record = new Record(docsPath);
 				
 		try {
 			if (args.length == 0) {
@@ -142,12 +146,7 @@ public class CommandNew extends Command  {
 	private void createADR(Record record) throws ADRException {
 		Path adrPath; // The ADR file that is created
 
-		//Save the record
-
-		Path rootPath = ADR.getRootPath(env);
-		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
-
-		adrPath = record.store(docsPath);
+		adrPath = record.store();
 
 		// And now start up the editor using the specified runner
 		EditorRunner runner = env.editorRunner;
