@@ -6,7 +6,7 @@ package org.doble.adr;
  * 
  */
 
-// TODO use a file mock as in https://github.com/google/jimfs
+// Tests use a mock filesystem https://github.com/google/jimfs
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

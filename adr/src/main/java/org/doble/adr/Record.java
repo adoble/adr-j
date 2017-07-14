@@ -187,7 +187,7 @@ public class Record  {
 			
 		try (Stream<Path> stream = Files.list(docsPath)) {
 			
-			Path[] paths = stream.filter(ADRFilter.filter(link.id)).toArray(Path[]::new);  //FIXME ADRFilter.filert uses the env . This is not present - add the path parameter
+			Path[] paths = stream.filter(ADRFilter.filter(link.id)).toArray(Path[]::new);  
 			if (paths.length == 1 ) {
 				// Read in the file
 				List<String> lines = Files.readAllLines(paths[0]);
@@ -213,8 +213,7 @@ public class Record  {
 			}
 				
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ADRException("FATAL: Unable to add reverse link", e);
 		}
 
 		

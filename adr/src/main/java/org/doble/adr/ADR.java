@@ -118,12 +118,10 @@ public class ADR   {
 	}
 
 	static public Map<String, Class<?>> buildCommandMap (String packageName)  {
-		//String commandName; // FIXME Remove
-		//String relPath = packageName.replace('.', '/');   // FIXME Remove
 		HashMap<String, Class<?>> commandMap = new HashMap<String, Class<?>>();
 
 
-		Reflections reflections = new Reflections("org.doble.command");  // FIXME try and remove the explicit package name
+		Reflections reflections = new Reflections("org.doble.command");  // TODO try and remove the explicit package name
 		Set<Class<?>> commands = 
 				reflections.getTypesAnnotatedWith(org.doble.annotations.Cmd.class);
 

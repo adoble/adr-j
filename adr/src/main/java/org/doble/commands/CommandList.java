@@ -55,7 +55,6 @@ public class CommandList extends Command {
 			}
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			throw new ADRException("FATAL: The ADR could not be saved!");
 		}  
 		

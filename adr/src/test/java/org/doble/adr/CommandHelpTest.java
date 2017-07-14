@@ -81,7 +81,6 @@ public class CommandHelpTest {
 			try {
 				adr.run(args, env);   //TODO env --> ADR constructor
 			} catch (ADRException e) {
-				// TODO Auto-generated catch block
 				fail("ADR Exception raised: " + e.getMessage());
 			}
 			

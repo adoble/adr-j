@@ -26,8 +26,7 @@ public class EnvironmentTest {
 			rootPath = fileSystem.getPath(ROOT_PATH);
 			Files.createDirectories(rootPath);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

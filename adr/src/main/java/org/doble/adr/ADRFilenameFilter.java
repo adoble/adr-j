@@ -13,12 +13,6 @@ import java.io.FilenameFilter;
  */
 public class ADRFilenameFilter implements FilenameFilter {
 
-	/**
-	 * 
-	 */
-	public ADRFilenameFilter() {
-		// TODO Auto-generated constructor stub
-	}
 
 	/* 
 	 * Filter the files that are ADR files

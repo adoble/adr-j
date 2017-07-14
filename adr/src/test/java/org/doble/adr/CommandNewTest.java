@@ -57,7 +57,6 @@ public class CommandNewTest {
 
 			Files.createDirectory(rootPath);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -77,7 +76,6 @@ public class CommandNewTest {
 		try {
 			adr.run(args, env);
 		} catch (ADRException e) {
-			// TODO Auto-generated catch block
 			fail("ADR Exception raised");
 		}
 
@@ -100,7 +98,6 @@ public class CommandNewTest {
 		try {
 			adr.run(args, env);
 		} catch (ADRException e) {
-			// TODO Auto-generated catch block
 			fail("ADR Exception raised");
 		}
 		
@@ -143,7 +140,6 @@ public class CommandNewTest {
 			try {
 				adr.run(args, env);
 			} catch (ADRException e) {
-				// TODO Auto-generated catch block
 				fail(e.getMessage());
 			}
 		}
@@ -163,7 +159,6 @@ public class CommandNewTest {
 		
 	
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			fail(e.getMessage());
 		}
 		
@@ -197,7 +192,6 @@ public class CommandNewTest {
     			try {
     				adr.run(args, env);
     			} catch (ADRException e) {
-    				// TODO Auto-generated catch block
     				fail(e.getMessage());
     			}
     		}
@@ -216,7 +210,6 @@ public class CommandNewTest {
 			try {
 				adr.run(args, env);
 			} catch (ADRException e) {
-				// TODO Auto-generated catch block
 				fail(e.getMessage());
 			}
     	
@@ -229,16 +222,7 @@ public class CommandNewTest {
 			try {
 				count = Files.lines(newADRFile).filter(s -> s.contains("Supersedes the architecture decision record "  + supersededADRID)).count();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				fail(e.getMessage());
-			}
-			
-			String[] contents;
-			try {
-				contents = Files.lines(newADRFile).toArray(String[]::new);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
 			
 			assertEquals("The new ADR does not reference the superseded ADR in the text.", count, 1);

@@ -41,8 +41,7 @@ public class CommandInitTest {
 
 			Files.createDirectory(rootPath);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail(e.getMessage());
 		}
 
 		// Set up the environment
@@ -69,7 +68,6 @@ public class CommandInitTest {
 		try {
 			adr.run(args, env);
 		} catch (ADRException e) {
-			// TODO Auto-generated catch block
 			fail("ADR Exception raised");
 		}
 
@@ -81,7 +79,7 @@ public class CommandInitTest {
 			boolean exists = Files.exists(p);
 			assertTrue(exists);
 		} catch (InvalidPathException e) {
-			// TODO Auto-generated catch block
+			
 			fail("InvalidPathException raised on "+ pathName);
 		}
 		
@@ -92,7 +90,6 @@ public class CommandInitTest {
 			boolean exists = Files.exists(p);
 			assertTrue(exists);
 		} catch (InvalidPathException e) {
-			// TODO Auto-generated catch block
 			fail("InvalidPathException raised on "+ pathName);
 		}
 		
@@ -104,7 +101,6 @@ public class CommandInitTest {
 			boolean exists = Files.exists(p);
 			assertTrue(exists);
 		} catch (InvalidPathException e) {
-			// TODO Auto-generated catch block
 			fail("InvalidPathException raised on "+ pathName);
 		}
 		
@@ -125,10 +121,8 @@ public class CommandInitTest {
 		
 			assertTrue(matches == 4);
 		} catch (InvalidPathException e) {
-			// TODO Auto-generated catch block
 			fail("InvalidPathException raised on "+ pathName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			fail(e.getMessage() + " reading " +  pathName);
 		}
 	}
@@ -145,7 +139,6 @@ public class CommandInitTest {
 		try {
 			adr.run(args, env);
 		} catch (ADRException e) {
-			// TODO Auto-generated catch block
 			fail("ADR Exception raised");
 		}
 		
@@ -156,7 +149,6 @@ public class CommandInitTest {
 			boolean exists = Files.exists(p);
 			assertTrue(exists);
 		} catch (InvalidPathException e) {
-			// TODO Auto-generated catch block
 			fail("InvalidPathException raised on "+ pathName);
 		}
 	}
@@ -175,7 +167,6 @@ public class CommandInitTest {
 		try {
 			adr.run(args, env);
 		} catch (ADRException e) {
-			// TODO Auto-generated catch block
 			fail("ADR Exception raised");
 		}
 		
@@ -183,7 +174,6 @@ public class CommandInitTest {
 		try {
 			adr.run(args, env);
 		} catch (ADRException e) {
-			// TODO Auto-generated catch block
 			exceptionRaised = true;
 		}
 		
