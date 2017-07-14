@@ -72,7 +72,6 @@ public class CommandInit extends Command {
 
 
 			// Create a properties file
-			//Path propPath = env.fileSystem.getPath(rootPathName, ".adr/adr.properties");
 			Path propPath = adrPath.resolve("adr.properties");
 			Files.createFile(propPath);
 
@@ -82,7 +81,6 @@ public class CommandInit extends Command {
 			writer.close();
 
 			// Now create the docs directory which contains the adr directory
-			//Path docsPath = env.fileSystem.getPath(properties.getProperty("root"),  properties.getProperty("docPath"));
 			Path docsPath = env.dir.resolve(properties.getProperty("docPath"));
 
 			env.out.println("Creating ADR directory at " + docsPath);

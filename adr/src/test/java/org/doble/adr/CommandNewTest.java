@@ -81,9 +81,7 @@ public class CommandNewTest {
 			fail("ADR Exception raised");
 		}
 
-		System.out.print("CommandNewTest setup ");
-		TestUtilities.ls(fileSystem.getPath("/project/adr/docs/adr"));
-		
+	
 	}
 
 	@After
@@ -112,8 +110,7 @@ public class CommandNewTest {
 		String fileName = ("0002 " + adrName +".md").replace(' ',  '-').toLowerCase();  // ADR id is 2 as the first ADR was setup during init.
 		Path adrFile = fileSystem.getPath(rootPathName, docsPath, fileName);
 		
-		//TestUtilities.ls(adrFile.getParent());
-		
+
 		
 		boolean exists = Files.exists(adrFile);
 		assertTrue(exists);
@@ -154,8 +151,7 @@ public class CommandNewTest {
 		
 		// Check to see if the names exist 
 		Path docsDir = fileSystem.getPath(rootPathName, docsPath);
-		//TestUtilities.ls(docsDir);
-				
+
 		try {
 			
 			Stream<String> actualFileNamesStream = Files.list(docsDir).map(Path::toString);
@@ -254,8 +250,7 @@ public class CommandNewTest {
 				
 				Path supersededADRFile = fileSystem.getPath("/project/adr/docs/adr/0005-to-be-superseded.md");
 									
-				Files.lines(supersededADRFile).forEach(System.out::println);
-				
+						
 				count = Files.lines(supersededADRFile).filter(s -> s.contains("Superseded by the architecture decision record "  + newADRID)).count();
 				
 				assertEquals("The superseded ADR does not reference the ADR that superseded it in the text.", 1, count);

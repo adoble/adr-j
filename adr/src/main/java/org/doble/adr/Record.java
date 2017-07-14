@@ -168,7 +168,6 @@ public class Record  {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace(System.err);
 			throw new ADRException("FATAL: Problem with the superseding of ADR: " + supersededID, e );
 		}
 
@@ -186,9 +185,6 @@ public class Record  {
 	 */
 	private void addReverseLink(Path docsPath, Link link) throws ADRException {
 			
-		// Find and open the file where the reverse link comment should be placed.
-		//Path adrPath = env.fileSystem.getPath(docsPath.toString());
-        //try (Stream<Path> stream = Files.list(adrPath)) {
 		try (Stream<Path> stream = Files.list(docsPath)) {
 			
 			Path[] paths = stream.filter(ADRFilter.filter(link.id)).toArray(Path[]::new);  //FIXME ADRFilter.filert uses the env . This is not present - add the path parameter
