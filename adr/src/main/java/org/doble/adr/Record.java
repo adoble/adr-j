@@ -1,5 +1,6 @@
 package org.doble.adr;
 
+import java.util.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -16,7 +17,8 @@ public class Record  {
 	public String context = "Record the architectural decisions made on this project.";
 	public String decision = "We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions";
 	public String consequences = "See Michael Nygard's article, linked above.";
-	private ArrayList<Integer> supersedes  = new ArrayList<Integer>();
+	//private ArrayList<Integer> supersedes  = new ArrayList<Integer>();
+	public OptionalInt supersedes = OptionalInt.empty();
 	
 	private class Link {
 		
@@ -67,10 +69,10 @@ public class Record  {
 
 		String statusMsg = status + "\n\n";
 
-		for (Integer sc : supersedes) {
-			statusMsg += "\nSupersedes the architecture decision record " + sc + "\n";
-			
+		if (supersedes.isPresent()) {
+		    statusMsg += "\nSupersedes the architecture decision record " + supersedes.getAsInt() + "\n";
 		}
+	
 		
 		for (Link link: links) {
 			statusMsg += capitalizeFirstCharacter(link.comment) + " ADR " + link.id.toString() +  "\n";
@@ -86,7 +88,9 @@ public class Record  {
 	 * 
 	 * @param docsPath The directory where the ADRs are.
 	 */
-	public Path store(Path docsPath) throws IOException, FileNotFoundException, UnsupportedEncodingException, ADRNotFoundException, ADRException  {
+	//public Path store(Path docsPath) throws IOException, FileNotFoundException, UnsupportedEncodingException, ADRNotFoundException, ADRException  {
+	public Path store(Path docsPath) throws  ADRException  {
+		
 		// Create a file name for the ADR
 		String fileName = lowercaseFirstCharacter(this.name);
 		fileName = fileName.replace(' ', '-');    // Replace blanks with hyphens
@@ -97,20 +101,80 @@ public class Record  {
 				
 		// Now write the ADR
 		
-		PrintWriter adrWriter = new PrintWriter(Files.newBufferedWriter(p));
-		
-		adrWriter.print(this.generate());		
-		adrWriter.close();
-		
-		// If there are (reverse) links to other ADR files then add them. 
-		for (Link link: links) {
-			addReverseLink(docsPath, link); 
+		try (PrintWriter adrWriter = new PrintWriter(Files.newBufferedWriter(p))) {
+
+			adrWriter.print(this.generate());		
+			adrWriter.close();
+
+			// If there are (reverse) links to other ADR files then add them. 
+			for (Link link: links) {
+				addReverseLink(docsPath, link); 
+			}
+
+			// If the  ADR supersedes another, then add the link to the record that supersedes it
+			if (supersedes.isPresent()) {
+				this.supersede(docsPath, supersedes.getAsInt(), this.id);  
+			}
 		}
-		
+		catch (Exception e) {
+			throw new ADRException("FATAL: Unable to store ADR" + this.id, e);
+		}
+
 		
 		return p;
 	}
 	
+	/**Writes the ADR (status section) with id supersededID that it has been 
+	 * superseded by the ADR with the id supersedesID. 
+	 * 
+	 * The message written in the superseded ADR has the form
+	 *         Superseded by the architecture decision record [supersedesID]
+	 * @param supersededID The id of the superseded ADR.  
+	 * @param supersedesID The id of the ADR that supersedes it.  
+	 */
+	private void supersede(Path docsPath, int supersededID, int supersedesID) throws ADRException {
+		Path supersededADRFile;
+		Path[] paths;
+		
+		// Get the ADR file that is to be superseded
+		try (Stream<Path> stream = Files.list(docsPath)) {
+			paths = stream.filter(ADRFilter.filter((int)supersededID)).toArray(Path[]::new);
+
+			if (paths.length == 1 ) {
+				supersededADRFile = paths[0];
+
+				// Read in the file
+				List<String> lines = Files.readAllLines(supersededADRFile);
+
+
+				// Find the Status section (before the context station) and add the reverse link comment
+				String line; 
+				for (int index = 0; index < lines.size(); index++) {
+					line = lines.get(index); 
+					if (line.startsWith("## Context")) {  // TODO Need to have use constants for the titles
+						lines.add(index, "Superseded by the architecture decision record " + supersedesID );  //FIXME change this to a markdown link
+						lines.add(index+1, "");
+						break;
+					}
+				}
+
+				// Write out the file
+				Files.write(supersededADRFile,lines);  //TODO use a temporary file when making such changes
+
+
+			}
+			else {  
+				throw new ADRException("FATAL: No matching ADR file found or more than one matching ADR file found with the id " + supersededID);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace(System.err);
+			throw new ADRException("FATAL: Problem with the superseding of ADR: " + supersededID, e );
+		}
+
+
+
+	}
 
 	
 	
@@ -127,7 +191,7 @@ public class Record  {
         //try (Stream<Path> stream = Files.list(adrPath)) {
 		try (Stream<Path> stream = Files.list(docsPath)) {
 			
-			Path[] paths = stream.filter(ADRFilter.filter(link.id)).toArray(Path[]::new);
+			Path[] paths = stream.filter(ADRFilter.filter(link.id)).toArray(Path[]::new);  //FIXME ADRFilter.filert uses the env . This is not present - add the path parameter
 			if (paths.length == 1 ) {
 				// Read in the file
 				List<String> lines = Files.readAllLines(paths[0]);
@@ -160,23 +224,8 @@ public class Record  {
 		
 	}
 
-	/**
-	 * @return the supersedes records
-	 */
-	public List<Integer> getSupersedes() {
-		ArrayList<Integer> listSupersedes = new ArrayList<Integer>(supersedes);
-			
-		return listSupersedes;
-	}
 
-	/**
-	 * @param supersede the supersede to set
-	 */
-	public void addSupersede(Integer supersede) {
-		supersedes.add(supersede);
-	}
-	
-	
+
 	/**
 	 * Adds a link the the record
 	 * @param id  the id of the ADR being linked to.

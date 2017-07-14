@@ -92,7 +92,7 @@ public class CommandNew extends Command  {
 						}
 						break;
 					case SUPERSEDES:
-						record.addSupersede(Integer.parseInt(arg));
+						record.supersedes = OptionalInt.of(Integer.parseInt(arg));
 						commandState = CommandStates.PARSE;
 						break;
 					case LINK:
@@ -141,30 +141,20 @@ public class CommandNew extends Command  {
 	//private void createADR(String adrName, Record record) {
 	private void createADR(Record record) throws ADRException {
 		Path adrPath; // The ADR file that is created
-		
-       //Save the record
-	try {
-			Path rootPath = ADR.getRootPath(env);
-			Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
-			
-//			Path docsPath = env.fileSystem.getPath(properties.getProperty("root"),
-//			                                                 properties.getProperty("docPath"));
-			adrPath = record.store(docsPath);
-			
-		} catch (IOException e) {
-			throw new ADRException("FATAL: Unable to store ADR, reason: " + e.getMessage());
-		} catch (ADRNotFoundException e) {   //TODO check the need for an extra ADR exception type
-			throw new ADRException("FATAL: " + e.getMessage());
-		}
 
-		
-		
+		//Save the record
+
+		Path rootPath = ADR.getRootPath(env);
+		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
+
+		adrPath = record.store(docsPath);
+
 		// And now start up the editor using the specified runner
 		EditorRunner runner = env.editorRunner;
-		
+
 		runner.run(adrPath);
-		
-		
+
+
 		env.out.println(adrPath.toString());  // Return the file name of the ADR
 	}
 	

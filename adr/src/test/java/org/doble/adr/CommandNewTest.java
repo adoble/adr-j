@@ -175,7 +175,6 @@ public class CommandNewTest {
 		
 	}
 	
-    @Ignore("Ignored until code in place")	
     @Test
 	public void testSuperseded() {
     		    		
@@ -238,6 +237,14 @@ public class CommandNewTest {
 				fail(e.getMessage());
 			}
 			
+			String[] contents;
+			try {
+				contents = Files.lines(newADRFile).toArray(String[]::new);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			assertEquals("The new ADR does not reference the superseded ADR in the text.", count, 1);
 			
 			
@@ -247,11 +254,11 @@ public class CommandNewTest {
 				
 				Path supersededADRFile = fileSystem.getPath("/project/adr/docs/adr/0005-to-be-superseded.md");
 									
-				//Files.lines(supersededADRFile).forEach(System.out::println);
+				Files.lines(supersededADRFile).forEach(System.out::println);
 				
 				count = Files.lines(supersededADRFile).filter(s -> s.contains("Superseded by the architecture decision record "  + newADRID)).count();
 				
-				assertEquals("The superseded ADR does not reference the ADR that superseded it in the text.", count, 1);
+				assertEquals("The superseded ADR does not reference the ADR that superseded it in the text.", 1, count);
 				
 			}
 			catch (IOException e) {
