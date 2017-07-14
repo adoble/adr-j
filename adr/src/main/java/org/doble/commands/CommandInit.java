@@ -28,22 +28,22 @@ public class CommandInit extends Command {
 
 	private Properties properties;
 	final private String defaultADRDirectory = "docs/adr";
-	
-	
-	
+
+
+
 	public CommandInit(Environment env) throws ADRException {	
 		super(env);
 		properties = new Properties();
 		//properties.setProperty("docPath", "doc/adr");
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see commands.Command#command(java.lang.String[])
 	 */
 	@Override
 	public void command(String[] args) throws ADRException {
-		
+
 		switch (args.length) {
 		case 0:
 			properties.setProperty("docPath", defaultADRDirectory); // Use the default value for the adr directory
@@ -56,64 +56,56 @@ public class CommandInit extends Command {
 		default:
 			throw new ADRException("ERROR: Unknown parameters");
 		}		
-	
+
+
 		try {
-			//String rootPathName = env.dir.toString();
-						
-			//Path adrPath = env.fileSystem.getPath(".", ".adr");
-			
 			Path adrPath = env.dir.resolve(".adr");
 
-			//properties.setProperty("root", rootPathName);
+
 			properties.setProperty("root", adrPath.toString());
 
 			if (Files.notExists(adrPath)) {
 				Files.createDirectories(adrPath);
-//				File dir = new File(".adr");
-//				dir.mkdir();
 			} else {
 				throw new ADRException("Directory is already initialised for ADR.");
 			}
 
-			
+
 			// Create a properties file
 			//Path propPath = env.fileSystem.getPath(rootPathName, ".adr/adr.properties");
 			Path propPath = adrPath.resolve("adr.properties");
 			Files.createFile(propPath);
-			
-		    BufferedWriter writer =  Files.newBufferedWriter(propPath);
-			
+
+			BufferedWriter writer =  Files.newBufferedWriter(propPath);
+
 			properties.store(writer, null);
 			writer.close();
 
 			// Now create the docs directory which contains the adr directory
 			//Path docsPath = env.fileSystem.getPath(properties.getProperty("root"),  properties.getProperty("docPath"));
 			Path docsPath = env.dir.resolve(properties.getProperty("docPath"));
-			
+
 			env.out.println("Creating ADR directory at " + docsPath);
 			Files.createDirectories(docsPath);
-				
-			
+
+
 			// Now generate template for the first architectural decision record and update the id
 			Record record = new Record(); 
-			
+
 			record.id = 1;
 			record.name = "Record architecture decisions";
 			record.date = DateFormat.getDateInstance().format(new Date());
-			
+
 			record.store(docsPath); 
-						
+
 			/*outProperties = new FileOutputStream(propPath.toString());
 			properties.store(outProperties, null);
 			outProperties.close(); */
-
-			
-
-		} catch (ADRNotFoundException e) {   //TODO Check why we need an extra ADR exception type
-			throw new ADRException("FATAL: " + e.getMessage());
-		} catch (IOException e) {
-			throw new ADRException("FATAL: initialise failed, reason: " + e.getMessage());
 		}
+		catch (Exception e) {
+			throw new ADRException("FATAL: Unable to initialise.", e);
+		}
+
 
 	}
 
