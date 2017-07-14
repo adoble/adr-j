@@ -20,6 +20,10 @@ public class Record  {
 	//private ArrayList<Integer> supersedes  = new ArrayList<Integer>();
 	public OptionalInt supersedes = OptionalInt.empty();
 	
+	// Where the adr files are stored
+	private final Path docsPath; 
+	
+	
 	private class Link {
 		
 		Link(Integer id, String comment, String reverseComment) { 
@@ -51,8 +55,11 @@ public class Record  {
 	
 	
 	
-	public Record() {
-		
+	/** Constructor for an ADR record
+	 * @param docsPath Where the ADR record is stored 
+	 */
+	public Record(Path docsPath) {
+		this.docsPath = docsPath;
 	}
 	
 	public String generate() {
@@ -70,7 +77,7 @@ public class Record  {
 		String statusMsg = status + "\n\n";
 
 		if (supersedes.isPresent()) {
-		    statusMsg += "\nSupersedes the architecture decision record " + supersedes.getAsInt() + "\n";
+		    statusMsg += "\nSupersedes the [architecture decision record "  + supersedes.getAsInt() + "](" + getADRFileName(supersedes.getAsInt()) + ")\n";
 		}
 	
 		
@@ -84,12 +91,32 @@ public class Record  {
 		 
 	}
 	
+	private String getADRFileName(int adrId) {
+		String fileName; 
+		
+		try {
+			Path[] paths = Files.list(docsPath).filter(ADRFilter.filter(adrId)).toArray(Path[]::new);
+			
+			if (paths.length == 1) {
+				fileName = paths[0].getFileName().toString();
+			}
+			else {
+				// Gracefully fail and return an empty string
+				fileName = "";
+			}
+		} catch (IOException e) {
+			// Gracefully fail and return an empty string
+			fileName = "";
+		}
+		
+		return fileName;
+
+	}
+
 	/** Store this ADR
 	 * 
-	 * @param docsPath The directory where the ADRs are.
 	 */
-	//public Path store(Path docsPath) throws IOException, FileNotFoundException, UnsupportedEncodingException, ADRNotFoundException, ADRException  {
-	public Path store(Path docsPath) throws  ADRException  {
+	public Path store() throws  ADRException  {
 		
 		// Create a file name for the ADR
 		String fileName = lowercaseFirstCharacter(this.name);
@@ -152,7 +179,7 @@ public class Record  {
 				for (int index = 0; index < lines.size(); index++) {
 					line = lines.get(index); 
 					if (line.startsWith("## Context")) {  // TODO Need to have use constants for the titles
-						lines.add(index, "Superseded by the architecture decision record " + supersedesID );  //FIXME change this to a markdown link
+						lines.add(index, "Superseded by the [architecture decision record " + supersedesID  + "](" + getADRFileName(supersedesID) + ")");  
 						lines.add(index+1, "");
 						break;
 					}
