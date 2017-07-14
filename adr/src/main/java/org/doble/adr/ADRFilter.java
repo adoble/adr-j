@@ -14,8 +14,7 @@ public class ADRFilter {
 
 		return p -> { 
 			String glob = "[0-9][0-9][0-9][0-9]*.md";
-			return env.fileSystem.getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
-			
+			return p.getFileSystem().getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
 		};
 
 	}
@@ -24,7 +23,7 @@ public class ADRFilter {
 
 		return p -> { 
 			String glob = adrID + "*.md";
-			return env.fileSystem.getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
+			return p.getFileSystem().getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
 			
 		};
 
@@ -34,7 +33,7 @@ public class ADRFilter {
 				return p -> { 
 			String formattedID = String.format("%04d", adrID);
 			String glob = formattedID + "*.md";
-			return env.fileSystem.getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
+			return p.getFileSystem().getPathMatcher("glob:" + glob).matches(p.getName(p.getNameCount()-1));
 			
 		};
 
