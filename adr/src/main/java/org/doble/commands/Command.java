@@ -11,7 +11,6 @@ import org.doble.annotations.Cmd;
  *
  */
 public abstract class Command {
-	//@SuppressWarnings("unused")  // Used in a command sub-class  TODO remove
 	protected Environment env;
 	
 	public Command(Environment env) throws ADRException{ 
