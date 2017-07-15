@@ -26,7 +26,7 @@ public class CommandNewTest {
     final static private String rootPathName = "/project/adr";
     final static private String docsPath = "/docs/adr";
     
-    private String[] adrNames = {"another test architecture decision", 
+    private String[] adrTitles = {"another test architecture decision", 
     		                     "yet another test architecture decision",
     		                     "and still the adrs come", 
     		                     "to be superseded", 
@@ -89,11 +89,11 @@ public class CommandNewTest {
 
 	@Test
 	public void testSimpleCommand() {
-		String adrName = "This is a test achitecture decision";
+		String adrTitle = "This is a test achitecture decision";
 	
 		
 		// Convert the name to an array of args - including the command.
-		String[] args = ("new" + " " + adrName).split(" ");
+		String[] args = ("new" + " " + adrTitle).split(" ");
 				
 		try {
 			adr.run(args, env);
@@ -104,7 +104,7 @@ public class CommandNewTest {
 		
 		// Check if the ADR file has been created
 		// First construct the file name
-		String fileName = ("0002 " + adrName +".md").replace(' ',  '-').toLowerCase();  // ADR id is 2 as the first ADR was setup during init.
+		String fileName = TestUtilities.adrFileName(2, adrTitle);  // ADR id is 2 as the first ADR was setup during init.
 		Path adrFile = fileSystem.getPath(rootPathName, docsPath, fileName);
 		
 
@@ -121,8 +121,8 @@ public class CommandNewTest {
 		ArrayList<Path> expectedFiles = new ArrayList<Path>();
 		ArrayList<String> expectedFileNames = new ArrayList<String>();
 		
-		for (int id = 0; id < adrNames.length; id++) {
-			String name = String.format("%04d", id + 2) + "-" + adrNames[id].replace(' ', '-').toLowerCase() + ".md";
+		for (int id = 0; id < adrTitles.length; id++) {
+			String name = TestUtilities.adrFileName(id + 2, adrTitles[id]);
 			Path path  = fileSystem.getPath(rootPathName, docsPath, name);
 			expectedFiles.add(path);
 			expectedFileNames.add(path.toString());
@@ -134,7 +134,7 @@ public class CommandNewTest {
 		expectedFileNames.add(initADR.toString());
 		
 		
-		for (String adrName: adrNames) {
+		for (String adrName: adrTitles) {
 			// Convert the name to an array of args - including the command.
 			String[] args = ("new" + " " + adrName).split(" ");
 			try {
@@ -165,90 +165,5 @@ public class CommandNewTest {
 	
 		
 	}
-	
-    @Test
-	public void testSuperseded() {
-    		    		
-    		// Create a set of test paths, paths of files that should be have been created
-    		ArrayList<Path> expectedFiles = new ArrayList<Path>();
-    		ArrayList<String> expectedFileNames = new ArrayList<String>();
-    		
-    		Path supersededADRFile = fileSystem.getPath("/project/adr/docs/adr/0005-to-be-superseded.md");
-    		
-    		for (int id = 0; id < adrNames.length; id++) {
-    			String name = String.format("%04d", id + 2) + "-" + adrNames[id].replace(' ', '-').toLowerCase() + ".md";
-    			Path path  = fileSystem.getPath(rootPathName, docsPath, name);
-    			expectedFiles.add(path);
-    			expectedFileNames.add(path.toString());
-    		}
-    		
-    		// And now add on the ADR created during initialization
-    		Path initADR = fileSystem.getPath(rootPathName, docsPath,  "0001-record-architecture-decisions.md");
-    		expectedFiles.add(initADR);
-    		expectedFileNames.add(initADR.toString());
-    		
-    		
-    		for (String adrName: adrNames) {
-    			// Convert the name to an array of args - including the command.
-    			String[] args = ("new" + " " + adrName).split(" ");
-    			try {
-    				adr.run(args, env);
-    			} catch (ADRException e) {
-    				fail(e.getMessage());
-    			}
-    		}
-    		
-    		// Now create a new ADR that supersedes ADR 5.
-    		int supersededId = 5;
-    		String newADRTitle = "This superceeds number 5";
-    		ArrayList<String> argList = new ArrayList<String>(); 
-    		argList.add("new");
-    		argList.add("-s");
-    		argList.add(Integer.toString(supersededId));
-    		argList.addAll(new ArrayList<String>(Arrays.asList((newADRTitle).split(" "))));
-    		
-    		String[] args = {}; 
-    		args = argList.toArray(args);
-			try {
-				adr.run(args, env);
-			} catch (ADRException e) {
-				fail(e.getMessage());
-			}
-    	
-			// Check that the the new record mentions that it supersedes ADR 5
-			int supersededADRID = 5;
-			int newADRID = adrNames.length + 2;
-			String newADRFileName = String.format("%04d", newADRID) + "-" + newADRTitle.replace(' ', '-').toLowerCase() + ".md"; 
-						
-			Path newADRFile = fileSystem.getPath(rootPathName, docsPath, newADRFileName);
-			long count = 0;
-			String link = "Supersedes the [architecture decision record "  + supersededADRID + "](" + supersededADRFile.getFileName() + ")";
-			try {
-				count = Files.lines(newADRFile).filter(s -> s.contains(link)).count();
-			} catch (IOException e) {
-				fail(e.getMessage());
-			}
-			
-			assertEquals("The new ADR does not reference the superseded ADR in the text.", count, 1);
-			
-			
-					
-			count = 0;
-			try {				
-				
-								
-				count = Files.lines(supersededADRFile).filter(s -> s.contains("Superseded by the [architecture decision record "  + newADRID + "](" + newADRFileName + ")")).count();
-				
-				assertEquals("The superseded ADR does not reference the ADR that superseded it in the text.", 1, count);
-				
-			}
-			catch (IOException e) {
-				fail(e.getMessage());
-			}
-			
-			
-			
-			
-		}
 
 }

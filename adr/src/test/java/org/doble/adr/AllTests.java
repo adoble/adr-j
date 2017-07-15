@@ -17,7 +17,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ org.doble.adr.EnvironmentTest.class, 
 	org.doble.adr.CommandHelpTest.class,
 	org.doble.adr.CommandInitTest.class,
-	org.doble.adr.CommandNewTest.class })
+	org.doble.adr.CommandNewTest.class,
+	org.doble.adr.CommandNewOptionsTest.class})
 
 public class AllTests {
 
