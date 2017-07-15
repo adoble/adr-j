@@ -1,6 +1,5 @@
 package org.doble.adr;
 
-import java.util.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import java.util.stream.Stream;
 
 
 public class Record  {
+	//TODO replace the Record public memebers with access methods of the form id(), name() etc. 
 	public int id;
 	public String name = "";
 	public String date = "";
@@ -18,7 +18,8 @@ public class Record  {
 	public String decision = "We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions";
 	public String consequences = "See Michael Nygard's article, linked above.";
 	//private ArrayList<Integer> supersedes  = new ArrayList<Integer>();
-	public OptionalInt supersedes = OptionalInt.empty();
+	//public OptionalInt supersedes = OptionalInt.empty();
+	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
 	
 	// Where the adr files are stored
 	private final Path docsPath; 
@@ -76,8 +77,8 @@ public class Record  {
 
 		String statusMsg = status + "\n\n";
 
-		if (supersedes.isPresent()) {
-		    statusMsg += "\nSupersedes the [architecture decision record "  + supersedes.getAsInt() + "](" + getADRFileName(supersedes.getAsInt()) + ")\n";
+		for (Integer adrID: supersedes) {
+		    statusMsg += "\nSupersedes the [architecture decision record "  + adrID + "](" + getADRFileName(adrID) + ")\n";
 		}
 	
 		
@@ -139,8 +140,8 @@ public class Record  {
 			}
 
 			// If the  ADR supersedes another, then add the link to the record that supersedes it
-			if (supersedes.isPresent()) {
-				this.supersede(docsPath, supersedes.getAsInt(), this.id);  
+			for (Integer adrID: supersedes) {
+				this.supersede(docsPath, adrID, this.id);  
 			}
 		}
 		catch (Exception e) {
@@ -286,6 +287,13 @@ public class Record  {
 	   }	
     	
     }
+	
+	/** Adds a supersedes ADR identifier, i.e. specifies what ADRs are superseded by this ADR. 
+	 * @param adrID The id of the ADR superseded by this ADR.
+	 */
+	public void addSupersedes(int adrId) {
+		supersedes.add(new Integer(adrId));
+	}
 	
 	private String capitalizeFirstCharacter(String s) {
 		return s.substring(0, 1).toUpperCase() + s.substring(1);

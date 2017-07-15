@@ -96,7 +96,7 @@ public class CommandNew extends Command  {
 						}
 						break;
 					case SUPERSEDES:
-						record.supersedes = OptionalInt.of(Integer.parseInt(arg));
+						record.addSupersedes(Integer.parseInt(arg));
 						commandState = CommandStates.PARSE;
 						break;
 					case LINK:
