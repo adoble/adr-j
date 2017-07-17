@@ -18,7 +18,9 @@ import org.junit.runners.Suite.SuiteClasses;
 	org.doble.adr.CommandHelpTest.class,
 	org.doble.adr.CommandInitTest.class,
 	org.doble.adr.CommandNewTest.class,
-	org.doble.adr.CommandNewOptionsTest.class})
+	org.doble.adr.CommandNewSupercedesTest.class,
+	org.doble.adr.CommandNewLinkTest.class
+	})
 
 public class AllTests {
 

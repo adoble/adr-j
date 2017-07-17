@@ -114,6 +114,22 @@ public class CommandNewTest {
 		
 	}
 	
+	@Test
+	public void testWithoutTitle() {
+		
+		// Convert the name to an array of args - including the command.
+		String[] args = {"new"};
+				
+		try {
+			adr.run(args, env);
+			fail("No exception raised when the ADR has no title.");
+		} catch (ADRException e) {
+			assertTrue(true);
+		}
+		
+				
+	}
+	
 	@Test 
 	public void testManyADRs() {
 		

@@ -83,7 +83,8 @@ public class Record  {
 	
 		
 		for (Link link: links) {
-			statusMsg += capitalizeFirstCharacter(link.comment) + " ADR " + link.id.toString() +  "\n";
+			//statusMsg += capitalizeFirstCharacter(link.comment) + " ADR " + link.id.toString() +  "\n";
+			statusMsg += capitalizeFirstCharacter(link.comment) + " [ADR " + link.id.toString() +  "](" + getADRFileName(link.id) + ")\n";
 		}
 
 		s = s.replace("@Status", statusMsg);
@@ -226,7 +227,7 @@ public class Record  {
 				for (int index = 0; index < lines.size(); index++) {
 					line = lines.get(index); 
 					if (line.startsWith("## Context")) {  // TODO Need to have use constants for the titles
-						lines.add(index, link.reverseComment + " ADR " + id );
+						lines.add(index, link.reverseComment + " [ADR " + id + "](" + getADRFileName(this.id) + ")\n");
 						lines.add(index+1, "");
 						break;
 					}
@@ -270,7 +271,7 @@ public class Record  {
      * @param linkSpec  The link specification as string
      * @throws LinkSpecificationException  Thrown if the link specification is incorrect
      */
-	public void addLink(String linkSpec) throws LinkSpecificationException {
+	public void addLink(String linkSpec) throws LinkSpecificationException  {
     	try {
 			if (linkSpec.length() > 0  ) { 
 				String[] linkSpecs =  linkSpec.split(":");
@@ -278,8 +279,9 @@ public class Record  {
 			    	links.add(new Link(new Integer(linkSpecs[0]), linkSpecs[1], linkSpecs[2]));
 			    }
 			    else { 
+			    	//throw new LinkSpecificationException();
 			    	throw new LinkSpecificationException();
-			    }
+				    }
 			
 			}
 		} catch (NumberFormatException e) {

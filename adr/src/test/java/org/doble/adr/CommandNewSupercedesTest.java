@@ -1,9 +1,5 @@
 package org.doble.adr;
 
-//import junit.framework.Test;
-//import junit.framework.TestCase;
-//import junit.framework.TestSuite;
-
 import static org.junit.Assert.*;
 
 import java.nio.file.FileSystem;
@@ -11,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.OptionalInt;
 
 import org.junit.*;
 import org.junit.runners.MethodSorters;
@@ -23,7 +18,7 @@ import com.google.common.jimfs.Jimfs;
  * 
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class CommandNewOptionsTest 
+public class CommandNewSupercedesTest 
 {
 	final static private String rootPathName = "/project/adr";
 	final static private String docsPath = "/docs/adr";
@@ -103,112 +98,111 @@ public class CommandNewOptionsTest
 	public void test1Superseded() {
         int[] supercededIds = {5};
 		
-	    checkSupersedes(supercededIds);
-		
-//		Path supersededADRFile = fileSystem.getPath("/project/adr/docs/adr/0005-to-be-superseded.md");
-//
-//		// Now create a new ADR that supersedes ADR 5.
-//		int supersededId = 5;
-//		String newADRTitle = "This superceeds number 5";
-//		ArrayList<String> argList = new ArrayList<String>(); 
-//		argList.add("new");
-//		argList.add("-s");
-//		argList.add(Integer.toString(supersededId));
-//		argList.addAll(new ArrayList<String>(Arrays.asList((newADRTitle).split(" "))));
-//
-//		String[] args = {}; 
-//		args = argList.toArray(args);
-//		try {
-//			adr.run(args, env);
-//		} catch (ADRException e) {
-//			fail(e.getMessage());
-//		}
-//
-//		// Check that the the new record mentions that it supersedes ADR 5
-//		int supersededADRID = 5;
-//		int newADRID = adrTitles.length + 2;
-//		String newADRFileName = TestUtilities.adrFileName(newADRID, newADRTitle);
-//
-//		Path newADRFile = fileSystem.getPath(rootPathName, docsPath, newADRFileName);
-//		long count = 0;
-//		String link = "Supersedes the [architecture decision record "  + supersededADRID + "](" + supersededADRFile.getFileName() + ")";
-//		try {
-//			count = TestUtilities.findString(link, newADRFile);
-//		} catch (Exception e) {
-//			fail(e.getMessage());
-//		}
-//
-//		assertEquals("The new ADR does not reference the superseded ADR in the text.", count, 1);
-//
-//
-//
-//		count = 0;
-//		try {				
-//			link = "Superseded by the [architecture decision record "  + newADRID + "](" + newADRFileName + ")";
-//			count = TestUtilities.findString(link, supersededADRFile );
-//			assertEquals("The superseded ADR does not reference the ADR that superseded it in the text.", 1, count);
-//
-//		}
-//		catch (Exception e) {
-//			fail(e.getMessage());
-//		}
-		
-		
-		
-
+	    try {
+			checkSupersedes(supercededIds);
+		} catch (ADRException e) {
+			fail(e.getMessage());
+		}
+	
 	}
 	
 	@Test
 	public void test2MultipleSupersedes() {
 		int[] supercededIds = {5, 6, 8};
 		
-	    checkSupersedes(supercededIds);
+	    try {
+	    	checkSupersedes(supercededIds);
+	    }
+	    catch (ADRException e) {
+	    	fail(e.getMessage());
+	    }
+	}
+	
+	
+	
+	@Test
+	public void test3SupercedesInvalidADR() {
 		
+		// badly formed id 
+		String[] adrIds = {"foo"};
+		try {
+			checkSupersedes(adrIds);
+			fail("Exception not raised when ADR is incorrectly formed");
+		} catch (ADRException e) {
+			assertTrue(true);
+		}
+		
+		// Non existing adr
+		String[] neAdrIds = {"100"};
+		try {
+			checkSupersedes(neAdrIds);
+			fail("Exception not raised when ADR does not exist");
+		} catch (ADRException e) {
+			assertTrue(true);
+		}
 		
 	}
+	
+
+	
+	public void checkSupersedes(int[] supercededIds) throws ADRException {
+		String[] strings = new String[supercededIds.length];
+		
+		for (int i = 0; i < supercededIds.length; i++ ) {
+			strings[i] = Integer.toString(supercededIds[i]);
+		}
+		
+		checkSupersedes(strings); 
+	}
+	
+	
+	
 
 	/**
 	 * @param supercededIds
 	 */
-	public void checkSupersedes(int[] supercededIds) {
-		// Checks to ensure the integrity of the test data
-		OptionalInt highest = Arrays.stream(supercededIds).max();
-	    assertTrue(highest.getAsInt() < adrTitles.length + 2);
-	    OptionalInt lowest = Arrays.stream(supercededIds).min();
-	    assertTrue(lowest.getAsInt() > 1);  //i.e not the initial ADR or negative
+	public void checkSupersedes(String[] supercededIds) throws ADRException {
+//		int[] supercededIds = Arrays.stream(supercededIdStrings).mapToInt(Integer::parseInt).toArray();
+//		
+//		// Checks to ensure the integrity of the test data
+//		OptionalInt highest = Arrays.stream(supercededIds).max();
+//	    assertTrue(highest.getAsInt() < adrTitles.length + 2);
+//	    OptionalInt lowest = Arrays.stream(supercededIds).min();
+//	    assertTrue(lowest.getAsInt() > 1);  //i.e not the initial ADR or negative
 	    
 		
-		// Now create a new ADR that supersedes a number if ADrs
+		// Now create a new ADR that supersedes a number of ADRs
 		String newADRTitle = "This superceeds number";
-		for (int index: supercededIds) {
+		for (String index: supercededIds) {
 			newADRTitle += " " + index;
 		}
 		
-		// Create a new ADr that supersedes others 
+		// Create a new ADR that supersedes others 
 		ArrayList<String> argList = new ArrayList<String>(); 
 		argList.add("new");
-		for (int id: supercededIds) {
+		for (String id: supercededIds) {
 			argList.add("-s");
-			argList.add(Integer.toString(id));
+			argList.add(id);
 		}
 		argList.addAll(new ArrayList<String>(Arrays.asList((newADRTitle).split(" "))));
 
 		String[] args = {}; 
 		args = argList.toArray(args);
-		try {
+		//try {
 			adr.run(args, env);
-		} catch (ADRException e) {
-			fail(e.getMessage());
-		}
+//	} catch (ADRException e) {
+//		fail(e.getMessage());
+//	}
 		
 		// Check that the the new record mentions that it supersedes ADR the ids
 		int newADRID = adrTitles.length + 2;
 		String newADRFileName = TestUtilities.adrFileName(newADRID, newADRTitle);
 		Path newADRFile = fileSystem.getPath(rootPathName, docsPath, newADRFileName);
 		
-		for (int supersededADRID: supercededIds ) {
+		for (String supersededADRID: supercededIds ) {
 			long count = 0;
-			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, adrTitles[supersededADRID - 2]);
+			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
+			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
 		    String link = "Supersedes the [architecture decision record "  + supersededADRID + "](" + supersededADRFileName + ")";
 			try {
 				count = TestUtilities.findString(link, newADRFile);
@@ -220,9 +214,10 @@ public class CommandNewOptionsTest
 		}
 		
 		// Check that the superseded ADRs reference the ADR that supersedes them 
-		for (int supersededADRID: supercededIds ) {
+		for (String supersededADRID: supercededIds ) {
 			long count = 0;
-			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, adrTitles[supersededADRID - 2]);
+			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
+			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
 			Path supersededADRFile = fileSystem.getPath("/project/adr/docs/adr/", supersededADRFileName);
 			String link = "Superseded by the [architecture decision record "  + newADRID + "](" + newADRFileName + ")";
 			try {
