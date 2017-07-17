@@ -102,8 +102,15 @@ public class ADR   {
 				command = ctor.newInstance(env);
 				// Execute the command
 				command.command(subCmdArgs);
-			} catch (Exception e) {
-				throw new ADRException("FATAL: Unknown command. Use\n   adr help \nfor more information.");
+			} 
+			catch (NoSuchMethodException e) {
+				throw new ADRException("FATAL: Unknown command [" + args[0] + ". Use\n   adr help \nfor more information.");
+			}
+			catch (ADRException e) {
+				throw e;
+			}
+			catch(Exception e) {
+				throw new ADRException("FATAL: Internal error.", e);
 			}
 		} else {
 			env.out.println("ERROR: Specify a command. For instance:");
