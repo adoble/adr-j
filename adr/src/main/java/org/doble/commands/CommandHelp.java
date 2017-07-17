@@ -32,7 +32,7 @@ public class CommandHelp extends Command {
 	@Override
 	public void command(String[] args) throws ADRException {
 		Map<String, Class<?>> commandMap;
-		Command command = new CommandNull(env); 
+		Command command;
 
 		// Build the map of the adr commands keyed with the command name.
 		// All the commands are in the specified package.

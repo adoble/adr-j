@@ -82,8 +82,7 @@ public class ADR   {
 
 	public void run(String[] args, Environment env) throws ADRException {
 		Map<String, Class<?>> commandMap; 
-		Command commandNull = new CommandNull(env);
-		Command command = commandNull;
+		Command command; 
 		
 		
 		// Build the map of the adr commands keyed with the command name.
@@ -103,7 +102,7 @@ public class ADR   {
 				// Execute the command
 				command.command(subCmdArgs);
 			} 
-			catch (NoSuchMethodException e) {
+			catch (NullPointerException | NoSuchMethodException e) {
 				throw new ADRException("FATAL: Unknown command [" + args[0] + ". Use\n   adr help \nfor more information.");
 			}
 			catch (ADRException e) {

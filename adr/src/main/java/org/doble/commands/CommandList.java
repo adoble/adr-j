@@ -5,7 +5,9 @@ package org.doble.commands;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.nio.file.*;
+import java.util.stream.Stream;
 
 import org.doble.adr.*;
 import org.doble.annotations.Cmd;
@@ -41,23 +43,22 @@ public class CommandList extends Command {
 	 */
 	@Override
 	public void command(String[] args) throws ADRException {
-		
-		try {
-			Path docsPath = env.fileSystem.getPath(properties.getProperty("root"),
-			                                                 properties.getProperty("docPath"));
-			
-			File docsDir = docsPath.toFile();
-			
-			FilenameFilter filter = new ADRFilenameFilter();
-			
-			for (String adrFileName: docsDir.list(filter)) {
-				env.out.println(adrFileName);
-			}
-			
-		} catch (Exception e) {
-			throw new ADRException("FATAL: The ADR could not be saved!");
-		}  
-		
+		Path rootPath = ADR.getRootPath(env);
+		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
+
+		try (Stream<Path> stream = Files.list(docsPath)){
+			stream.filter(ADRFilter.filter()).forEachOrdered(env.out::println);
+		} catch (IOException e) {
+			throw new ADRException("FATAL: Cannot access directory.", e);
+		}
+
+		//			File docsDir = docsPath.toFile();
+		//			
+		//			FilenameFilter filter = new ADRFilenameFilter();
+		//			
+		//			for (String adrFileName: docsDir.list(filter)) {
+		//				env.out.println(adrFileName);
+		//			}
 
 	}
 
