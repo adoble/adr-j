@@ -6,7 +6,8 @@ import java.nio.file.*;
 import java.util.*;
 
 import org.reflections.*;
-
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 import org.doble.commands.*;
 import org.doble.annotations.*;
 
@@ -84,7 +85,6 @@ public class ADR   {
 		Map<String, Class<?>> commandMap; 
 		Command command; 
 		
-		
 		// Build the map of the adr commands keyed with the command name.
 		// All the commands are in the specified package. 
 		commandMap = buildCommandMap("org.doble.commands");
@@ -121,10 +121,20 @@ public class ADR   {
 	}
 
 	static public Map<String, Class<?>> buildCommandMap (String packageName)  {
+	
+		
 		HashMap<String, Class<?>> commandMap = new HashMap<String, Class<?>>();
 
 
-		Reflections reflections = new Reflections("org.doble.command");  // TODO try and remove the explicit package name
+		
+		ConfigurationBuilder cb = new ConfigurationBuilder()
+		         .setUrls(ClasspathHelper.forPackage("org.doble.command"));  // TODO try an remove the explicit package name
+		
+		cb.addUrls(ADR.class.getProtectionDomain().getCodeSource().getLocation());  // Make sure that the urls for the JAR are also loaded so 
+																					// that the tests ca also run in Maven with the surefire plugin
+																					// SEE https://stackoverflow.com/questions/13576665/unit-test-using-the-reflections-google-library-fails-only-when-executed-by-maven
+		Reflections reflections = new Reflections(cb);
+                  
 		Set<Class<?>> commands = 
 				reflections.getTypesAnnotatedWith(org.doble.annotations.Cmd.class);
 

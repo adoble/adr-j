@@ -43,6 +43,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
+						   <addClasspath>true</addClasspath>
 							<mainClass>org.doble.adr.ADR</mainClass>
 						</manifest>
 					</archive>
