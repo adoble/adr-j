@@ -1,0 +1,16 @@
+org\doble\commands\CommandNew$CommandStates.class
+org\doble\adr\ADR.class
+org\doble\commands\Command.class
+org\doble\adr\ADRNotFoundException.class
+org\doble\commands\CommandHelp.class
+org\doble\adr\RootPathNotFound.class
+org\doble\adr\Environment$1.class
+org\doble\adr\ADRFilter.class
+org\doble\commands\CommandInit.class
+org\doble\commands\CommandList.class
+org\doble\commands\CommandNew.class
+org\doble\annotations\Cmd.class
+org\doble\commands\CommandNew$1.class
+org\doble\adr\LinkSpecificationException.class
+org\doble\adr\Record$Link.class
+org\doble\adr\Record.class
