@@ -47,11 +47,11 @@ public class CommandNewLinkTest {
 				.build();
 
 		// Set up the directory structure
-		adr = new ADR();
+		adr = new ADR(env);
 
 		String[] args = {"init"};
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		} catch (ADRException e) {
 			fail("ADR Exception raised");
 		}
@@ -69,14 +69,14 @@ public class CommandNewLinkTest {
 	public void test1Links() {
 		// Create some ADRs
 		try {
-			adr.run(TestUtilities.argify("new An ADR"), env);
-			adr.run(TestUtilities.argify("new Yet another adr"), env);
-			adr.run(TestUtilities.argify("new This ADR is going to be linked to"), env);  // ADR id 4
-			adr.run(TestUtilities.argify("new And even more decisions"), env);
-			adr.run(TestUtilities.argify("new Decisions decisions decisions"), env);
+			adr.run(TestUtilities.argify("new An ADR"));
+			adr.run(TestUtilities.argify("new Yet another adr"));
+			adr.run(TestUtilities.argify("new This ADR is going to be linked to"));  // ADR id 4
+			adr.run(TestUtilities.argify("new And even more decisions"));
+			adr.run(TestUtilities.argify("new Decisions decisions decisions"));
 
 			// Create new ADR that links to another 
-			adr.run(TestUtilities.argify("new -l \"4:Links to:Is linked to from\" Links to number 4"), env);
+			adr.run(TestUtilities.argify("new -l \"4:Links to:Is linked to from\" Links to number 4"));
 
 			// Now check if the link messages has been added to the new ADR 7)
 			Path newADRFile  = fileSystem.getPath(rootPathName, docsPath, "0007-links-to-number-4.md");
@@ -102,7 +102,7 @@ public class CommandNewLinkTest {
 	@Test(expected=ADRException.class)
 	public void test2MissingLInkSpec() throws ADRException {
 		// Create new ADR that links to another 
-		adr.run(TestUtilities.argify("new -l Links to number 4"), env);
+		adr.run(TestUtilities.argify("new -l Links to number 4"));
 	}
 	
 	

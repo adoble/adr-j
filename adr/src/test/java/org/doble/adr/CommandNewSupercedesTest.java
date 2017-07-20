@@ -35,7 +35,7 @@ public class CommandNewSupercedesTest
 
 	private static FileSystem fileSystem;
 
-	private Environment env;
+	//private Environment env;
 	private ADR adr;
 
 	@Before
@@ -53,21 +53,19 @@ public class CommandNewSupercedesTest
 			e.printStackTrace();
 		}
 
-		// Set up the environment
-		env = new Environment.Builder(fileSystem)
+		adr = new ADR(new Environment.Builder(fileSystem)
 				.out(System.out)
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
 				.editorRunner(new TestEditorRunner())
-				.build();
-
+				.build()
+				);
+		
 		// Set up the directory structure
-		adr = new ADR();
-
 		String[] args = {"init"};
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		} catch (ADRException e) {
 			fail("ADR Exception raised");
 		}
@@ -79,7 +77,7 @@ public class CommandNewSupercedesTest
 				// Convert the name to an array of args - including the command.
 			args = ("new" + " " + adrTitle).split(" ");
 			try {
-				adr.run(args, env);
+				adr.run(args);
 			} catch (ADRException e) {
 				fail(e.getMessage());
 			}
@@ -189,7 +187,7 @@ public class CommandNewSupercedesTest
 		String[] args = {}; 
 		args = argList.toArray(args);
 		//try {
-			adr.run(args, env);
+			adr.run(args);
 //	} catch (ADRException e) {
 //		fail(e.getMessage());
 //	}

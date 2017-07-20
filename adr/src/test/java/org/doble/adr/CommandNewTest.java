@@ -34,7 +34,6 @@ public class CommandNewTest {
     		                     "something to link to", 
     		                     "a very important decision"};
     
-    private Environment env;
     private ADR adr;
 
 	@BeforeClass
@@ -61,20 +60,20 @@ public class CommandNewTest {
 		}
 
 		// Set up the environment
-		env = new Environment.Builder(fileSystem)
+		adr = new ADR(new Environment.Builder(fileSystem)
 				.out(System.out)
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
 				.editorRunner(new TestEditorRunner())
-				.build();
+				.build()
+				);
+		
 		
 		// Set up the directory structure
-		adr = new ADR();
-
 		String[] args = {"init"};
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		} catch (ADRException e) {
 			fail("ADR Exception raised");
 		}
@@ -94,7 +93,7 @@ public class CommandNewTest {
 		String[] args = TestUtilities.argify("new " + adrTitle);
 				
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		} catch (ADRException e) {
 			fail("ADR Exception raised");
 		}
@@ -112,7 +111,7 @@ public class CommandNewTest {
 		String[] args = {"new"};
 				
 		try {
-			adr.run(args, env);
+			adr.run(args);
 			fail("No exception raised when the ADR has no title.");
 		} catch (ADRException e) {
 			assertTrue(true);
@@ -145,7 +144,7 @@ public class CommandNewTest {
 			// Convert the name to an array of args - including the command.
 			String[] args = ("new" + " " + adrName).split(" ");
 			try {
-				adr.run(args, env);
+				adr.run(args);
 			} catch (ADRException e) {
 				fail(e.getMessage());
 			}

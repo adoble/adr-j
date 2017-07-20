@@ -63,7 +63,7 @@ public class CommandHelpTest {
 
 	@Test
 	public void test() {
-		ADR adr = new ADR();
+	
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
@@ -74,12 +74,12 @@ public class CommandHelpTest {
 				.in(System.in)
 				.userDir(rootPath)
 				.build();
-		
+		ADR adr = new ADR(env);		
 		
 		String[] args = {"help"};
 		
 			try {
-				adr.run(args, env);   //TODO env --> ADR constructor
+				adr.run(args); 
 			} catch (ADRException e) {
 				fail("ADR Exception raised: " + e.getMessage());
 			}

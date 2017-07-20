@@ -61,12 +61,12 @@ public class CommandInitTest {
 
 	@Test
 	public void testInit() {
-		ADR adr = new ADR();
+		ADR adr = new ADR(env);
 
 		String[] args = {"init"};
 
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		} catch (ADRException e) {
 			fail("ADR Exception raised");
 		}
@@ -132,12 +132,12 @@ public class CommandInitTest {
 	public void testInitCustomDirectory() {
 		String customDir = "myStuff/myDocs/myADRs";
 		
-		ADR adr = new ADR();
+		ADR adr = new ADR(env);
 
 		String[] args = {"init", customDir };
 
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		} catch (ADRException e) {
 			fail("ADR Exception raised");
 		}
@@ -159,20 +159,20 @@ public class CommandInitTest {
 	@Test
 	public void testReInit() {
 		boolean exceptionRaised = false; 
-		ADR adr = new ADR();
+		ADR adr = new ADR(env);
 
 		// Initialize the ADR directories
 		String[] args = {"init"};
 
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		} catch (ADRException e) {
 			fail("ADR Exception raised");
 		}
 		
 		// Re-initialize to see if an exception is raised
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		} catch (ADRException e) {
 			exceptionRaised = true;
 		}

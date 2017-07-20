@@ -22,11 +22,13 @@ public class ADR   {
 	final static public int MAX_ID_LENGTH = 4;
 	final static String ADR_DIR_NAME = ".adr";
 	private static FileSystem fileSystem; 
-
+    final private Environment env;
 	
 	
 
-    public ADR() {}
+    public ADR(Environment env) {
+    	this.env = env;
+    }
     
       
 	/** ADR tool main entry
@@ -57,24 +59,24 @@ public class ADR   {
 
 		
 		// Set up the environment that the tool runs in. 
-		Environment env = new Environment.Builder(FileSystems.getDefault())
+		Environment mainEnv = new Environment.Builder(FileSystems.getDefault())
 				.out(System.out)
 				.err(System.err)
 				.in(System.in)
 				.userDir(System.getProperty("user.dir"))
 				.editorCommand(editorCommand)
-				.editorRunner(new SystemEditorRunner())     // TODO why the environment for the editor runner? 
+				.editorRunner(new SystemEditorRunner()) 
 				.build();
 		
 				
-		ADR adr = new ADR();   //TODO env -> ADR constructor
+		ADR adr = new ADR(mainEnv);
 
 		// Run the commands specified in arguments.
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		}
 		catch (ADRException e) {
-			env.err.println(e.getMessage());
+			mainEnv.err.println(e.getMessage());
 			System.exit(1);
 		}
 		catch (Exception e) {
@@ -84,7 +86,7 @@ public class ADR   {
 
 	}
 
-	public void run(String[] args, Environment env) throws ADRException {
+	public void run(String[] args) throws ADRException {
 		Map<String, Class<?>> commandMap; 
 		Command command; 
 		

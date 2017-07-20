@@ -52,11 +52,11 @@ public class CommandListTest {
 				.build();
 
 		// Set up the directory structure
-		adr = new ADR();
+		adr = new ADR(env);
 
 		String[] args = {"init"};
 		try {
-			adr.run(args, env);
+			adr.run(args);
 		} catch (ADRException e) {
 			fail("ADR Exception raised");
 		}
@@ -72,6 +72,7 @@ public class CommandListTest {
 
 	@Test
 	public void testList() {
+		
 		String[] testData = {
 				"new An ADR",
 				"new Yet another adr",
@@ -86,7 +87,7 @@ public class CommandListTest {
 		// Create some ADRs
 		try {
 			for (int i = 0; i < testData.length ; i++) {
-				adr.run(TestUtilities.argify(testData[i]), env);
+				adr.run(TestUtilities.argify(testData[i]));
 			}
 		}
 		catch (Exception e)  {
@@ -104,8 +105,10 @@ public class CommandListTest {
 				.editorRunner(new TestEditorRunner())
 				.build();
 		
+		ADR localADR = new ADR(localEnv);
+		
 		try {
-			adr.run(TestUtilities.argify("list"), localEnv);
+			localADR.run(TestUtilities.argify("list"));
 		}
 		catch (Exception e)  {
 			fail(e.getMessage());
