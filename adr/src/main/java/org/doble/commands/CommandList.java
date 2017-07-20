@@ -47,7 +47,7 @@ public class CommandList extends Command {
 		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
 
 		try (Stream<Path> stream = Files.list(docsPath)){
-			stream.filter(ADRFilter.filter()).forEachOrdered(env.out::println);
+			stream.map(Path::getFileName).filter(ADRFilter.filter()).forEachOrdered(env.out::println);
 		} catch (IOException e) {
 			throw new ADRException("FATAL: Cannot access directory.", e);
 		}

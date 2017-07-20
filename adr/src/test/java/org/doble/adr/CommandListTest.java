@@ -111,13 +111,15 @@ public class CommandListTest {
 			fail(e.getMessage());
 		}
 		
+		
 		String[] expectedFiles = {
-				"/project/adr/docs/adr/0002-an-ADR.md",
-				"/project/adr/docs/adr/0003-yet-another-adr.md",
-				"/project/adr/docs/adr/0004-this-ADR-is-going-to-be-linked-to.md",
-				"/project/adr/docs/adr/0005-and-even-more-decisions.md",
-				"/project/adr/docs/adr/0006-decisions-decisions-decisions.md"
+				"0002-an-ADR.md",
+				"0003-yet-another-adr.md",
+				"0004-this-ADR-is-going-to-be-linked-to.md",
+				"0005-and-even-more-decisions.md",
+				"0006-decisions-decisions-decisions.md"
 		};
+		
 		
 		String list = new String(baos.toByteArray());
 		for (String expected: expectedFiles) {
