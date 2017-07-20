@@ -150,8 +150,10 @@ public class CommandNew extends Command  {
 
 		// And now start up the editor using the specified runner
 		EditorRunner runner = env.editorRunner;
+		
+		env.out.println("Opening Editor on " + adrPath.toString() + " ...");
 
-		runner.run(adrPath);
+		runner.run(adrPath, env.editorCommand);
 
 
 		env.out.println(adrPath.toString());  // Return the file name of the ADR

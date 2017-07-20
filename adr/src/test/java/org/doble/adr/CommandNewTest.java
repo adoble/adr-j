@@ -66,7 +66,7 @@ public class CommandNewTest {
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
-				.editorRunner(new TestEditorRunner(null))
+				.editorRunner(new TestEditorRunner())
 				.build();
 		
 		// Set up the directory structure
@@ -90,10 +90,8 @@ public class CommandNewTest {
 	@Test
 	public void testSimpleCommand() {
 		String adrTitle = "This is a test achitecture decision";
-	
 		
-		// Convert the name to an array of args - including the command.
-		String[] args = ("new" + " " + adrTitle).split(" ");
+		String[] args = TestUtilities.argify("new " + adrTitle);
 				
 		try {
 			adr.run(args, env);
@@ -103,14 +101,7 @@ public class CommandNewTest {
 		
 		
 		// Check if the ADR file has been created
-		// First construct the file name
-		String fileName = TestUtilities.adrFileName(2, adrTitle);  // ADR id is 2 as the first ADR was setup during init.
-		Path adrFile = fileSystem.getPath(rootPathName, docsPath, fileName);
-		
-
-		
-		boolean exists = Files.exists(adrFile);
-		assertTrue(exists);
+		assertTrue(Files.exists(fileSystem.getPath("/project/adr/docs/adr/0002-this-is-a-test-achitecture-decision.md"))); // ADR id is 2 as the first ADR was setup during init.
 		
 	}
 	

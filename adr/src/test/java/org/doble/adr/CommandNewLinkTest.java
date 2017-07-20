@@ -43,7 +43,7 @@ public class CommandNewLinkTest {
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
-				.editorRunner(new TestEditorRunner(null))
+				.editorRunner(new TestEditorRunner())
 				.build();
 
 		// Set up the directory structure

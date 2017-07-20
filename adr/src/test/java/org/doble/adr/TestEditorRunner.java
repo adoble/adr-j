@@ -9,14 +9,9 @@ import java.nio.file.Path;
  */
 public class TestEditorRunner extends EditorRunner {
 
-	public TestEditorRunner(Environment env) {
-		super(env);
-		
-	}
-
 	/** Just checks that the path exists. */ 
 	@Override
-	public void run(Path path) throws ADRException {
+	public void run(Path path, String editorCommand) throws ADRException {
 	   if (Files.notExists(path)) {
 		   throw new ADRException("ADR path " + path.toString() + " does not exist");
 	   }

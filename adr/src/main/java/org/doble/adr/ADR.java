@@ -49,6 +49,7 @@ public class ADR   {
 		if (editorCommand == null) {
 			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
 				    	+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
+			System.err.println(msg);
 			System.exit(1);
 		} 
 		
@@ -61,9 +62,11 @@ public class ADR   {
 				.err(System.err)
 				.in(System.in)
 				.userDir(System.getProperty("user.dir"))
-				.editor(editorCommand)
+				.editorCommand(editorCommand)
+				.editorRunner(new SystemEditorRunner())     // TODO why the environment for the editor runner? 
 				.build();
 		
+				
 		ADR adr = new ADR();   //TODO env -> ADR constructor
 
 		// Run the commands specified in arguments.
