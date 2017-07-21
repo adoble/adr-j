@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.doble</groupId>
-	<artifactId>adr</artifactId>
+	<artifactId>adr-j</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>adr</name>
+	<name>adr-j</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
