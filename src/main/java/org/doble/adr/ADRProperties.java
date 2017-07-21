@@ -16,7 +16,11 @@ public class ADRProperties extends Properties{
 	/**
 	 * 
 	 */
+	public  static final String defaultDocPath = "doc/adr";  //TODO is this the right place for this constant?
+	
 	private static final long serialVersionUID = 1L;
+	
+	
 
 
 	Environment env;
@@ -53,7 +57,7 @@ public class ADRProperties extends Properties{
 				propertiesReader.close();
 			} else {
 				// Set the default values. This should be stored when adr init is called, 
-				setProperty("docPath", "doc/adr");
+				setProperty("docPath", defaultDocPath);
 			}
 		} catch (Exception e) {
 			throw new ADRException("FATAL: The properties file could not be read.", e);

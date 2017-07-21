@@ -27,14 +27,10 @@ import org.doble.annotations.Cmd;
 public class CommandInit extends Command {
 
 	private Properties properties;
-	final private String defaultADRDirectory = "docs/adr";
-
-
-
+	
 	public CommandInit(Environment env) throws ADRException {	
 		super(env);
 		properties = new Properties();
-		//properties.setProperty("docPath", "doc/adr");
 	}
 
 
@@ -46,7 +42,7 @@ public class CommandInit extends Command {
 
 		switch (args.length) {
 		case 0:
-			properties.setProperty("docPath", defaultADRDirectory); // Use the default value for the adr directory
+			properties.setProperty("docPath", ADRProperties.defaultDocPath); // Use the default value for the adr directory
 			break;
 
 		case 1:

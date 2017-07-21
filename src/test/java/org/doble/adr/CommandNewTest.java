@@ -24,7 +24,7 @@ import com.google.common.jimfs.*;
 public class CommandNewTest {
 	private static FileSystem fileSystem;
     final static private String rootPathName = "/project/adr";
-    final static private String docsPath = "/docs/adr";
+    final static private String docsPath = "/doc/adr";
     
     private String[] adrTitles = {"another test architecture decision", 
     		                     "yet another test architecture decision",
@@ -100,7 +100,7 @@ public class CommandNewTest {
 		
 		
 		// Check if the ADR file has been created
-		assertTrue(Files.exists(fileSystem.getPath("/project/adr/docs/adr/0002-this-is-a-test-achitecture-decision.md"))); // ADR id is 2 as the first ADR was setup during init.
+		assertTrue(Files.exists(fileSystem.getPath("/project/adr/doc/adr/0002-this-is-a-test-achitecture-decision.md"))); // ADR id is 2 as the first ADR was setup during init.
 		
 	}
 	

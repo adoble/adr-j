@@ -21,8 +21,7 @@ public class ADR   {
 
 	final static public int MAX_ID_LENGTH = 4;
 	final static String ADR_DIR_NAME = ".adr";
-	private static FileSystem fileSystem; 
-    final private Environment env;
+	final private Environment env;
 	
 	
 
@@ -39,8 +38,6 @@ public class ADR   {
 	 */
 	public static void main(String[] args) {
 
-		// Instantiate the main class using the default file system
-		ADR.fileSystem = FileSystems.getDefault();
 		
 		// Determine the editor
 		String editorCommand = System.getenv("EDITOR"); 
@@ -57,7 +54,7 @@ public class ADR   {
 		
 		
 
-		
+		// Instantiate the main class using the default file system
 		// Set up the environment that the tool runs in. 
 		Environment mainEnv = new Environment.Builder(FileSystems.getDefault())
 				.out(System.out)

@@ -18,7 +18,7 @@ import com.google.common.jimfs.Jimfs;
 
 public class CommandListTest {
 	final static private String rootPathName = "/project/adr";
-	final static private String docsPath = "/docs/adr";
+	final static private String docsPath = "/doc/adr";
 	
 	private static FileSystem fileSystem;
 

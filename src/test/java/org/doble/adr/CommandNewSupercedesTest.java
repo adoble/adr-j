@@ -21,7 +21,7 @@ import com.google.common.jimfs.Jimfs;
 public class CommandNewSupercedesTest 
 {
 	final static private String rootPathName = "/project/adr";
-	final static private String docsPath = "/docs/adr";
+	final static private String docsPath = "/doc/adr";
 
 	final private String[] adrTitles = {"Another test architecture decision", 
 			"Yet another test architecture decision",
@@ -216,7 +216,7 @@ public class CommandNewSupercedesTest
 			long count = 0;
 			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
 			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
-			Path supersededADRFile = fileSystem.getPath("/project/adr/docs/adr/", supersededADRFileName);
+			Path supersededADRFile = fileSystem.getPath("/project/adr/doc/adr/", supersededADRFileName);
 			String link = "Superseded by the [architecture decision record "  + newADRID + "](" + newADRFileName + ")";
 			try {
 				count = TestUtilities.findString(link, supersededADRFile);
