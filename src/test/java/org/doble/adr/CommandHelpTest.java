@@ -62,7 +62,7 @@ public class CommandHelpTest {
 	}
 
 	@Test
-	public void test() {
+	public void testHelp() {
 	
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -94,5 +94,43 @@ public class CommandHelpTest {
 		assertTrue(content.contains("Help"));  //At least this command is shown
 		
 	}
+	
+	@Test
+	public void testNoArgs() {
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+		
+		Environment env = new Environment.Builder(fileSystem)
+				.out(ps)
+				.err(System.err)
+				.in(System.in)
+				.userDir(rootPath)
+				.build();
+		ADR adr = new ADR(env);		
+		
+		String[] args = {};
+		
+			try {
+				adr.run(args); 
+			} catch (ADRException e) {
+				fail("ADR Exception raised: " + e.getMessage());
+			}
+			
+		
+		
+		// read the output
+		String content = new String(baos.toByteArray());
+		
+		assertTrue(content.length() > 0);
+		
+		assertTrue(content.contains("init"));  //At least this command is shown
+		assertTrue(content.contains("help"));  //At least this command is shown
+		assertTrue(content.contains("new"));   //At least this command is shown
+		
+	}
+	
+	
+	
 
 }

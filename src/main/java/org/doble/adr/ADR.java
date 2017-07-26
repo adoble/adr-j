@@ -113,8 +113,8 @@ public class ADR   {
 			catch(Exception e) {
 				throw new ADRException("FATAL: Internal error.", e);
 			}
-		} else {
-			env.out.println("ERROR: Specify a command. For instance:");
+		} else {   // No arguments specified
+			env.out.println("Specify a command. For instance:");
 			Set<String> keys = commandMap.keySet();
 			for (String commandName : keys) {
 				env.out.println("   " + commandName);
