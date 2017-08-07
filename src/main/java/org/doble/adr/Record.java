@@ -2,28 +2,28 @@ package org.doble.adr;
 
 import java.io.*;
 import java.nio.file.*;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
 
 
 public class Record  {
-	//TODO replace the Record public memebers with access methods of the form id(), name() etc. 
-	public int id;
-	public String name = "";
-	public String date = "";
-	public String status = "Accepted";
-	public String context = "Record the architectural decisions made on this project.";
-	public String decision = "We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions";
-	public String consequences = "See Michael Nygard's article, linked above.";
-	//private ArrayList<Integer> supersedes  = new ArrayList<Integer>();
-	//public OptionalInt supersedes = OptionalInt.empty();
+	private final Path docsPath; // Where the adr files are stored
+	private final int id;
+	private final String idFormatted;
+	private final String name;
+	private final Date date;;
+	private final String status;
+	private final String context;
+	private final String decision;
+	private final String consequences;
+	
+
 	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
-	
-	// Where the adr files are stored
-	private final Path docsPath; 
-	
+
 	
 	private class Link {
 		
@@ -41,9 +41,8 @@ public class Record  {
 	private ArrayList<Link> links  = new ArrayList<Link>();
 
 	
-	
 	// Mark down template 
-	String template = "# @ID. @Name\n\n" + 
+	private String template = "# @ID. @Name\n\n" + 
 			           "Date: @Date\n\n" +
 			      	  "## Status\n\n" +
 			      	  "@Status\n\n" + 
@@ -56,21 +55,35 @@ public class Record  {
 	
 	
 	
-	/** Constructor for an ADR record
+	/** Constructor for an ADR record. It has private scope so that only 
+	 *  the builder can be used to construct it. 
 	 * @param docsPath Where the ADR record is stored 
 	 */
-	public Record(Path docsPath) {
-		this.docsPath = docsPath;
+	private Record(Record.Builder builder) {
+		this.docsPath = builder.docsPath;
+		this.id = builder.id;
+		this.idFormatted = builder.idFormatted;
+		this.name = builder.name;
+		this.date = builder.date;
+		this.status= builder.status;
+		this.context= builder.context;
+		this.decision= builder.decision;
+		this.consequences= builder.consequences;
 	}
 	
-	public String generate() {
+	/**
+	 * Generate a string with the specified ADR sections (in this case from Michael Nygard.)
+	 * @return String The generated string. 
+	 */
+	private String generate() {
 		 String s;
 		 
-		 Integer idInt = new Integer(id);
+		 // Integer idInt = new Integer(id);
 		 
-		 s = template.replace("@ID",  idInt.toString());
+		 //s = template.replace("@ID",  idInt.toString());
+		 s = template.replace("@ID",  idFormatted);
 		 s = s.replace("@Name",  capitalizeFirstCharacter(this.name));  // First character of title is always upper case
-		 s = s.replace("@Date",  date);
+		 s = s.replace("@Date",  DateFormat.getDateInstance().format(date));
 		 s = s.replace("@Context",  context);
 		 s = s.replace("@Decision",  decision);
 		 s = s.replace("@Consequences",  consequences);
@@ -123,7 +136,7 @@ public class Record  {
 		// Create a file name for the ADR
 		String fileName = lowercaseFirstCharacter(this.name);
 		fileName = fileName.replace(' ', '-');    // Replace blanks with hyphens
-		String idFormatted = String.format("%04d", this.id);
+		//String idFormatted = String.format("%04d", this.id);
 		fileName = idFormatted + '-' + fileName + ".md";  // Compose full file name
 		//Path p = env.fileSystem.getPath(docsPath.toString(), fileName);
 		Path p = docsPath.resolve(fileName); // Full path of the ADR file in the document path
@@ -303,6 +316,65 @@ public class Record  {
 	
 	private String lowercaseFirstCharacter(String s) {
 		return s.substring(0, 1).toLowerCase() + s.substring(1);
+	}
+	
+	
+	/************ Builder class *************/
+	public static class Builder {
+		private Path docsPath; 
+		private int id;
+		private String idFormatted;
+		private String name;
+		private Date date = new Date();
+		private String status = "Accepted";
+	    private String context = "Record the architectural decisions made on this project.";
+	    private String decision = "We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions";
+	    private String consequences = "See Michael Nygard's article, linked above.";
+	 
+		public Builder(Path docsPath) {
+			this.docsPath = docsPath; 
+		}
+		
+		public Builder id(int id) {
+			this.id = id;
+			idFormatted = String.format("%04d", id);
+			return this; 
+		}
+		
+		public Builder name(String name) {
+			this.name = name.trim();
+			return this; 
+		}
+		
+		public Builder date(Date date) {
+			this.date = date;
+			return this; 
+		}
+		
+		public Builder status(String status) {
+			this.status= status;
+			return this; 
+		}
+		
+		public Builder context(String context) {
+			this.context= context;
+			return this; 
+		}
+		
+		public Builder decision(String decision) {
+			this.decision = decision;
+			return this; 
+		}
+		
+		public Builder consequences(String consequences) {
+			this.consequences = consequences;
+			return this; 
+		}
+		
+		public Record build() {
+			return new Record(this);
+		}
+		
 	}
 
 

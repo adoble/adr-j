@@ -15,12 +15,13 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 
 @SuiteClasses({ org.doble.adr.EnvironmentTest.class, 
-	org.doble.adr.CommandHelpTest.class,
-	org.doble.adr.CommandInitTest.class,
-	org.doble.adr.CommandNewTest.class,
-	org.doble.adr.CommandNewSupercedesTest.class,
-	org.doble.adr.CommandNewLinkTest.class,
-	org.doble.adr.CommandListTest.class,
+				org.doble.adr.RecordTest.class, 
+				org.doble.adr.CommandHelpTest.class,
+				org.doble.adr.CommandInitTest.class,
+				org.doble.adr.CommandNewTest.class,
+				org.doble.adr.CommandNewSupercedesTest.class,
+				org.doble.adr.CommandNewLinkTest.class,
+				org.doble.adr.CommandListTest.class,
 	})
 
 public class AllTests {

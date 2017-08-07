@@ -65,14 +65,17 @@ public class CommandNew extends Command  {
 	 */
 	@Override
 	public void command(String[] args) throws ADRException {
-		String link = ""; 
 		
-		// Determine where the ADRs are stored and set uo the
-		// record object 
+		String name = "";
+		String link = ""; 
+		ArrayList<Integer> supersedes = new ArrayList<Integer>();
+		
+		// Determine where the ADRs are stored and 
+		// set up the record object 
 		Path rootPath = ADR.getRootPath(env);
 		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
 		
-		Record record = new Record(docsPath);
+		
 				
 		try {
 			if (args.length == 0) {
@@ -92,11 +95,12 @@ public class CommandNew extends Command  {
 							commandState = CommandStates.LINK;
 						} else {
 							commandState = CommandStates.RECORD;
-							record.name += arg + " ";
+							name += arg + " ";
 						}
 						break;
 					case SUPERSEDES:
-						record.addSupersedes(Integer.parseInt(arg));
+						supersedes.add(Integer.parseInt(arg));
+						//record.addSupersedes(Integer.parseInt(arg));
 						commandState = CommandStates.PARSE;
 						break;
 					case LINK:
@@ -104,7 +108,7 @@ public class CommandNew extends Command  {
 						commandState = CommandStates.PARSE;
 						break;
 					case RECORD:
-						record.name += arg + " ";
+						name += arg + " ";
 						break;
 					}
 				}
@@ -126,10 +130,16 @@ public class CommandNew extends Command  {
 			throw new ADRException(msg);
 		}
 		
-		record.id  =  highestIndex()  + 1;
-	 	record.status = "New";
-		record.date = DateFormat.getDateInstance().format(new Date());
-		record.name = record.name.trim();
+		Record record = new Record.Builder(docsPath)
+				                  .id(highestIndex() + 1)
+				                  .name(name)
+				                  .date(new Date())
+				                  .build();
+		
+		
+		for (Integer supersedeId: supersedes) {
+			record.addSupersedes(supersedeId);;
+		}
 		
 		try {
 			record.addLink(link);
@@ -142,7 +152,6 @@ public class CommandNew extends Command  {
 		createADR(record);
 	}
 
-	//private void createADR(String adrName, Record record) {
 	private void createADR(Record record) throws ADRException {
 		Path adrPath; // The ADR file that is created
 
@@ -165,7 +174,6 @@ public class CommandNew extends Command  {
 	 * @return int The highest index found. If no files are found returns 0.
 	 */
 	private int highestIndex() throws ADRException {  
-		//int highestIndex = 0; 
 		OptionalInt highestIndex; 
 		
 		Path docPath = env.fileSystem.getPath(properties.getProperty("docPath"));

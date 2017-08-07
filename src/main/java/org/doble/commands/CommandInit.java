@@ -5,7 +5,6 @@ package org.doble.commands;
 
 import java.io.*;
 import java.nio.file.*;
-import java.text.DateFormat;
 import java.util.*;
 
 import org.doble.adr.*;
@@ -84,17 +83,14 @@ public class CommandInit extends Command {
 
 
 			// Now generate template for the first architectural decision record and update the id
-			Record record = new Record(docsPath); 
-
-			record.id = 1;
-			record.name = "Record architecture decisions";
-			record.date = DateFormat.getDateInstance().format(new Date());
-
+			Record record = new Record.Builder(docsPath)
+					                    .id(1)
+					                    .name("Record architecture decisions")
+					                    .date(new Date())
+					                    .build(); 
+				
 			record.store(); 
 
-			/*outProperties = new FileOutputStream(propPath.toString());
-			properties.store(outProperties, null);
-			outProperties.close(); */
 		}
 		catch (Exception e) {
 			throw new ADRException("FATAL: Unable to initialise.", e);
