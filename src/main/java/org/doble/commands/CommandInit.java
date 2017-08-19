@@ -57,8 +57,6 @@ public class CommandInit extends Command {
 			Path adrPath = env.dir.resolve(".adr");
 
 
-			properties.setProperty("root", adrPath.toString());
-
 			if (Files.notExists(adrPath)) {
 				Files.createDirectories(adrPath);
 			} else {
