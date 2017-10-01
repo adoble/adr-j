@@ -48,6 +48,7 @@ public class CommandListTest {
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
+				.editorCommand("dummyEditor")
 				.editorRunner(new TestEditorRunner())
 				.build();
 

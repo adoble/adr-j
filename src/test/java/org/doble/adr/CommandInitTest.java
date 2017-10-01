@@ -50,6 +50,7 @@ public class CommandInitTest {
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPath)
+				.editorCommand("dummyEditor")
 				.build();
 
 	}
@@ -179,6 +180,48 @@ public class CommandInitTest {
 		
 		assertTrue(exceptionRaised);
 	
+	}
+	
+	/** Test to see if the init command still goes through even 
+	 * if the EDITOR or VISUAL environment variable has not been set. 
+	 */
+	@Test
+	public void testEditorNotSet() {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream testErr =  new PrintStream(baos);		
+		// Set up the environment with a null editor command and catch the output
+		Environment envWithoutEditor = new Environment.Builder(fileSystem)
+				.out(env.out)
+				.err(testErr)
+				.in(env.in)
+				.userDir(env.dir)
+				.editorCommand(null)
+				.build();
+		
+		
+		ADR adr = new ADR(envWithoutEditor);
+
+		String[] args = {"init"};
+
+		try {
+			adr.run(args);
+			String commandOutput= new String(baos.toByteArray());
+			assertTrue("No warning given from init command that edit has not been set.", commandOutput.contains("WARNING"));
+		} catch (ADRException e) {
+			fail("ADR Exception raised");
+		}
+
+
+		// Check to see if the .adr directory has been created even though an error is there . 
+		String pathName = rootPath + "/.adr";
+		try {
+			Path p = fileSystem.getPath(pathName);
+			boolean exists = Files.exists(p);
+			assertTrue(exists);
+		} catch (InvalidPathException e) {
+			
+			fail("InvalidPathException raised on "+ pathName);
+		}
 	}
 	
 

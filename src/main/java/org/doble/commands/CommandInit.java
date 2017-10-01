@@ -38,6 +38,14 @@ public class CommandInit extends Command {
 	 */
 	@Override
 	public void command(String[] args) throws ADRException {
+		
+
+		if (env.editorCommand == null) {
+			String msg = "WARNING: Editor for the ADR has not been found in the environment variables.\n"
+				    	+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
+			env.err.println(msg);
+		} 
+		
 
 		switch (args.length) {
 		case 0:

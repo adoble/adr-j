@@ -43,6 +43,7 @@ public class CommandNewLinkTest {
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
+				.editorCommand("dummyEditor")
 				.editorRunner(new TestEditorRunner())
 				.build();
 

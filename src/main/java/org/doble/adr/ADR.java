@@ -39,18 +39,15 @@ public class ADR   {
 	public static void main(String[] args) {
 
 		
-		// Determine the editor
-		String editorCommand = System.getenv("EDITOR"); 
+		// Determine the editor from the system environment
+		String editorCommand = null;
+		editorCommand = System.getenv("EDITOR"); 
 		if (editorCommand == null) {
 			// Try VISUAL
 			editorCommand = System.getenv("VISUAL");
 		}
-		if (editorCommand == null) {
-			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
-				    	+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
-			System.err.println(msg);
-			System.exit(1);
-		} 
+		// else leave as null to be picked up later
+		// TODO change this to an optional variable. 
 		
 		
 

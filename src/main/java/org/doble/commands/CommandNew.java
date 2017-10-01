@@ -75,6 +75,12 @@ public class CommandNew extends Command  {
 		Path rootPath = ADR.getRootPath(env);
 		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
 		
+		// Check to see if the editor command has been set.
+		if (env.editorCommand == null) {
+			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
+						+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
+			throw new ADRException(msg);
+		}
 		
 				
 		try {

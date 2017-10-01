@@ -58,6 +58,7 @@ public class CommandNewSupercedesTest
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
+				.editorCommand("dummyEditor")
 				.editorRunner(new TestEditorRunner())
 				.build()
 				);

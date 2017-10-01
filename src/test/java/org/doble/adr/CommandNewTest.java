@@ -65,6 +65,7 @@ public class CommandNewTest {
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
+			    .editorCommand("dummyEditor")
 				.editorRunner(new TestEditorRunner())
 				.build()
 				);
@@ -95,7 +96,7 @@ public class CommandNewTest {
 		try {
 			adr.run(args);
 		} catch (ADRException e) {
-			fail("ADR Exception raised");
+			fail("ADR Exception raised: " + e.getMessage());
 		}
 		
 		
