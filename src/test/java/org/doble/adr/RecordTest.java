@@ -90,4 +90,17 @@ public class RecordTest {
 		assertTrue(TestUtilities.contains("The decision.", adrFile));
 		assertTrue(TestUtilities.contains("What it implies,", adrFile));
 	}
+
+	@Test
+	@Order(3)
+	public void nameIsLowerCased() throws Exception {
+
+		Record record = new Record.Builder(docPath).id(8).name("CDR is stored in a relational database").build();
+
+		record.store();
+
+		// Check if the ADR file has been created
+		assertTrue(Files.exists(fileSystem.getPath("/test/0008-cdr-is-stored-in-a-relational-database.md")));
+	}
+
 }
