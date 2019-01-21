@@ -1,0 +1,53 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '4.0.2'
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+group = 'org.doble'
+version = '0.0.1-SNAPSHOT'
+
+description = "adr-j"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+mainClassName = "org.doble.adr.ADR"
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven {
+        url 'https://oss.sonatype.org/content/groups/public'
+    }
+}
+
+dependencies {
+    compile group: 'org.reflections', name: 'reflections', version:'0.9.11'
+    compile group: 'com.google.jimfs', name: 'jimfs', version:'1.1'
+
+    // need 5.4 for @TestMethodOrder - see https://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestMethodOrder.html
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.0-M1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0-M1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0-M1'
+}
+
+shadowJar {
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer)
+    classifier 'fat'
+}
+
+task releaseJar(dependsOn: "shadowJar", type: Copy) {
+    group = 'ADR-J - Release'
+    description "Creates a JAR release."
+    from("$buildDir/libs/adr-j-${project.version}-fat.jar")
+    rename { String fileName ->
+        fileName.replace('-fat', '')
+    }
+    into("$buildDir/releases")
+    // set executable with read permissions (first true) and for all (false)
+    file("$buildDir/releases/adr-j-${project.version}.jar").setExecutable(true, false)
+}
