@@ -1,35 +1,36 @@
 package org.doble.adr;
 
-import static org.junit.Assert.*;
-
-import java.nio.file.*;
-
-
-import org.junit.*;
-
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EnvironmentTest {
 	private FileSystem fileSystem;
 	private final String ROOT_PATH = "/project/adr";
-	private Path rootPath; 
+	private Path rootPath;
 	private String editor = "C:/Users/adoble/AppData/Local/atom/bin/atom.cmd";
 	private EditorRunner runner = new TestEditorRunner();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
-		try {
-			fileSystem = Jimfs.newFileSystem(Configuration.unix());
-			
-			rootPath = fileSystem.getPath(ROOT_PATH);
-			Files.createDirectories(rootPath);
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
+		fileSystem = Jimfs.newFileSystem(Configuration.unix());
+
+		rootPath = fileSystem.getPath(ROOT_PATH);
+		Files.createDirectories(rootPath);
 	}
 
+	@AfterEach
+	public void tearDown() throws Exception {
+		fileSystem.close();
+	}
 
 	@Test
 	public void testEnvironment() {
@@ -41,19 +42,17 @@ public class EnvironmentTest {
 				.editorCommand(editor)
 				.editorRunner(runner)
 				.build();
-		
 
-	assertTrue(env.fileSystem.equals(fileSystem));
-	assertTrue(env.out.equals(System.out));
-	assertTrue(env.err.equals(System.err));
-	assertTrue(env.in.equals(System.in));
-	
-	Path p = env.dir;
-	String pname = p.toString();
-	assertTrue(pname.equals(ROOT_PATH));
-	
-	assertTrue(env.editorCommand.equals(editor));
-	assertTrue(env.editorRunner.equals(runner));
+		assertEquals(env.fileSystem, fileSystem);
+		assertEquals(env.out, System.out);
+		assertEquals(env.err, System.err);
+		assertEquals(env.in, System.in);
+
+		Path p = env.dir;
+		String pname = p.toString();
+		assertEquals(pname, ROOT_PATH);
+
+		assertEquals(env.editorCommand, editor);
+		assertEquals(env.editorRunner, runner);
 	}
-
 }

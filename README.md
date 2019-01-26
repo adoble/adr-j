@@ -46,4 +46,11 @@ ADRs are stored in your project as Markdown files in the `doc/adr` directory.
 
 The decisions for this tool are recorded as [architecture decision records in the project repository](doc/adr/).
 
+Compile
+-------
+
+This project uses Gradle for compilation. Execute following command to generate `build/release/adr-j.jar`.
+
+    gradlew releaseJar
+
 [ADRs]: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions

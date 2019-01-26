@@ -3,3 +3,8 @@
 .project
 .settings
 .classpath
+.idea/
+*.iml
+.gradle/
+build/
+out/
