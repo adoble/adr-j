@@ -45,9 +45,11 @@ task releaseJar(dependsOn: "shadowJar", type: Copy) {
     description "Creates a JAR release."
     from("$buildDir/libs/adr-j-${project.version}-fat.jar")
     rename { String fileName ->
-        fileName.replace('-fat', '')
+        //fileName.replace('-fat', '')
+        fileName.replace("-${project.version}-fat", "")
     }
     into("$buildDir/releases")
     // set executable with read permissions (first true) and for all (false)
-    file("$buildDir/releases/adr-j-${project.version}.jar").setExecutable(true, false)
+    //file("$buildDir/releases/adr-j-${project.version}.jar").setExecutable(true, false)
+    file("$buildDir/releases/adr-j.jar").setExecutable(true, false)
 }
