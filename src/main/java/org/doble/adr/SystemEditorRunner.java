@@ -18,18 +18,24 @@ public class SystemEditorRunner extends  EditorRunner {
 	 */
 	@Override
 	public void run(Path path, String editorCommand) throws ADRException {
-		
-		String adrFileName = path.getFileName().toString();
+
 		String adrPathName = path.toString();
-				
+		Process p = null;
 		try {
-			Runtime runTime = Runtime.getRuntime();
-			String cmd = editorCommand + " " + adrPathName;
-			runTime.exec(cmd);  
-			
-		} catch (IOException e) {
+			ProcessBuilder processBuilder = new ProcessBuilder(editorCommand,adrPathName);
+			processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+			processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+			processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
+
+			p = processBuilder.start();
+			p.waitFor();
+
+		} catch (IOException | InterruptedException e) {
 			throw new ADRException("FATAL: Could not open the editor.", e);
-			
+		} finally {
+			if (p != null){
+				p.destroy();
+			}
 		}
 
 	}
