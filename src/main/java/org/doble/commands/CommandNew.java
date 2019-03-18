@@ -23,28 +23,32 @@ import org.doble.annotations.Cmd;
  * @author adoble
  */
 @Cmd(name = "new",
-		usage = "adr new [-s <superseded_adr>] [-l <target_adr>:<link_description>:<reverse_link_description>] TITLE_TEXT...",
+		usage = "adr new  [options] <title_text>...\n" +
+				"   options:\n" +
+				"     -l, --link <target_adr>:<link_description>:<reverse_link_description>]\n" +
+				"     -s, --supersedes <superseded_adr>\n",
 		shorthelp = "Creates a new, numbered ADR.",
-		help = " Creates a new, numbered ADR.  The TITLE_TEXT arguments are concatenated to" +
-				" form the title of the new ADR.  The ADR is opened for editing in the" +
-				" editor specified by the VISUAL or EDITOR environment variable (VISUAL is" +
-				" preferred; EDITOR is used if VISUAL is not set).  After editing, the" +
-				" file name of the ADR is output to stdout, so the command can be used in" +
-				" scripts.\n\n" +
-				" Options:\n\n" +
-				" -s <superseded_adr>   A reference (number or partial filename) of a previous" +
-				"                 decision that the new decision supersedes. A Markdown link" +
-				"                 to the superseded ADR is inserted into the Status section." +
-				"                 The status of the superseded ADR is changed to record that" +
+		help =  "Creates a new, numbered ADR.  The <title_text> arguments are concatenated to " +
+				"form the title of the new ADR.  The ADR is opened for editing in the " +
+				"editor specified by the VISUAL or EDITOR environment variable (VISUAL is " +
+				"preferred; EDITOR is used if VISUAL is not set).  After editing, the " +
+				"file name of the ADR is output to stdout, so the command can be used in " +
+				"scripts.\n\n" +
+				"Options:\n\n" +
+				" -s, --supersedes <superseded_adr>\n" +
+				"                 A reference (number or partial filename) of a previous\n" +
+				"                 decision that the new decision supersedes. A Markdown link\n" +
+				"                 to the superseded ADR is inserted into the Status section.\n" +
+				"                 The status of the superseded ADR is changed to record that\n" +
 				"                 it has been superseded by the new ADR.\n\n" +
-				" -l <target_adr>:<link_description>:<reverse_link_description>" +
-				"                 Links the new ADR to a previous ADR." +
-				"                 <target_adr> is a reference (number or partial filename) of a" +
-				"                 previous decision. " +
-				"                 <link_description> is the description of the link created in the new ADR." +
-				"                 <reverse_link_description> is the description of the link created in the" +
+				" -l, --link <target_adr>:<link_description>:<reverse_link_description>\n" +
+				"                 Links the new ADR to a previous ADR.\n" +
+				"                 <target_adr> is a reference (number or partial filename) of a\n" +
+				"                 previous decision.\n" +
+				"                 <link_description> is the description of the link created in the new ADR.\n" +
+				"                 <reverse_link_description> is the description of the link created in the\n" +
 				"                 existing ADR that will refer to the new ADR.\n\n" +
-				" Multiple -s and -l options can be given, so that the new ADR can supersede" +
+				"Multiple -s and -l options can be given, so that the new ADR can supersede" +
 				" or link to multiple existing ADRs."
 )
 public class CommandNew extends Command {
@@ -74,7 +78,7 @@ public class CommandNew extends Command {
 	@Override
 	public void command(String[] args) throws ADRException {
 
-		// This stores TITLE_TEXT
+		// This stores <title_text>
 		String name = "";
 
 		String link = "";

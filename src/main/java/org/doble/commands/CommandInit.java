@@ -19,12 +19,12 @@ import org.doble.annotations.Cmd;
 			 "  options: \n" +
 			 "    -t, --template  <template_file>",
      shorthelp= "Initialises the directory of architecture decision records.",
-     help= "Initialises the directory of architecture decision records:\n\n" +
- 			" * creates a subdirectory of the current working directory" +
- 			" * creates the first ADR in that subdirectory, recording the decision to" +
+     help= "\nInitialises the directory of architecture decision records:\n" +
+ 			" * creates a subdirectory of the current working directory\n" +
+ 			" * creates the first ADR in that subdirectory, recording the decision to\n" +
  			"   record architectural decisions with ADRs.\n\n" +
- 			"If the <directory> is not given, the ADRs are stored in the directory `doc/adr`." +
-		    "<template_file> specifies an alternative template for the ADRs (NOT CURRENTLY IMPLEMENTED)."
+ 			"If <directory> is not given, the ADRs are stored in the directory `doc/adr`.\n\n" +
+		    "The parameter <template_file> specifies an alternative template for the ADRs (NOT CURRENTLY IMPLEMENTED)."
 		)   
 public class CommandInit extends Command {
 

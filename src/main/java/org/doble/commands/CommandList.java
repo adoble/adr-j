@@ -19,8 +19,8 @@ import org.doble.annotations.Cmd;
 @Cmd (
 		name="list",
 		usage="adr list",
-		shorthelp="Lists the architecture decision records",
-		help= "Lists the architecture decision records"
+		shorthelp="Lists the architecture decision records.",
+		help= "Lists the filenames of the currently created architecture decision records"
 		)
 public class CommandList extends Command {
 	private ADRProperties properties; 
