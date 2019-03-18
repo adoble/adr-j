@@ -15,13 +15,16 @@ import org.doble.annotations.Cmd;
  *
  */
 @Cmd(name="init", 
-     usage="adr init [DIRECTORY]", 
+     usage=  "adr init [options] <directory> \n  " +
+			 "  options: \n" +
+			 "    -t, --template  <template_file>",
      shorthelp= "Initialises the directory of architecture decision records.",
      help= "Initialises the directory of architecture decision records:\n\n" +
  			" * creates a subdirectory of the current working directory" +
  			" * creates the first ADR in that subdirectory, recording the decision to" +
  			"   record architectural decisions with ADRs.\n\n" +
- 			"If the DIRECTORY is not given, the ADRs are stored in the directory `doc/adr`."
+ 			"If the <directory> is not given, the ADRs are stored in the directory `doc/adr`." +
+		    "<template_file> specifies an alternative template for the ADRs (NOT CURRENTLY IMPLEMENTED)."
 		)   
 public class CommandInit extends Command {
 

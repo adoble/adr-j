@@ -23,7 +23,7 @@ import org.doble.annotations.Cmd;
  * @author adoble
  */
 @Cmd(name = "new",
-		usage = "adr new [-s SUPERSEDED] [-l TARGET:LINK:REVERSE-LINK] TITLE_TEXT...",
+		usage = "adr new [-s <superseded_adr>] [-l <target_adr>:<link_description>:<reverse_link_description>] TITLE_TEXT...",
 		shorthelp = "Creates a new, numbered ADR.",
 		help = " Creates a new, numbered ADR.  The TITLE_TEXT arguments are concatenated to" +
 				" form the title of the new ADR.  The ADR is opened for editing in the" +
@@ -32,17 +32,17 @@ import org.doble.annotations.Cmd;
 				" file name of the ADR is output to stdout, so the command can be used in" +
 				" scripts.\n\n" +
 				" Options:\n\n" +
-				" -s SUPERSEDED   A reference (number or partial filename) of a previous" +
+				" -s <superseded_adr>   A reference (number or partial filename) of a previous" +
 				"                 decision that the new decision supersedes. A Markdown link" +
 				"                 to the superseded ADR is inserted into the Status section." +
 				"                 The status of the superseded ADR is changed to record that" +
 				"                 it has been superseded by the new ADR.\n\n" +
-				" -l TARGET:LINK:REVERSE-LINK" +
+				" -l <target_adr>:<link_description>:<reverse_link_description>" +
 				"                 Links the new ADR to a previous ADR." +
-				"                 TARGET is a reference (number or partial filename) of a" +
+				"                 <target_adr> is a reference (number or partial filename) of a" +
 				"                 previous decision. " +
-				"                 LINK is the description of the link created in the new ADR." +
-				"                 REVERSE-LINK is the description of the link created in the" +
+				"                 <link_description> is the description of the link created in the new ADR." +
+				"                 <reverse_link_description> is the description of the link created in the" +
 				"                 existing ADR that will refer to the new ADR.\n\n" +
 				" Multiple -s and -l options can be given, so that the new ADR can supersede" +
 				" or link to multiple existing ADRs."
