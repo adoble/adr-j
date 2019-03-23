@@ -7,7 +7,7 @@ Based on the [script based tools from Nat Pryce](https://github.com/npryce/adr-t
 
 Quick Start
 -----------
-[Install ADR-J tool](INSTALL.md)
+[Install ADR-J tool](./doc/usage/INSTALL.md)
 
 Use the `adr` command to manage ADRs.  Try running `adr help`.
 
@@ -21,6 +21,12 @@ ADRs are stored in your project as Markdown files in the `doc/adr` directory.
     This will create the first ADR recording that you are using ADRs
     to record architectural decisions and linking to
     [Michael Nygard's article on the subject][ADRs].
+
+    To use a different template to the standard, specify the path of a template:
+
+       adr int -t ~/standards/madr.md doc/architecture/decisions
+
+    A guide to writing templates can be found [here](./doc/usage/Writing_Templates.md).
 
 2. Create Architecture Decision Records
 
