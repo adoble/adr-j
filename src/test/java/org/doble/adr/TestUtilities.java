@@ -85,7 +85,7 @@ public class TestUtilities {
 		long count;
 
 		//Test point
-		//Files.lines(file).forEach(System.out::println);
+		Files.lines(file).forEach(System.out::println);
 
 		count = Files.lines(file).filter(s -> s.contains(lookFor)).count();
 		return count;
