@@ -22,7 +22,7 @@ The first argument to adr (the subcommand) specifies the action to perform. Furt
 
 Running adr without any arguments lists the available subcommands.
 
-Subcommands are implemented as Java classes with a defined interface in the package `adr.commmand`. A reflection mechanism is used so that new commands can be added without changing the rest of the code e.g. the subcommand new is implemented as class`CommandNew`, the subcommand help as the class `CommandHelp` and so on. Each command class is annotated with the name of the command (so the class name is not important) and also with its own help instructions so that it is completely self-cntained.
+Subcommands are implemented as Java classes with a defined interface in the package `adr.commmand`. A reflection mechanism is used so that new commands can be added without changing the rest of the code e.g. the subcommand new is implemented as class`CommandNew`, the subcommand help as the class `CommandHelp` and so on. Each command class is annotated with the name of the command (so the class name is not important) and also with its own help instructions so that it is completely self-contained.
 
 
 ## Consequences
