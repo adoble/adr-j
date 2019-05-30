@@ -88,9 +88,9 @@ public class CommandListTest {
 		localADR.run(TestUtilities.argify("list"));
 
 		String[] expectedFiles = {
-				"0002-an-ADR.md",
+				"0002-an-adr.md",
 				"0003-yet-another-adr.md",
-				"0004-this-ADR-is-going-to-be-linked-to.md",
+				"0004-this-adr-is-going-to-be-linked-to.md",
 				"0005-and-even-more-decisions.md",
 				"0006-decisions-decisions-decisions.md"
 		};
