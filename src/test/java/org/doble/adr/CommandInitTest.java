@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import org.doble.adr.template.Template;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,9 @@ public class CommandInitTest {
 
 	@Test
 	public void testInit() throws Exception {
+
+		String extFile = Template.MARKDOWN.templateEngine().getFileExtension();
+
 		ADR adr = new ADR(env);
 
 		String[] args = {"init"};
@@ -66,13 +70,13 @@ public class CommandInitTest {
 		assertTrue(exists);
 
 		// Check if the ADR has been created
-		pathName = rootPath + "/doc/adr/0001-record-architecture-decisions.md";
+		pathName = rootPath + "/doc/adr/0001-record-architecture-decisions" + extFile;
 		p = fileSystem.getPath(pathName);
 		exists = Files.exists(p);
 		assertTrue(exists);
 
 		// Do a sample check on the content
-		pathName = rootPath + "/doc/adr/0001-record-architecture-decisions.md";
+		pathName = rootPath + "/doc/adr/0001-record-architecture-decisions" + extFile;
 		p = fileSystem.getPath(pathName);
 		List<String> contents = Files.readAllLines(p);
 
@@ -93,7 +97,7 @@ public class CommandInitTest {
 
 		ADR adr = new ADR(env);
 
-		String[] args = {"init", customDir};
+		String[] args = {"init", "-d", customDir};
 
 		adr.run(args);
 
@@ -158,4 +162,51 @@ public class CommandInitTest {
 		boolean exists = Files.exists(p);
 		assertTrue(exists);
 	}
+
+	@Test
+	public void testInitwithAsciidocTemplate() throws Exception {
+
+		String extFile = Template.ASCIIDOC.templateEngine().getFileExtension();
+
+		ADR adr = new ADR(env);
+
+		String[] args = {"init","-t","ASCIIDOC"};
+
+		adr.run(args);
+
+		// Check to see if the .adr directory has been created.
+		String pathName = rootPath + "/.adr";
+		Path p = fileSystem.getPath(pathName);
+		boolean exists = Files.exists(p);
+		assertTrue(exists);
+
+		//Now see if the  standard docs directory has been created
+		pathName = rootPath + "/doc/adr";
+		p = fileSystem.getPath(pathName);
+		exists = Files.exists(p);
+		assertTrue(exists);
+
+		// Check if the ADR has been created
+		pathName = rootPath + "/doc/adr/0001-record-architecture-decisions" + extFile;
+		p = fileSystem.getPath(pathName);
+		exists = Files.exists(p);
+		assertTrue(exists);
+
+		// Do a sample check on the content
+		pathName = rootPath + "/doc/adr/0001-record-architecture-decisions" + extFile;
+		p = fileSystem.getPath(pathName);
+		List<String> contents = Files.readAllLines(p);
+
+		// Sample the contents
+		int matches = 0;
+		for (String line : contents) {
+			if (line.contains("Record architecture decisions")) matches++;
+			if (line.contains("== Decision")) matches++;
+			if (line.contains("Nygard")) matches++;
+		}
+
+		assertTrue(matches == 4);
+	}
+
+
 }

@@ -3,21 +3,17 @@
  */
 package org.doble.commands;
 
+import org.doble.adr.*;
+import org.doble.adr.template.Template;
+import org.doble.adr.template.TemplateEngine;
+import org.doble.annotations.Cmd;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.OptionalInt;
-
-import org.doble.adr.ADR;
-import org.doble.adr.ADRException;
-import org.doble.adr.ADRProperties;
-import org.doble.adr.EditorRunner;
-import org.doble.adr.Environment;
-import org.doble.adr.LinkSpecificationException;
-import org.doble.adr.Record;
-import org.doble.annotations.Cmd;
 
 /**
  * @author adoble
@@ -85,6 +81,7 @@ public class CommandNew extends Command {
 		// set up the record object 
 		Path rootPath = ADR.getRootPath(env);
 		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
+		TemplateEngine templateEngine = Template.valueOf(properties.getProperty("template")).templateEngine();
 
 		// Check to see if the editor command has been set.
 		if (env.editorCommand == null) {
@@ -144,7 +141,7 @@ public class CommandNew extends Command {
 			throw new ADRException(msg);
 		}
 
-		Record record = new Record.Builder(docsPath)
+		Record record = new Record.Builder(docsPath,templateEngine)
 				.id(highestIndex() + 1)
 				.name(name)
 				.date(new Date())

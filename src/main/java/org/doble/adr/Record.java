@@ -1,5 +1,7 @@
 package org.doble.adr;
 
+import org.doble.adr.template.TemplateEngine;
+
 import java.io.*;
 import java.nio.file.*;
 import java.text.DateFormat;
@@ -19,6 +21,7 @@ public class Record {
 	private final String context;
 	private final String decision;
 	private final String consequences;
+	private final TemplateEngine templateEngine;
 
 	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
 
@@ -37,17 +40,6 @@ public class Record {
 
 	private ArrayList<Link> links = new ArrayList<Link>();
 
-	// Mark down template
-	private String template = "# @ID. @Name\n\n" +
-			"Date: @Date\n\n" +
-			"## Status\n\n" +
-			"@Status\n\n" +
-			"## Context\n\n" +
-			"@Context\n\n" +
-			"## Decision\n\n" +
-			"@Decision\n\n" +
-			"## Consequences\n\n" +
-			"@Consequences\n";
 
 	/**
 	 * Constructor for an ADR record. It has private scope so that only
@@ -63,6 +55,7 @@ public class Record {
 		this.context = builder.context;
 		this.decision = builder.decision;
 		this.consequences = builder.consequences;
+		this.templateEngine = builder.templateEngine;
 	}
 
 	/**
@@ -76,7 +69,7 @@ public class Record {
 		// Integer idInt = new Integer(id);
 
 		//s = template.replace("@ID",  idInt.toString());
-		s = template.replace("@ID", idFormatted);
+		s = templateEngine.getRecordTemplate().replace("@ID", idFormatted);
 		s = s.replace("@Name", capitalizeFirstCharacter(this.name));  // First character of title is always upper case
 		s = s.replace("@Date", DateFormat.getDateInstance().format(date));
 		s = s.replace("@Context", context);
@@ -128,7 +121,7 @@ public class Record {
 		String fileName = this.name.toLowerCase();
 		fileName = fileName.replace(' ', '-');    // Replace blanks with hyphens
 		//String idFormatted = String.format("%04d", this.id);
-		fileName = idFormatted + '-' + fileName + ".md";  // Compose full file name
+		fileName = idFormatted + '-' + fileName + templateEngine.getFileExtension();  // Compose full file name
 		//Path p = env.fileSystem.getPath(docsPath.toString(), fileName);
 		Path p = docsPath.resolve(fileName); // Full path of the ADR file in the document path
 
@@ -293,6 +286,7 @@ public class Record {
 
 	public static class Builder {
 		private Path docsPath;
+		private TemplateEngine templateEngine;
 		private int id;
 		private String idFormatted;
 		private String name;
@@ -302,9 +296,12 @@ public class Record {
 		private String decision = "We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions";
 		private String consequences = "See Michael Nygard's article, linked above.";
 
-		public Builder(Path docsPath) {
+		public Builder(Path docsPath, TemplateEngine templateEngine) {
 			this.docsPath = docsPath;
+			this.templateEngine = templateEngine;
 		}
+
+
 
 		public Builder id(int id) {
 			this.id = id;

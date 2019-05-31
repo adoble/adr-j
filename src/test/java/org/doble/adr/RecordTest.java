@@ -8,6 +8,8 @@ import java.util.Date;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import org.doble.adr.template.TemplateEngine;
+import org.doble.adr.template.Template;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RecordTest {
 	private FileSystem fileSystem;
 	private Path docPath = null;
+	private TemplateEngine defaultTemplate;
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -31,6 +34,8 @@ public class RecordTest {
 		docPath = fileSystem.getPath("/test");
 
 		Files.createDirectory(docPath);
+
+		defaultTemplate =  Template.MARKDOWN.templateEngine();
 	}
 
 	@AfterEach
@@ -42,7 +47,7 @@ public class RecordTest {
 	@Order(1)
 	public void test1BasicRecordConstruction() throws Exception {
 
-		Record record = new Record.Builder(docPath).id(7).name("This is a new record").build();
+		Record record = new Record.Builder(docPath, defaultTemplate).id(7).name("This is a new record").build();
 
 		record.store();
 
@@ -67,7 +72,7 @@ public class RecordTest {
 	public void test2ComplexRecordConstruction() throws Exception {
 		Date date = new Date();
 
-		Record record = new Record.Builder(docPath).id(42)
+		Record record = new Record.Builder(docPath, defaultTemplate).id(42)
 				.name("This is a complex record")
 				.date(date)
 				.status("Accepted")
@@ -95,7 +100,7 @@ public class RecordTest {
 	@Order(3)
 	public void nameIsLowerCased() throws Exception {
 
-		Record record = new Record.Builder(docPath).id(8).name("CDR is stored in a relational database").build();
+		Record record = new Record.Builder(docPath, defaultTemplate).id(8).name("CDR is stored in a relational database").build();
 
 		record.store();
 

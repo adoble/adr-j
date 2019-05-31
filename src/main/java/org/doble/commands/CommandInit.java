@@ -8,6 +8,8 @@ import java.nio.file.*;
 import java.util.*;
 
 import org.doble.adr.*;
+import org.doble.adr.template.Template;
+import org.doble.adr.template.TemplateEngine;
 import org.doble.annotations.Cmd;
 
 /**
@@ -15,15 +17,18 @@ import org.doble.annotations.Cmd;
  *
  */
 @Cmd(name="init", 
-     usage="adr init [DIRECTORY]", 
+     usage="adr init [-d DIRECTORY] [-t ASCIIDOC | MARKDOWN]",
      shorthelp= "Initialises the directory of architecture decision records.",
      help= "Initialises the directory of architecture decision records:\n\n" +
  			" * creates a subdirectory of the current working directory" +
  			" * creates the first ADR in that subdirectory, recording the decision to" +
  			"   record architectural decisions with ADRs.\n\n" +
- 			"If the DIRECTORY is not given, the ADRs are stored in the directory `doc/adr`."
+ 			"If the DIRECTORY is not given, the ADRs are stored in the directory `doc/adr`." +
+			 "If the template is not given, the ADRs use the MARKDOWN format."
 		)   
 public class CommandInit extends Command {
+
+	private enum CommandStates {PARSE, DIRECTORY, TEMPLATE}
 
 	private Properties properties;
 	
@@ -47,18 +52,31 @@ public class CommandInit extends Command {
 		} 
 		
 
-		switch (args.length) {
-		case 0:
+
 			properties.setProperty("docPath", ADRProperties.defaultDocPath); // Use the default value for the adr directory
-			break;
+			properties.setProperty("template", ADRProperties.defaultTemplate.name());
+			CommandStates commandState = CommandStates.PARSE;
 
-		case 1:
-			properties.setProperty("docPath", args[0]);
-			break;
+			for (String arg : args) {
 
-		default:
-			throw new ADRException("ERROR: Unknown parameters");
-		}		
+				switch (commandState) {
+					case PARSE:
+						if (arg.equals("-d")) {
+							commandState = CommandStates.DIRECTORY;
+						} else if (arg.equals("-t")) {
+							commandState = CommandStates.TEMPLATE;
+						}
+						break;
+					case DIRECTORY:
+						properties.setProperty("docPath", arg);
+						commandState = CommandStates.PARSE;
+						break;
+					case TEMPLATE:
+						properties.setProperty("template", arg);
+						commandState = CommandStates.PARSE;
+						break;
+				}
+			}
 
 
 		try {
@@ -83,13 +101,14 @@ public class CommandInit extends Command {
 
 			// Now create the docs directory which contains the adr directory
 			Path docsPath = env.dir.resolve(properties.getProperty("docPath"));
+			TemplateEngine templateEngine = Template.valueOf(properties.getProperty("template")).templateEngine();
 
 			env.out.println("Creating ADR directory at " + docsPath);
 			Files.createDirectories(docsPath);
 
 
 			// Now generate template for the first architectural decision record and update the id
-			Record record = new Record.Builder(docsPath)
+			Record record = new Record.Builder(docsPath, templateEngine)
 					                    .id(1)
 					                    .name("Record architecture decisions")
 					                    .date(new Date())
