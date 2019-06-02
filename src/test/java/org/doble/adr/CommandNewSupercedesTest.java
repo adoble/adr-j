@@ -8,6 +8,9 @@ import java.util.Arrays;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+
+import picocli.CommandLine;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -17,6 +20,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CommandNewSupercedesTest {
@@ -33,8 +37,9 @@ public class CommandNewSupercedesTest {
 
 	private static FileSystem fileSystem;
 
-	private ADR adr;
-
+	//private ADR adr;
+    private Environment env;
+    
 	@BeforeEach
 	public void setUp() throws Exception {
 		Path rootPath = null;
@@ -46,26 +51,25 @@ public class CommandNewSupercedesTest {
 
 		Files.createDirectory(rootPath);
 
-		adr = new ADR(new Environment.Builder(fileSystem)
+		env = new Environment.Builder(fileSystem)
 				.out(System.out)
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
 				.editorCommand("dummyEditor")
 				.editorRunner(new TestEditorRunner())
-				.build()
-		);
+				.build();
 
-		// Set up the directory structure
+		// Initalize up the directory structure
 		String[] args = {"init"};
-		adr.run(args);
+		ADR.run(args, env);
 
 		// Now create a set of files that we can use for the tests
 		//for (String adrTitle: adrTitles) {
 		for (String adrTitle : adrTitles) {
 			// Convert the name to an array of args - including the command.
 			args = ("new" + " " + adrTitle).split(" ");
-			adr.run(args);
+			ADR.run(args, env);
 		}
 	}
 
@@ -91,31 +95,34 @@ public class CommandNewSupercedesTest {
 	@Test
 	@Order(3)
 	public void test3SupercedesInvalidADR() throws Exception {
-
+       int exitCode;
+       
 		// badly formed id 
 		String[] adrIds = {"foo"};
-		assertThrows(ADRException.class, () -> {
-			checkSupersedes(adrIds);
-		});
+		
+		exitCode = checkSupersedes(adrIds);
+		assertEquals(CommandLine.ExitCode.USAGE, exitCode);  
 
 		// Non existing adr
 		String[] neAdrIds = {"100"};
-		assertThrows(ADRException.class, () -> {
-			checkSupersedes(neAdrIds);
-		});
+		exitCode = checkSupersedes(neAdrIds);
+		assertEquals(CommandLine.ExitCode.SOFTWARE, exitCode);  
+		
 	}
 
-	public void checkSupersedes(int[] supercededIds) throws Exception {
+	public int checkSupersedes(int[] supercededIds) throws Exception {
 		String[] strings = new String[supercededIds.length];
 
 		for (int i = 0; i < supercededIds.length; i++) {
 			strings[i] = Integer.toString(supercededIds[i]);
 		}
 
-		checkSupersedes(strings);
+		int exitCode = checkSupersedes(strings);
+		return exitCode;
 	}
 
-	public void checkSupersedes(String[] supercededIds) throws Exception {
+	public int checkSupersedes(String[] supercededIds) throws Exception {
+		int exitCode = 0;
 //		int[] supercededIds = Arrays.stream(supercededIdStrings).mapToInt(Integer::parseInt).toArray();
 //		
 //		// Checks to ensure the integrity of the test data
@@ -141,7 +148,11 @@ public class CommandNewSupercedesTest {
 
 		String[] args = {};
 		args = argList.toArray(args);
-		adr.run(args);
+		exitCode = ADR.run(args, env);
+		
+		if (exitCode != 0) {  // Failure
+		  return exitCode;
+		}  
 
 		// Check that the the new record mentions that it supersedes ADR the ids
 		int newADRID = adrTitles.length + 2;
@@ -168,5 +179,7 @@ public class CommandNewSupercedesTest {
 			count = TestUtilities.findString(link, supersededADRFile);
 			assertTrue(count == 1, "The superseded ADR does not reference the  (new) ADR [" + supersededADRID + "] that supersedes it in the text.");
 		}
+		
+		return exitCode;
 	}
 }

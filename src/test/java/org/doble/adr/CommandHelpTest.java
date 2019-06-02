@@ -15,9 +15,16 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-// Import a mock of the file systes
+// Import a mock of the file systems
 
 /**
+ * This tests the help subcommand. 
+ * 
+ * Note hat before the use of the picocli library, the help subcommand was implemented with 
+ * its own class and this JUnit class tested it. Decision was made to still run the test, but
+ * on the picocli in-built help subcommand. 
+ * 
+ * 
  * @author adoble
  */
 public class CommandHelpTest {
@@ -42,18 +49,21 @@ public class CommandHelpTest {
 				.in(System.in)
 				.userDir(rootPath)
 				.build();
-		ADR adr = new ADR(env);
+		//ADR adr = new ADR(env);
 
 		String[] args = {"help"};
 
-		adr.run(args);
+		//adr.run(args);
+		ADR.run(args, env);
 
 		// read the output
 		String content = new String(baos.toByteArray());
 
 		assertTrue(content.length() > 0);
 
-		assertTrue(content.contains("Help"));  //At least this command is shown
+		assertTrue(content.contains("init"));  //At least this command is shown
+		assertTrue(content.contains("new"));  //At least this command is shown
+		assertTrue(content.contains("list"));  //At least this command is shown
 	}
 
 	@Test
@@ -68,14 +78,15 @@ public class CommandHelpTest {
 				.in(System.in)
 				.userDir(rootPath)
 				.build();
-		ADR adr = new ADR(env);
+		//ADR adr = new ADR(env);
 
 		String[] args = {};
 
 		try {
-			adr.run(args);
-		} catch (ADRException e) {
-			fail("ADR Exception raised: " + e.getMessage());
+			//adr.run(args);
+			ADR.run(args, env);
+		} catch (Exception e) {
+			fail("Exception raised: " + e.getMessage());
 		}
 
 		// read the output

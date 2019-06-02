@@ -10,6 +10,9 @@ import java.util.stream.Stream;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+
+import picocli.CommandLine;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,10 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommandNewTest {
-	private static FileSystem fileSystem;
 	final static private String rootPathName = "/project/adr";
 	final static private String docsPath = "/doc/adr";
-
+	private static FileSystem fileSystem;
+	private Environment env;
+	
 	private String[] adrTitles = {"another test architecture decision",
 			"yet another test architecture decision",
 			"and still the adrs come",
@@ -30,7 +34,7 @@ public class CommandNewTest {
 			"something to link to",
 			"a very important decision"};
 
-	private ADR adr;
+	//private ADR adr;
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -44,19 +48,29 @@ public class CommandNewTest {
 		Files.createDirectory(rootPath);
 
 		// Set up the environment
-		adr = new ADR(new Environment.Builder(fileSystem)
+//		adr = new ADR(new Environment.Builder(fileSystem)
+//				.out(System.out)
+//				.err(System.err)
+//				.in(System.in)
+//				.userDir(rootPathName)
+//				.editorCommand("dummyEditor")
+//				.editorRunner(new TestEditorRunner())
+//				.build()
+//		);
+		
+		env = new Environment.Builder(fileSystem)
 				.out(System.out)
 				.err(System.err)
 				.in(System.in)
 				.userDir(rootPathName)
 				.editorCommand("dummyEditor")
 				.editorRunner(new TestEditorRunner())
-				.build()
-		);
+				.build();
 
 		// Set up the directory structure
 		String[] args = {"init"};
-		adr.run(args);
+		ADR.run(args, env);
+		//adr.run(args);
 	}
 
 	@AfterEach
@@ -70,7 +84,7 @@ public class CommandNewTest {
 
 		String[] args = TestUtilities.argify("new " + adrTitle);
 
-		adr.run(args);
+		int exitCode = ADR.run(args, env);
 
 		// Check if the ADR file has been created
 		assertTrue(Files.exists(fileSystem.getPath("/project/adr/doc/adr/0002-this-is-a-test-achitecture-decision.md"))); // ADR id is 2 as the first ADR was setup during init.
@@ -79,9 +93,12 @@ public class CommandNewTest {
 	@Test
 	public void testWithoutTitle() {
 		String[] args = {"new"};
-		assertThrows(ADRException.class, () -> {
-			adr.run(args);
-		});
+		int exitCode = ADR.run(args,  env);
+		
+		assertTrue(exitCode == CommandLine.ExitCode.USAGE);  // Usage exit code
+//		assertThrows(ADRException.class, () -> {
+//			adr.run(args);
+//		});
 	}
 
 	@Test
@@ -106,7 +123,7 @@ public class CommandNewTest {
 		for (String adrName : adrTitles) {
 			// Convert the name to an array of args - including the command.
 			String[] args = ("new" + " " + adrName).split(" ");
-			adr.run(args);
+			ADR.run(args, env);
 		}
 
 		// Check to see if the names exist 

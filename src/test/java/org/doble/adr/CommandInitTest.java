@@ -47,11 +47,11 @@ public class CommandInitTest {
 
 	@Test
 	public void testInit() throws Exception {
-		ADR adr = new ADR(env);
+		//ADR adr = new ADR(env);
 
 		String[] args = {"init"};
 
-		adr.run(args);
+		ADR.run(args, env);
 
 		// Check to see if the .adr directory has been created.
 		String pathName = rootPath + "/.adr";
@@ -91,11 +91,11 @@ public class CommandInitTest {
 	public void testInitCustomDirectory() throws Exception {
 		String customDir = "myStuff/myDocs/myADRs";
 
-		ADR adr = new ADR(env);
+		//ADR adr = new ADR(env);
 
 		String[] args = {"init", customDir};
 
-		adr.run(args);
+		ADR.run(args, env);
 
 		// Check to see if the custom directory has been created. 
 		String pathName = rootPath + "/" + customDir;
@@ -105,27 +105,29 @@ public class CommandInitTest {
 	}
 
 	/**
-	 * Test to see if a re initialization of the directory causes an exception to be raised
+	 * Test to see if a re initialization of the directory causes error code to be given
 	 */
 	@Test
 	public void testReInit() throws Exception {
-		boolean exceptionRaised = false;
-		ADR adr = new ADR(env);
+		int errorCode;
+		//ADR adr = new ADR(env);
 
 		// Initialize the ADR directories
 		String[] args = {"init"};
 
-		adr.run(args);
+		 errorCode = ADR.run(args, env);
+		
+		assertTrue(errorCode == 0);
 
-		// Re-initialize to see if an exception is raised
-		try {
-			adr.run(args);
-		} catch (ADRException e) {
-			exceptionRaised = true;
-		}
-
-		assertTrue(exceptionRaised);
+		// Re-initialize to see if an error code is given  is raised
+	
+		errorCode = 	ADR.run(args, env);
+		
+		assertTrue(errorCode == ADR.ERRORCODE);
+			
 	}
+	
+	//TODO test for other error codes. 
 
 	/**
 	 * Test to see if the init command still goes through even
@@ -144,11 +146,11 @@ public class CommandInitTest {
 				.editorCommand(null)
 				.build();
 
-		ADR adr = new ADR(envWithoutEditor);
+		//ADR adr = new ADR(envWithoutEditor);
 
 		String[] args = {"init"};
 
-		adr.run(args);
+		ADR.run(args, envWithoutEditor);
 		String commandOutput = new String(baos.toByteArray());
 		assertTrue(commandOutput.contains("WARNING"), "No warning given from init command that edit has not been set.");
 

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CommandListTest {
 	final static private String rootPathName = "/project/adr";
@@ -44,11 +45,10 @@ public class CommandListTest {
 				.editorRunner(new TestEditorRunner())
 				.build();
 
-		// Set up the directory structure
-		adr = new ADR(env);
-
+		// Initialize up the directory structure
 		String[] args = {"init"};
-		adr.run(args);
+		int exitCode = ADR.run(args, env);
+		assertEquals(exitCode,  0); 
 	}
 
 	@AfterEach
@@ -69,7 +69,7 @@ public class CommandListTest {
 
 		// Create some ADRs
 		for (int i = 0; i < testData.length; i++) {
-			adr.run(TestUtilities.argify(testData[i]));
+			assertEquals(ADR.run(TestUtilities.argify(testData[i]), env), 0);;
 		}
 
 		//Catch the output 
@@ -83,9 +83,10 @@ public class CommandListTest {
 				.editorRunner(new TestEditorRunner())
 				.build();
 
-		ADR localADR = new ADR(localEnv);
+		//ADR localADR = new ADR(localEnv);
 
-		localADR.run(TestUtilities.argify("list"));
+		int exitCode = ADR.run(TestUtilities.argify("list"), localEnv);
+		assertEquals(exitCode, 0);
 
 		String[] expectedFiles = {
 				"0002-an-adr.md",

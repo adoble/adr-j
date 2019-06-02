@@ -6,6 +6,9 @@ import java.nio.file.Path;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+
+import picocli.CommandLine;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CommandNewLinkTest {
@@ -47,11 +51,12 @@ public class CommandNewLinkTest {
 				.editorRunner(new TestEditorRunner())
 				.build();
 
-		// Set up the directory structure
-		adr = new ADR(env);
-
+		// Initialize up the directory structure
 		String[] args = {"init"};
-		adr.run(args);
+		int exitCode = ADR.run(args, env);
+		
+		assertTrue(exitCode == 0); // Successful initialization
+		
 	}
 
 	@AfterEach
@@ -63,14 +68,14 @@ public class CommandNewLinkTest {
 	@Order(1)
 	public void test1Links() throws Exception {
 		// Create some ADRs
-		adr.run(TestUtilities.argify("new An ADR"));
-		adr.run(TestUtilities.argify("new Yet another adr"));
-		adr.run(TestUtilities.argify("new This ADR is going to be linked to"));  // ADR id 4
-		adr.run(TestUtilities.argify("new And even more decisions"));
-		adr.run(TestUtilities.argify("new Decisions decisions decisions"));
+		assertEquals(ADR.run(TestUtilities.argify("new An ADR"), env), 0);
+		assertEquals(ADR.run(TestUtilities.argify("new Yet another adr"), env), 0);
+		assertEquals(ADR.run(TestUtilities.argify("new This ADR is going to be linked to"), env), 0);  // ADR id 4
+		assertEquals(ADR.run(TestUtilities.argify("new And even more decisions"), env), 0);
+		assertEquals(ADR.run(TestUtilities.argify("new Decisions decisions decisions"), env), 0);
 
 		// Create new ADR that links to another
-		adr.run(TestUtilities.argify("new -l \"4:Links to:Is linked to from\" Links to number 4"));
+		assertEquals(ADR.run(TestUtilities.argify("new -l \"4:Links to:Is linked to from\" Links to number 4"), env), 0);
 
 		// Now check if the link messages has been added to the new ADR 7)
 		Path newADRFile = fileSystem.getPath(rootPathName, docsPath, "0007-links-to-number-4.md");
@@ -85,9 +90,11 @@ public class CommandNewLinkTest {
 
 	@Order(2)
 	public void test2MissingLInkSpec() {
-		// Create new ADR that links to another
-		assertThrows(ADRException.class, () -> {
-			adr.run(TestUtilities.argify("new -l Links to number 4"));
-		});
+		// Create new ADR that links to another, but with a malformed Link specification
+		int exitCode = ADR.run(TestUtilities.argify("new -l Links to number 4"), env);
+		assertEquals(exitCode, CommandLine.ExitCode.USAGE);
+//		assertThrows(ADRException.class, () -> {
+//			adr.run(TestUtilities.argify("new -l Links to number 4"));
+//		});
 	}
 }

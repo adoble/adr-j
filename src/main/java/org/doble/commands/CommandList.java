@@ -3,63 +3,81 @@
  */
 package org.doble.commands;
 
-import java.io.File;
-import java.io.FilenameFilter;
+
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
 import org.doble.adr.*;
-import org.doble.annotations.Cmd;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.ParentCommand;
 
 /**
  * @author adoble
  *
  */
-@Cmd (
-		name="list",
-		usage="adr list",
-		shorthelp="Lists the architecture decision records.",
-		help= "Lists the filenames of the currently created architecture decision records"
-		)
-public class CommandList extends Command {
+//@Cmd (
+//		name="list",
+//		usage="adr list",
+//		shorthelp="Lists the architecture decision records.",
+//		help= "Lists the filenames of the currently created architecture decision records"
+//		)
+
+@Command(name = "list",
+         description = "Lists the filenames of the currently created architecture decision records.")
+public class CommandList implements Callable<Integer> {
+	@ParentCommand
+	CommandADR commandADR;
+	
+	private Environment env;
 	private ADRProperties properties; 
 
 	/**
 	 * 
 	 */
-	public CommandList(Environment env) throws ADRException {
-		super(env);
-		
-		properties = new ADRProperties(env);
-			
-		// Load the properties
-		properties.load();
-		
+	public CommandList()  {
+
 	}
 
 	/* (non-Javadoc)
 	 * @see commands.Command#command(java.lang.String[])
 	 */
 	@Override
-	public void command(String[] args) throws ADRException {
-		Path rootPath = ADR.getRootPath(env);
+	public Integer call() {
+		
+		env = commandADR.getEnvironment();
+		
+		properties = new ADRProperties(env);
+					
+		// Load the properties
+		try {
+			properties.load();
+		} catch (ADRException e) {
+			env.err.println("FATAL: Cannot load properties file. Exception message ->" + e.getMessage() );
+			return ADR.ERRORCODE;
+		}
+		
+		Path rootPath;
+		try {
+			rootPath = ADR.getRootPath(env);
+		} catch (ADRException e) {
+			env.err.println("FATAL: Cannot determine project root directory. Exception message ->" + e.getMessage() );
+			return ADR.ERRORCODE;
+		}
+		
+		
 		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
 
 		try (Stream<Path> stream = Files.list(docsPath)){
 			stream.map(Path::getFileName).filter(ADRFilter.filter()).forEachOrdered(env.out::println);
 		} catch (IOException e) {
-			throw new ADRException("FATAL: Cannot access directory.", e);
+			env.out.println("FATAL: Cannot access directory. Exception message ->" + e.getMessage());
+			return ADR.ERRORCODE;
 		}
 
-		//			File docsDir = docsPath.toFile();
-		//			
-		//			FilenameFilter filter = new ADRFilenameFilter();
-		//			
-		//			for (String adrFileName: docsDir.list(filter)) {
-		//				env.out.println(adrFileName);
-		//			}
-
+		        
+		return 0;
 	}
 
 
