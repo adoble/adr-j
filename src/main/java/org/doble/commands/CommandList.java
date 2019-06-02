@@ -14,15 +14,11 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
 /**
+ * Subcommand to list the filenames of the currently created architecture decision records
+ * 
  * @author adoble
  *
  */
-//@Cmd (
-//		name="list",
-//		usage="adr list",
-//		shorthelp="Lists the architecture decision records.",
-//		help= "Lists the filenames of the currently created architecture decision records"
-//		)
 
 @Command(name = "list",
          description = "Lists the filenames of the currently created architecture decision records.")

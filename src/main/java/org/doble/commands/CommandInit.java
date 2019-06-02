@@ -20,18 +20,6 @@ import picocli.CommandLine.ParentCommand;
  * @author adoble
  *
  */
-//@Cmd(name="init", 
-//     usage=  "adr init [options] <directory> \n  " +
-//			 "  options: \n" +
-//			 "    -t, --template  <template_file>",
-//     shorthelp= "Initialises the directory of architecture decision records.",
-//     help= "\nInitialises the directory of architecture decision records:\n" +
-// 			" * creates a subdirectory of the current working directory\n" +
-// 			" * creates the first ADR in that subdirectory, recording the decision to\n" +
-// 			"   record architectural decisions with ADRs.\n\n" +
-// 			"If <directory> is not given, the ADRs are stored in the directory `doc/adr`.\n\n" +
-//		    "The parameter <template_file> specifies an alternative template for the ADRs (NOT CURRENTLY IMPLEMENTED)."
-//		)   
 @Command(name = "init",
          description = "Initialises the directory of architecture decision records:\n" +
       			       " * creates a subdirectory of the current working directory\n" +
@@ -54,12 +42,6 @@ public class CommandInit implements Callable<Integer> {
 	private Environment env;
 	private Properties properties;
 	
-//	public CommandInit()  {	
-//		
-//		this.env = commandADR.getEnvironment();
-//		properties = new Properties();
-//	}
-
 
 	/* (non-Javadoc)
 	 * @see commands.Command#command(java.lang.String[])

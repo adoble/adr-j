@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class TestUtilities {
-	//private enum States {initial, character, space, quote}
 
 	/**
 	 * Print out the files in the specified directory
@@ -83,9 +82,6 @@ public class TestUtilities {
 	 */
 	public static long findString(String lookFor, Path file) throws Exception {
 		long count;
-
-		//Test point
-		//Files.lines(file).forEach(System.out::println);
 
 		count = Files.lines(file).filter(s -> s.contains(lookFor)).count();
 		return count;

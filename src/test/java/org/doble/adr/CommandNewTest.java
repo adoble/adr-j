@@ -35,8 +35,6 @@ public class CommandNewTest {
 			"something to link to",
 			"a very important decision"};
 
-	//private ADR adr;
-
 	@BeforeEach
 	public void setUp() throws Exception {
 		Path rootPath = null;
@@ -48,17 +46,6 @@ public class CommandNewTest {
 
 		Files.createDirectory(rootPath);
 
-		// Set up the environment
-//		adr = new ADR(new Environment.Builder(fileSystem)
-//				.out(System.out)
-//				.err(System.err)
-//				.in(System.in)
-//				.userDir(rootPathName)
-//				.editorCommand("dummyEditor")
-//				.editorRunner(new TestEditorRunner())
-//				.build()
-//		);
-		
 		env = new Environment.Builder(fileSystem)
 				.out(System.out)
 				.err(System.err)
@@ -71,7 +58,7 @@ public class CommandNewTest {
 		// Set up the directory structure
 		String[] args = {"init"};
 		ADR.run(args, env);
-		//adr.run(args);
+
 	}
 
 	@AfterEach
@@ -98,9 +85,6 @@ public class CommandNewTest {
 		int exitCode = ADR.run(args,  env);
 		
 		assertTrue(exitCode == CommandLine.ExitCode.USAGE);  // Usage exit code
-//		assertThrows(ADRException.class, () -> {
-//			adr.run(args);
-//		});
 	}
 
 	@Test

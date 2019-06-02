@@ -7,6 +7,7 @@ package org.doble.adr;
  * Exception is raised from the adr command handlers if they have encountered an error. 
  * This is usually raised after the command has printed a user error/warning
  * message 
+ * 
  * @author adoble
  *
  */

@@ -37,7 +37,6 @@ public class CommandNewSupercedesTest {
 
 	private static FileSystem fileSystem;
 
-	//private ADR adr;
     private Environment env;
     
 	@BeforeEach
@@ -104,8 +103,8 @@ public class CommandNewSupercedesTest {
 		assertEquals(CommandLine.ExitCode.USAGE, exitCode);  
 
 		// Non existing adr
-		String[] neAdrIds = {"100"};
-		exitCode = checkSupersedes(neAdrIds);
+		String[] nonExistingAdrIds = {"100"};
+		exitCode = checkSupersedes(nonExistingAdrIds);
 		assertEquals(CommandLine.ExitCode.SOFTWARE, exitCode);  
 		
 	}
@@ -123,13 +122,6 @@ public class CommandNewSupercedesTest {
 
 	public int checkSupersedes(String[] supercededIds) throws Exception {
 		int exitCode = 0;
-//		int[] supercededIds = Arrays.stream(supercededIdStrings).mapToInt(Integer::parseInt).toArray();
-//		
-//		// Checks to ensure the integrity of the test data
-//		OptionalInt highest = Arrays.stream(supercededIds).max();
-//	    assertTrue(highest.getAsInt() < adrTitles.length + 2);
-//	    OptionalInt lowest = Arrays.stream(supercededIds).min();
-//	    assertTrue(lowest.getAsInt() > 1);  //i.e not the initial ADR or negative
 
 		// Now create a new ADR that supersedes a number of ADRs
 		String newADRTitle = "This superceeds number";

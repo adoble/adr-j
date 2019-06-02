@@ -26,37 +26,10 @@ import picocli.CommandLine.*;
 
 
 /**
+ * Subcommand the create a new, numbered Architecture Description Record (ADR).
+ * 
  * @author adoble
  */
-//@Cmd(name = "new",
-//		usage = "adr new  [options] <title_text>...\n" +
-//				"   options:\n" +
-//				"     -l, --link <target_adr>:<link_description>:<reverse_link_description>]\n" +
-//				"     -s, --supersedes <superseded_adr>\n",
-//		shorthelp = "Creates a new, numbered ADR.",
-//		help =  "Creates a new, numbered ADR.  The <title_text> arguments are concatenated to " +
-//				"form the title of the new ADR.  The ADR is opened for editing in the " +
-//				"editor specified by the VISUAL or EDITOR environment variable (VISUAL is " +
-//				"preferred; EDITOR is used if VISUAL is not set).  After editing, the " +
-//				"file name of the ADR is output to stdout, so the command can be used in " +
-//				"scripts.\n\n" +
-//				"Options:\n\n" +
-//				" -s, --supersedes <superseded_adr>\n" +
-//				"                 A reference (number or partial filename) of a previous\n" +
-//				"                 decision that the new decision supersedes. A Markdown link\n" +
-//				"                 to the superseded ADR is inserted into the Status section.\n" +
-//				"                 The status of the superseded ADR is changed to record that\n" +
-//				"                 it has been superseded by the new ADR.\n\n" +
-//				" -l, --link <target_adr>:<link_description>:<reverse_link_description>\n" +
-//				"                 Links the new ADR to a previous ADR.\n" +
-//				"                 <target_adr> is a reference (number or partial filename) of a\n" +
-//				"                 previous decision.\n" +
-//				"                 <link_description> is the description of the link created in the new ADR.\n" +
-//				"                 <reverse_link_description> is the description of the link created in the\n" +
-//				"                 existing ADR that will refer to the new ADR.\n\n" +
-//				"Multiple -s and -l options can be given, so that the new ADR can supersede" +
-//				" or link to multiple existing ADRs."
-//)
 
 @Command(name = "new",
          description = "Creates a new, numbered ADR.  The <title_text> arguments are concatenated to"
@@ -90,25 +63,14 @@ public class CommandNew implements Callable<Integer> {
 	ArrayList<Integer> supersedes = new ArrayList<Integer>();
 	
 	@ParentCommand
-	CommandADR commandADR;
-	
-	
+	CommandADR commandADR; 
+		
 	private Environment env;
-	//private enum CommandStates {PARSE, SUPERSEDES, LINK, RECORD};
+	
 	ADRProperties properties;
 
-	/**
-	 *
-	 */
-//	public CommandNew()  {
-//		
-//	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see commands.Command#command(java.lang.String[])
-	 */
+
 	@Override
 	public Integer call()  throws Exception {
 		String adrTitle;
@@ -136,56 +98,6 @@ public class CommandNew implements Callable<Integer> {
 		}
 
 		
-//		try {
-//			if (args.length == 0) {
-//				String msg = "ERROR: Try giving the ADR a description.\n";
-//				msg += this.getUsage();
-//				throw new ADRException(msg);
-//			} else {
-//				CommandStates commandState = CommandStates.PARSE;
-//				for (String arg : args) {
-//
-//					switch (commandState) {
-//						case PARSE:
-//							if (arg.equals("-s")) {
-//								commandState = CommandStates.SUPERSEDES;
-//							} else if (arg.equals("-l")) {
-//								commandState = CommandStates.LINK;
-//							} else {
-//								commandState = CommandStates.RECORD;
-//								name += arg + " ";
-//							}
-//							break;
-//						case SUPERSEDES:
-//							supersedes.add(Integer.parseInt(arg));
-//							//record.addSupersedes(Integer.parseInt(arg));
-//							commandState = CommandStates.PARSE;
-//							break;
-//						case LINK:
-//							link = arg;
-//							commandState = CommandStates.PARSE;
-//							break;
-//						case RECORD:
-//							name += arg + " ";
-//							break;
-//					}
-//				}
-//				if (commandState == CommandStates.SUPERSEDES) {
-//					String msg = "ERROR: -s option requires an ADR reference.\n";
-//					msg += "Usage: " + getUsage();
-//					throw new ADRException(msg);
-//				}
-//				if (commandState == CommandStates.LINK) {
-//					String msg = "ERROR: -l option requires an ADR reference.\n";
-//					msg += "Usage: " + getUsage();
-//					throw new ADRException(msg);
-//				}
-//			}
-//		} catch (NumberFormatException e) {
-//			String msg = "ERROR: Invalid ADR reference for the option -s \n";
-//			msg += this.getUsage();
-//			throw new ADRException(msg);
-//		}
 		
 		// Create the ADR title from the arguments
 		StringBuilder sb = new StringBuilder();

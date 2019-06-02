@@ -49,11 +49,9 @@ public class CommandHelpTest {
 				.in(System.in)
 				.userDir(rootPath)
 				.build();
-		//ADR adr = new ADR(env);
 
 		String[] args = {"help"};
 
-		//adr.run(args);
 		ADR.run(args, env);
 
 		// read the output
@@ -78,12 +76,10 @@ public class CommandHelpTest {
 				.in(System.in)
 				.userDir(rootPath)
 				.build();
-		//ADR adr = new ADR(env);
 
 		String[] args = {};
 
 		try {
-			//adr.run(args);
 			ADR.run(args, env);
 		} catch (Exception e) {
 			fail("Exception raised: " + e.getMessage());

@@ -28,7 +28,6 @@ public class CommandNewLinkTest {
 	private static FileSystem fileSystem;
 
 	private Environment env;
-//	private ADR adr;
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -93,8 +92,5 @@ public class CommandNewLinkTest {
 		// Create new ADR that links to another, but with a malformed Link specification
 		int exitCode = ADR.run(TestUtilities.argify("new -l Links to number 4"), env);
 		assertEquals(exitCode, CommandLine.ExitCode.USAGE);
-//		assertThrows(ADRException.class, () -> {
-//			adr.run(TestUtilities.argify("new -l Links to number 4"));
-//		});
 	}
 }

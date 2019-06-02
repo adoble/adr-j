@@ -47,8 +47,6 @@ public class CommandInitTest {
 
 	@Test
 	public void testInit() throws Exception {
-		//ADR adr = new ADR(env);
-
 		String[] args = {"init"};
 
 		ADR.run(args, env);
@@ -91,8 +89,6 @@ public class CommandInitTest {
 	public void testInitCustomDirectory() throws Exception {
 		String customDir = "myStuff/myDocs/myADRs";
 
-		//ADR adr = new ADR(env);
-
 		String[] args = {"init", customDir};
 
 		ADR.run(args, env);
@@ -110,7 +106,6 @@ public class CommandInitTest {
 	@Test
 	public void testReInit() throws Exception {
 		int errorCode;
-		//ADR adr = new ADR(env);
 
 		// Initialize the ADR directories
 		String[] args = {"init"};
@@ -145,8 +140,6 @@ public class CommandInitTest {
 				.userDir(env.dir)
 				.editorCommand(null)
 				.build();
-
-		//ADR adr = new ADR(envWithoutEditor);
 
 		String[] args = {"init"};
 

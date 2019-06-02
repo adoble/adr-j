@@ -7,6 +7,16 @@ import org.doble.adr.Environment;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.HelpCommand;
 
+/** 
+ * This class represents the main command "adr". It is:
+ *  - required for the Picocli framework
+ *  - contains the command declarations 
+ *  - maintains the environment for subcommands
+ *  
+ * @author adoble
+ *
+ */
+
 @Command(name = "adr",
 		 description = "Creation and management of architectural decision records (ADRs)",
 		 version = "2.1",
@@ -38,7 +48,6 @@ public class CommandADR implements Callable<Integer> {
 
 	@Override
 	public Integer call() throws Exception {
-		
 		return 0;
 	}
 
