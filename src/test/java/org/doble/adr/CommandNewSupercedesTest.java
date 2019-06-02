@@ -155,7 +155,7 @@ public class CommandNewSupercedesTest {
 			long count = 0;
 			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
 			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
-			String link = "Supersedes the [architecture decision record " + supersededADRID + "](" + supersededADRFileName + ")";
+			String link = "Supersedes ADR " + supersededADRID + " - " + supersededADRFileName ;
 			count = TestUtilities.findString(link, newADRFile);
 
 			assertTrue(count == 1, "The new ADR does not reference the superseded ADR [" + supersededADRID + "] in the text.");
