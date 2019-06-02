@@ -86,8 +86,6 @@ public class Record {
 		String statusMsg = status + "\n\n";
 
 		for (Integer adrID : supersedes) {
-			// TODO Change this to the form "Supersedes ADR 004 - Implement as Java"
-			//statusMsg += "\nSupersedes the [architecture decision record " + adrID + "](" + getADRFileName(adrID) + ")\n";
 			statusMsg += "\nSupersedes ADR " + adrID + " - " + getADRFileName(adrID) + "\n";
 			}
 
