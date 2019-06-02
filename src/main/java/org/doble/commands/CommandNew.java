@@ -109,7 +109,6 @@ public class CommandNew implements Callable<Integer> {
 		adrTitle = sb.toString().trim(); //Remove the last space
 		
 
-		//TODO change name to title
 		Record record = new Record.Builder(docsPath)
 				.id(highestIndex() + 1)
 				.name(adrTitle)
