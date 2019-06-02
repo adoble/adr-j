@@ -19,7 +19,7 @@ public class SystemEditorRunner extends  EditorRunner {
 	@Override
 	public void run(Path path, String editorCommand) throws ADRException {
 		
-		String adrFileName = path.getFileName().toString();
+//		String adrFileName = path.getFileName().toString();
 		String adrPathName = path.toString();
 				
 		try {

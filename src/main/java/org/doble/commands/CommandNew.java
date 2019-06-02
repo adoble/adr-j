@@ -130,7 +130,9 @@ public class CommandNew implements Callable<Integer> {
 		if (env.editorCommand == null) {
 			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
 					+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
+			env.err.println(msg);
 			return ADR.ERRORCODE;
+			//TODO check if a test has been provided for this
 		}
 
 		
@@ -215,6 +217,7 @@ public class CommandNew implements Callable<Integer> {
 			
 		} catch (LinkSpecificationException e) {
 			String msg = "ERROR: -l parameter incorrectly formed.";
+			env.err.println(msg);   //TODO check that there is a test for this.
 			return CommandLine.ExitCode.USAGE;  // Ensure that the usage instruction are shown
 		}
 

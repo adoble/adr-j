@@ -24,7 +24,7 @@ public class RecordTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		Path rootPath = null;
+		//Path rootPath = null;
 
 		fileSystem = Jimfs.newFileSystem(Configuration.unix());
 

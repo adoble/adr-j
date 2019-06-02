@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class TestUtilities {
-	private enum States {initial, character, space, quote}
+	//private enum States {initial, character, space, quote}
 
 	/**
 	 * Print out the files in the specified directory

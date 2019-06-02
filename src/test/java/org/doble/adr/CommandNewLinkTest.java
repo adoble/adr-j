@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+//import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,7 +28,7 @@ public class CommandNewLinkTest {
 	private static FileSystem fileSystem;
 
 	private Environment env;
-	private ADR adr;
+//	private ADR adr;
 
 	@BeforeEach
 	public void setUp() throws Exception {

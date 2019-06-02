@@ -17,12 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CommandListTest {
 	final static private String rootPathName = "/project/adr";
-	final static private String docsPath = "/doc/adr";
+//	final static private String docsPath = "/doc/adr";
 
 	private static FileSystem fileSystem;
 
 	private Environment env;
-	private ADR adr;
+	//private ADR adr;
 
 	@BeforeEach
 	public void setUp() throws Exception {

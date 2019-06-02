@@ -17,7 +17,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommandNewTest {
@@ -85,6 +86,7 @@ public class CommandNewTest {
 		String[] args = TestUtilities.argify("new " + adrTitle);
 
 		int exitCode = ADR.run(args, env);
+		assertEquals(0, exitCode);
 
 		// Check if the ADR file has been created
 		assertTrue(Files.exists(fileSystem.getPath("/project/adr/doc/adr/0002-this-is-a-test-achitecture-decision.md"))); // ADR id is 2 as the first ADR was setup during init.
