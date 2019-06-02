@@ -33,12 +33,11 @@ import picocli.CommandLine.ParentCommand;
 //		    "The parameter <template_file> specifies an alternative template for the ADRs (NOT CURRENTLY IMPLEMENTED)."
 //		)   
 @Command(name = "init",
-//         description = "\nInitialises the directory of architecture decision records:\n" +
-//      			       " * creates a subdirectory of the current working directory\n" +
-//     			       " * creates the first ADR in that subdirectory, recording the decision to\n" +
-//     			       "   record architectural decisions with ADRs."
-    		description = "Something short"	       
-		)
+         description = "Initialises the directory of architecture decision records:\n" +
+      			       " * creates a subdirectory of the current working directory\n" +
+     			       " * creates the first ADR in that subdirectory, recording the decision to\n" +
+     			       "   record architectural decisions with ADRs."
+    	)
 public class CommandInit implements Callable<Integer> {
 	
 	@Option(names = { "-t", "--template" }, paramLabel = "TEMPLATE", description = "Template file used for ADRs.")
