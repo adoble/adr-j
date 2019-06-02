@@ -48,6 +48,7 @@ public class CommandInit implements Callable<Integer> {
 	 */
 	@Override
 	public Integer call() throws Exception {
+		int exitCode = 0; 
 
 		this.env = commandADR.getEnvironment();
 		properties = new Properties();
@@ -56,6 +57,7 @@ public class CommandInit implements Callable<Integer> {
 			String msg = "WARNING: Editor for the ADR has not been found in the environment variables.\n"
 					+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
 			env.err.println(msg);
+			exitCode = ADR.ERRORENVIRONMENT;
 		} 
 
 		properties.setProperty("docPath", docPath); // Use the default value for the adr directory
@@ -68,7 +70,7 @@ public class CommandInit implements Callable<Integer> {
 			Files.createDirectories(adrPath);
 		} else {
 			env.out.println("Directory is already initialised for ADR.");
-			return ADR.ERRORCODE;
+			return ADR.ERRORGENERAL;
 		}
 
 
@@ -95,7 +97,7 @@ public class CommandInit implements Callable<Integer> {
 				.build(); 
 		record.store(); 
 
-		return 0;
+		return exitCode;
 	}
 
 }

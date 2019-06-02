@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommandInitTest {
@@ -118,7 +119,7 @@ public class CommandInitTest {
 	
 		errorCode = 	ADR.run(args, env);
 		
-		assertTrue(errorCode == ADR.ERRORCODE);
+		assertTrue(errorCode == ADR.ERRORGENERAL);
 			
 	}
 	
@@ -143,7 +144,8 @@ public class CommandInitTest {
 
 		String[] args = {"init"};
 
-		ADR.run(args, envWithoutEditor);
+		int exitCode = ADR.run(args, envWithoutEditor);
+		assertEquals(ADR.ERRORENVIRONMENT, exitCode, "Exit code  does not indicate that init has errors");
 		String commandOutput = new String(baos.toByteArray());
 		assertTrue(commandOutput.contains("WARNING"), "No warning given from init command that edit has not been set.");
 

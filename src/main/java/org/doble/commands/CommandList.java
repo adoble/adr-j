@@ -51,7 +51,7 @@ public class CommandList implements Callable<Integer> {
 			properties.load();
 		} catch (ADRException e) {
 			env.err.println("FATAL: Cannot load properties file. Exception message ->" + e.getMessage() );
-			return ADR.ERRORCODE;
+			return ADR.ERRORGENERAL;
 		}
 		
 		Path rootPath;
@@ -59,7 +59,7 @@ public class CommandList implements Callable<Integer> {
 			rootPath = ADR.getRootPath(env);
 		} catch (ADRException e) {
 			env.err.println("FATAL: Cannot determine project root directory. Exception message ->" + e.getMessage() );
-			return ADR.ERRORCODE;
+			return ADR.ERRORGENERAL;
 		}
 		
 		
@@ -69,7 +69,7 @@ public class CommandList implements Callable<Integer> {
 			stream.map(Path::getFileName).filter(ADRFilter.filter()).forEachOrdered(env.out::println);
 		} catch (IOException e) {
 			env.out.println("FATAL: Cannot access directory. Exception message ->" + e.getMessage());
-			return ADR.ERRORCODE;
+			return ADR.ERRORGENERAL;
 		}
 
 		        

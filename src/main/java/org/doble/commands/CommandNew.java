@@ -74,6 +74,7 @@ public class CommandNew implements Callable<Integer> {
 	@Override
 	public Integer call()  throws Exception {
 		String adrTitle;
+		int exitCode = 0; 
 		
 		env = commandADR.getEnvironment();
 
@@ -93,8 +94,7 @@ public class CommandNew implements Callable<Integer> {
 			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
 					+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
 			env.err.println(msg);
-			return ADR.ERRORCODE;
-			//TODO check if a test has been provided for this
+			exitCode =  ADR.ERRORENVIRONMENT;
 		}
 
 		
@@ -136,7 +136,7 @@ public class CommandNew implements Callable<Integer> {
 		createADR(record);
 		
 		
-		return 0;
+		return exitCode;
 	}
 
 	private void createADR(Record record) throws ADRException {

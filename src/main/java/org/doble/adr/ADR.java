@@ -27,8 +27,9 @@ public class ADR  {
 
 	final static public int MAX_ID_LENGTH = 4;
 	final static String ADR_DIR_NAME = ".adr";
-	public static final Integer ERRORCODE = 1;
-	//private static ADR adr;
+	
+	public static final Integer ERRORGENERAL = 1;        // General purpose error code
+	public static final Integer ERRORENVIRONMENT= 2;  // Environment variables not correctly set 
 	private Environment env;
 	
 
