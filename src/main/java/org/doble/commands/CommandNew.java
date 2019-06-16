@@ -49,7 +49,6 @@ public class CommandNew implements Callable<Integer> {
     		+ "   <target_adr>:<link_description>:<reverse_link_description>\n\n"
     		+ " <target_adr> is a reference (number or partial filename) of a previous decision."
     		+ " <link_description> is the description of the link created in the new ADR."
-    		+ " <reverse_link_description> is the description of the link created in the existing ADR that will refer to the new ADR.\n"
     		+ "Multiple -l options can be given, so that the new ADR can link to multiple existing ADRs"
     		)
 	ArrayList<String> links = new ArrayList<String>();;

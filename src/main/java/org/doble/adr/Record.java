@@ -1,102 +1,168 @@
 package org.doble.adr;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Record {
 	private final Path docsPath; // Where the adr files are stored
-	private final int id;
+	private final Optional<Path> template;
+	private final Integer id;
 	private final String idFormatted;
 	private final String name;
 	private final Date date;
-	;
 	private final String status;
-	private final String context;
-	private final String decision;
-	private final String consequences;
+	//private final String context;
+	//private final String decision;
+	//private final String consequences;
 
 	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
 
 	private class Link {
 
-		Link(Integer id, String comment, String reverseComment) {
+		Link(Integer id, String comment) {
 			this.id = id;
 			this.comment = comment;
-			this.reverseComment = reverseComment;
 		}
 
 		Integer id;
 		String comment = "";
-		String reverseComment = "";
 	}
-
+	
 	private ArrayList<Link> links = new ArrayList<Link>();
 
-	// Mark down template
-	private String template = "# @ID. @Name\n\n" +
-			"Date: @Date\n\n" +
-			"## Status\n\n" +
-			"@Status\n\n" +
-			"## Context\n\n" +
-			"@Context\n\n" +
-			"## Decision\n\n" +
-			"@Decision\n\n" +
-			"## Consequences\n\n" +
-			"@Consequences\n";
+//	// Mark down template
+//	private String template = "# @ID. @Name\n\n" +
+//			"Date: @Date\n\n" +
+//			"## Status\n\n" +
+//			"@Status\n\n" +
+//			"## Context\n\n" +
+//			"@Context\n\n" +
+//			"## Decision\n\n" +
+//			"@Decision\n\n" +
+//			"## Consequences\n\n" +
+//			"@Consequences\n";
 
 	/**
 	 * Constructor for an ADR record. It has private scope so that only
 	 * the builder can be used to construct it.
 	 */
-	private Record(Record.Builder builder) {
+	private Record(Record.Builder builder) throws URISyntaxException {
+		final String defaultTemplateName = "default_template.md";
 		this.docsPath = builder.docsPath;
+		//this.template = builder.template;
 		this.id = builder.id;
 		this.idFormatted = builder.idFormatted;
 		this.name = builder.name;
 		this.date = builder.date;
 		this.status = builder.status;
-		this.context = builder.context;
-		this.decision = builder.decision;
-		this.consequences = builder.consequences;
+		
+		if (builder.template.isPresent()) {
+			this.template = builder.template;
+		} else {
+			// Use the default Nygard template 
+			this.template = Optional.of(Paths.get(getClass()
+					.getClassLoader()
+					.getResource(defaultTemplateName)  
+					.toURI()));
+
+		}
+			
+		//this.context = builder.context;
+		//this.decision = builder.decision;
+		//this.consequences = builder.consequences;
 	}
 
 	/**
-	 * Generate a string with the specified ADR sections (in this case from Michael Nygard.)
+	 * Generate and store an ADR using the data stored in this record. 
+	 * Generate a file with a name of the form: 
+	 *    (adr id)-(adr name, lower case separated with hyphens).(the extension of the template file used)   //TODO extension
 	 *
-	 * @return String The generated string.
+	 * @return Path The generated ADR file.
 	 */
-	private String generate() {
-		String s;
-
-		// Integer idInt = new Integer(id);
-
-		//s = template.replace("@ID",  idInt.toString());
-		s = template.replace("@ID", idFormatted);
-		s = s.replace("@Name", capitalizeFirstCharacter(this.name));  // First character of title is always upper case
-		s = s.replace("@Date", DateFormat.getDateInstance().format(date));
-		s = s.replace("@Context", context);
-		s = s.replace("@Decision", decision);
-		s = s.replace("@Consequences", consequences);
-
-		String statusMsg = status + "\n\n";
-
-		for (Integer adrID : supersedes) {
-			statusMsg += "\nSupersedes ADR " + adrID + " - " + getADRFileName(adrID) + "\n";
-			}
-
-		for (Link link : links) {
-			//statusMsg += capitalizeFirstCharacter(link.comment) + " ADR " + link.id.toString() +  "\n";
-			statusMsg += capitalizeFirstCharacter(link.comment) + " [ADR " + link.id.toString() + "](" + getADRFileName(link.id) + ")\n";
+	public Path store() throws ADRException {
+	
+		// Create a file name for the ADR
+		String targetFileName = this.name.toLowerCase();
+		targetFileName = targetFileName.replace(' ', '-');    // Replace blanks with hyphens
+		//String idFormatted = String.format("%04d", this.id);
+		targetFileName = idFormatted + '-' + targetFileName + ".md";  // Compose full file name
+		//Path p = env.fileSystem.getPath(docsPath.toString(), fileName);
+		Path targetFile = docsPath.resolve(targetFileName); // Full path of the ADR file in the document path
+		
+		
+		// Create the link fragment using the line in the template file
+		Path sourceFile = this.template.get();
+		String templateLinkFragment = getFragment(sourceFile, "{{{link.id}}}");
+		
+		//Now generate link fragments (i.e. the markdown and the template field) for each of the links
+		ArrayList<String> linkFragments = new ArrayList<String>();
+		for (Link link: links) {
+			String linkFragment = templateLinkFragment;
+			linkFragments.add(linkFragment.replace("{{{link.comment}}}", 
+					                               capitalizeFirstCharacter(link.comment))
+					                      .replace("{{{link.id}}}", link.id.toString())
+					                      .replace("{{{link.file}}}", getADRFileName(link.id))
+					         );
 		}
+		String linkSectionString = linkFragments.stream().collect(Collectors.joining("\n"));
+		
+		// Create the superceded fragment using the line in the template file
+		String templateSupercededFragment = getFragment(sourceFile, "{{{superceded.id}}}");
+		// Now generate superceded string fragments 
+		ArrayList<String> supercededFragments = new ArrayList<String>();
+		for (Integer supercededId: supersedes) {
+			String supercededFragment = templateSupercededFragment;
+			supercededFragments.add(supercededFragment.replace("{{{superceded.id}}}", supercededId.toString())
+												        .replace("{{{superceded.file}}}", getADRFileName(supercededId))
+					                );
+		}
+		String supercededSectionString = supercededFragments.stream().collect(Collectors.joining("\n"));
+		
+		// Now substitute the fields in the template and write to the ADR
+		List<String> targetContent = new ArrayList<String>();
+		try (Stream<String> lines = Files.lines(sourceFile)) {
+			targetContent = lines
+					.map(line -> line.replaceAll("\\{\\{id\\}\\}", id.toString()))
+					.map(line -> line.replaceAll("\\{\\{name\\}\\}", name))
+					.map(line -> line.replaceAll("\\{\\{status\\}\\}", status))
+					.map(line -> line.replaceAll("\\{\\{date\\}\\}", DateFormat.getDateInstance().format(date)))
+					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0))        // Remove lines which will be blank
+					.filter(line -> !(line.contains("{{{superceded.id}}}") && supercededFragments.size() == 0)) // Remove lines which will be blank
+					.map(line -> line.contains("{{{link.id}}}")?linkSectionString: line)   
+					.map(line -> line.contains("{{{superceded.id}}}")?supercededSectionString: line)
+					.collect(Collectors.toList());   
+			//targetContent.removeIf(item -> item.isEmpty());  // Remove double empty lines
+			Files.write(targetFile, targetContent);  
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		   throw new ADRException("Cannot write ADR", e.getCause());
+		}
+		
+		// If there are (reverse) links to other ADR files then add them. 
+		// REMOVED. Using user defined templates means that there is no reliable way to 
+		// insert a reverse link at predetermined location in the other ADR
+		//
+		//TODO: Change the documentation around the link specification 
+		//
+//		for (Link link : links) {
+//			addReverseLink(docsPath, link);
+//		}
 
-		s = s.replace("@Status", statusMsg);
-
-		return s;
+		// If the  ADR supersedes another, then add the link to the record that supersedes it
+		for (Integer adrID : supersedes) {
+			this.supersede(docsPath, adrID, this.id);
+		}
+		
+        return targetFile;
 	}
 
 	private String getADRFileName(int adrId) {
@@ -119,41 +185,7 @@ public class Record {
 		return fileName;
 	}
 
-	/**
-	 * Store this ADR
-	 */
-	public Path store() throws ADRException {
-
-		// Create a file name for the ADR
-		String fileName = this.name.toLowerCase();
-		fileName = fileName.replace(' ', '-');    // Replace blanks with hyphens
-		//String idFormatted = String.format("%04d", this.id);
-		fileName = idFormatted + '-' + fileName + ".md";  // Compose full file name
-		//Path p = env.fileSystem.getPath(docsPath.toString(), fileName);
-		Path p = docsPath.resolve(fileName); // Full path of the ADR file in the document path
-
-		// Now write the ADR
-
-		try (PrintWriter adrWriter = new PrintWriter(Files.newBufferedWriter(p))) {
-
-			adrWriter.print(this.generate());
-			adrWriter.close();
-
-			// If there are (reverse) links to other ADR files then add them. 
-			for (Link link : links) {
-				addReverseLink(docsPath, link);
-			}
-
-			// If the  ADR supersedes another, then add the link to the record that supersedes it
-			for (Integer adrID : supersedes) {
-				this.supersede(docsPath, adrID, this.id);
-			}
-		} catch (Exception e) {
-			throw new ADRException("FATAL: Unable to store ADR" + this.id, e);
-		}
-
-		return p;
-	}
+	
 
 	/**
 	 * Writes the ADR (status section) with id supersededID that it has been
@@ -200,52 +232,15 @@ public class Record {
 		}
 	}
 
-	/**
-	 * Adds a reverse link reference to an ADR at the end of the Status section with the form
-	 * "Linked to from ADR {id}"
-	 *
-	 * @param docsPath The path where the ADRs are..
-	 * @param link     The ADR record file where the reverse link reference is to be added.
-	 */
-	private void addReverseLink(Path docsPath, Link link) throws ADRException {
-
-		try (Stream<Path> stream = Files.list(docsPath)) {
-
-			Path[] paths = stream.filter(ADRFilter.filter(link.id)).toArray(Path[]::new);
-			if (paths.length == 1) {
-				// Read in the file
-				List<String> lines = Files.readAllLines(paths[0]);
-
-				// Find the Status section (before the context station) and add the reverse link comment
-				String line;
-				for (int index = 0; index < lines.size(); index++) {
-					line = lines.get(index);
-					if (line.startsWith("## Context")) {  // TODO Need to have use constants for the titles
-						lines.add(index, link.reverseComment + " [ADR " + id + "](" + getADRFileName(this.id) + ")\n");
-						lines.add(index + 1, "");
-						break;
-					}
-				}
-
-				// Write out the file
-				Files.write(paths[0], lines);
-			} else {
-				throw new ADRException("FATAL: More than one matching ADR file found for the reverse link.");
-			}
-		} catch (IOException e) {
-			throw new ADRException("FATAL: Unable to add reverse link", e);
-		}
-	}
 
 	/**
 	 * Adds a link the the record
 	 *
 	 * @param id             the id of the ADR being linked to.
 	 * @param comment        The link comment in this ADR
-	 * @param reverseComment The comment added to the ADR with the specified id.
-	 */
-	public void addLink(Integer id, String comment, String reverseComment) {
-		links.add(new Link(id, comment, reverseComment));
+	 **/
+	public void addLink(Integer id, String comment) {
+		links.add(new Link(id, comment));
 	}
 
 	/**
@@ -262,8 +257,8 @@ public class Record {
 		try {
 			if (linkSpec.length() > 0) {
 				String[] linkSpecs = linkSpec.split(":");
-				if (linkSpecs.length == 3) {
-					links.add(new Link(new Integer(linkSpecs[0]), linkSpecs[1], linkSpecs[2]));
+				if (linkSpecs.length == 2) {
+					links.add(new Link(new Integer(linkSpecs[0]), linkSpecs[1]));
 				} else {
 					//throw new LinkSpecificationException();
 					throw new LinkSpecificationException();
@@ -286,6 +281,27 @@ public class Record {
 	private String capitalizeFirstCharacter(String s) {
 		return s.substring(0, 1).toUpperCase() + s.substring(1);
 	}
+	
+	/*
+	 * Finds and returns the line in the template that contains the specified substitution field.
+	 * Assumes that all the other substitution field for the link are on the same line.
+	 * TODO make sure that the above is in the documentation
+	 */
+	private static String getFragment(Path sourceFile, String substitutionField) {
+		String templateFragment = "";
+		try (Stream<String> templateLines = Files.lines(sourceFile)) {
+			templateFragment = templateLines.filter(line-> line.contains(substitutionField)).findAny().orElse(null);
+			templateLines.close();
+
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return templateFragment;
+	}
+	
+	
 
 //	private String lowercaseFirstCharacter(String s) {
 //		return s.substring(0, 1).toLowerCase() + s.substring(1);
@@ -293,19 +309,27 @@ public class Record {
 
 	public static class Builder {
 		private Path docsPath;
+		private Optional<Path> template = Optional.empty();
 		private int id;
 		private String idFormatted;
 		private String name;
 		private Date date = new Date();
-		private String status = "Accepted";
-		private String context = "Record the architectural decisions made on this project.";
-		private String decision = "We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions";
-		private String consequences = "See Michael Nygard's article, linked above.";
+		private String status = "Proposed";
+//TODO remove commented out code
+//		private String context = "Record the architectural decisions made on this project.";
+//		private String decision = "We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions";
+//		private String consequences = "See Michael Nygard's article, linked above.";
 
 		public Builder(Path docsPath) {
 			this.docsPath = docsPath;
 		}
+      
 
+		public Builder template(Path template) {
+			this.template = Optional.ofNullable(template);
+			return this;
+		}
+		
 		public Builder id(int id) {
 			this.id = id;
 			idFormatted = String.format("%04d", id);
@@ -327,22 +351,18 @@ public class Record {
 			return this;
 		}
 
-		public Builder context(String context) {
-			this.context = context;
-			return this;
-		}
+		/*
+		 * public Builder context(String context) { this.context = context; return this;
+		 * }
+		 * 
+		 * public Builder decision(String decision) { this.decision = decision; return
+		 * this; }
+		 * 
+		 * public Builder consequences(String consequences) { this.consequences =
+		 * consequences; return this; }
+		 */
 
-		public Builder decision(String decision) {
-			this.decision = decision;
-			return this;
-		}
-
-		public Builder consequences(String consequences) {
-			this.consequences = consequences;
-			return this;
-		}
-
-		public Record build() {
+		public Record build() throws URISyntaxException {
 			return new Record(this);
 		}
 	}

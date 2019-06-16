@@ -4,7 +4,12 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -15,6 +20,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -41,7 +47,29 @@ public class RecordTest {
 	@Test
 	@Order(1)
 	public void test1BasicRecordConstruction() throws Exception {
+		String expectedContents = "# 7. This is a new record\n" + 
+				"\n" + 
+				"Date: {{date}}\n" + 
+				"\n" + 
+				"## Status\n" + 
+				"\n" + 
+				"Proposed\n" + 
+				"\n\n" + 
+				"## Context\n" + 
+				"\n" + 
+				"Record the architectural decisions made on this project.\n" + 
+				"\n" + 
+				"## Decision\n" + 
+				"\n" + 
+				"We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions\n" + 
+				"\n" + 
+				"## Consequences\n" + 
+				"\n" + 
+				"See Michael Nygard's article, linked above.";
+		
+		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(new Date()));
 
+		// Build the record
 		Record record = new Record.Builder(docPath).id(7).name("This is a new record").build();
 
 		record.store();
@@ -51,29 +79,50 @@ public class RecordTest {
 
 		// Read in the file
 		Path adrFile = fileSystem.getPath("/test/0007-this-is-a-new-record.md");
+		Stream<String> lines = Files.lines(adrFile);
+		String actualContents = lines.collect(Collectors.joining("\n"));
+		lines.close();
 
-		assertTrue(TestUtilities.contains("0007", adrFile));
-		assertTrue(TestUtilities.contains("This is a new record", adrFile));
+	    
+		//TestUtilities.stringDiff(expectedContents, actualContents);
+		
+        assertEquals(expectedContents, actualContents);
 
-		// Check the default values
-		assertTrue(TestUtilities.contains("Accepted", adrFile));
-		assertTrue(TestUtilities.contains("Record the architectural decisions made on this project.", adrFile));
-		assertTrue(TestUtilities.contains("We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions", adrFile));
-		assertTrue(TestUtilities.contains("See Michael Nygard's article, linked above.", adrFile));
 	}
+
+
 
 	@Test
 	@Order(2)
 	public void test2ComplexRecordConstruction() throws Exception {
 		Date date = new Date();
-
+		
+		String expectedContents = "# 42. This is a complex record\n" + 
+				"\n" + 
+				"Date: {{date}}\n" + 
+				"\n" + 
+				"## Status\n" + 
+				"\n" + 
+				"Accepted\n" + 
+				"\n" + 
+				"\n" + 
+				"## Context\n" + 
+				"\n" + 
+				"Record the architectural decisions made on this project.\n" + 
+				"\n" + 
+				"## Decision\n" + 
+				"\n" + 
+				"We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions\n" + 
+				"\n" + 
+				"## Consequences\n" + 
+				"\n" + 
+				"See Michael Nygard's article, linked above.";
+		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(date));
+		
 		Record record = new Record.Builder(docPath).id(42)
 				.name("This is a complex record")
 				.date(date)
 				.status("Accepted")
-				.context("The context,")
-				.decision("The decision.")
-				.consequences("What it implies,")
 				.build();
 		record.store();
 
@@ -82,13 +131,13 @@ public class RecordTest {
 
 		// Read in the file
 		Path adrFile = fileSystem.getPath("/test/0042-this-is-a-complex-record.md");
+		Stream<String> lines = Files.lines(adrFile);
+		String actualContents = lines.collect(Collectors.joining("\n"));
+		lines.close();
+		
+		//TestUtilities.stringDiff(expectedContents, actualContents);
+		assertEquals(expectedContents, actualContents);
 
-		assertTrue(TestUtilities.contains("0042", adrFile));
-		assertTrue(TestUtilities.contains("This is a complex record", adrFile));
-		assertTrue(TestUtilities.contains(DateFormat.getDateInstance().format(date), adrFile));
-		assertTrue(TestUtilities.contains("Accepted", adrFile));
-		assertTrue(TestUtilities.contains("The decision.", adrFile));
-		assertTrue(TestUtilities.contains("What it implies,", adrFile));
 	}
 
 	@Test
@@ -101,6 +150,19 @@ public class RecordTest {
 
 		// Check if the ADR file has been created
 		assertTrue(Files.exists(fileSystem.getPath("/test/0008-cdr-is-stored-in-a-relational-database.md")));
+	}
+	
+	@Test
+	@Order(4)
+	public void testLinkConstruction() throws Exception {
+		Record record = new Record.Builder(docPath).id(102).name("Contains some links").build();
+        
+		// <target_adr>:<link_description>
+		record.addLink("4:Links to");
+		record.addLink("5:Also links to");
+				
+		record.store();
+
 	}
 
 }

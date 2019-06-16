@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import org.doble.adr.*;
 //import org.doble.annotations.Cmd;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -28,8 +29,12 @@ import picocli.CommandLine.ParentCommand;
     	)
 public class CommandInit implements Callable<Integer> {
 	
-	@Option(names = { "-t", "--template" }, paramLabel = "TEMPLATE", description = "Template file used for ADRs.")
+	@Option(names = { "-t", "-template" }, paramLabel = "TEMPLATE", description = "Template file used for ADRs.")
     private String template;
+	
+	@Option(names = { "-i", "-initial" }, paramLabel = "INITIALTEMPLATE", 
+			description = "A template for the initial ADR created during intialization")
+    private String initialTemplate;
 
     @Parameters(arity = "0..1", paramLabel = "DOCDIR", description = "The directory to store the ADRs relative to " 
     		                                                         + " the current directory."
@@ -60,8 +65,9 @@ public class CommandInit implements Callable<Integer> {
 			exitCode = ADR.ERRORENVIRONMENT;
 		} 
 
-		properties.setProperty("docPath", docPath); // Use the default value for the adr directory
-
+		properties.setProperty("docPath", docPath); 
+		if (template != null) properties.setProperty("templateFile", template.toString());
+        if (initialTemplate != null) properties.setProperty("initialTemplateFile", initialTemplate.toString());
 
 		Path adrPath = env.dir.resolve(".adr");
 
@@ -89,13 +95,42 @@ public class CommandInit implements Callable<Integer> {
 		Files.createDirectories(docsPath);
 
 
-		// Now generate template for the first architectural decision record and update the id
-		Record record = new Record.Builder(docsPath)
-				.id(1)
-				.name("Record architecture decisions")
-				.date(new Date())
-				.build(); 
-		record.store(); 
+		// If no template is specified and no initial template is specified create
+		// an initial ADR using the default (Nygard) form 
+		if (template == null && initialTemplate == null) {
+			Path defaultInitialTemplate = Paths.get(getClass().getClassLoader()
+					.getResource("default_initial_template.md")
+					.toURI());
+
+			Record record = new Record.Builder(docsPath)
+					.template(defaultInitialTemplate)
+					.id(1)
+					.name("Record architecture decisions")
+					.date(new Date())
+					.build(); 
+			record.store(); 
+		}
+		
+		// If a template is specified and an initial template is specified create an
+		// initial ADR using the specified initial template
+		if (template != null && initialTemplate != null) {
+			Record record = new Record.Builder(docsPath)
+					.template(env.fileSystem.getPath(initialTemplate))
+					.id(1)
+					.name("Record architecture decisions")
+					.date(new Date())
+					.build(); 
+			record.store();
+		}
+		
+		// If an initial template is specified, but no template give error message
+		if (template == null && initialTemplate != null) {
+			env.err.println("ERROR: Initial template [INITIALTEMPLATE] spceified, but no template [TEMPLATE]specified.  "
+					+ "No initial ADR created!");
+			env.err.println();
+			exitCode = CommandLine.ExitCode.USAGE;
+		}
+		
 
 		return exitCode;
 	}

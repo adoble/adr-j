@@ -74,17 +74,13 @@ public class CommandNewLinkTest {
 		assertEquals(ADR.run(TestUtilities.argify("new Decisions decisions decisions"), env), 0);
 
 		// Create new ADR that links to another
-		assertEquals(ADR.run(TestUtilities.argify("new -l \"4:Links to:Is linked to from\" Links to number 4"), env), 0);
+		assertEquals(ADR.run(TestUtilities.argify("new -l \"4:Links to\" Links to number 4"), env), 0);
 
-		// Now check if the link messages has been added to the new ADR 7)
+		// Now check if the link messages has been added to the new ADR 7
 		Path newADRFile = fileSystem.getPath(rootPathName, docsPath, "0007-links-to-number-4.md");
-
+        
 		assertTrue(TestUtilities.contains("Links to [ADR 4](0004-this-adr-is-going-to-be-linked-to.md)", newADRFile));
 
-		// Now check that the link message has been added to the target ADR
-		Path targetADRFile = fileSystem.getPath(rootPathName, docsPath, "0004-this-adr-is-going-to-be-linked-to.md");
-
-		assertTrue(TestUtilities.contains("Is linked to from [ADR 7](0007-links-to-number-4.md)", targetADRFile));
 	}
 
 	@Order(2)

@@ -20,6 +20,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 //import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -155,8 +156,14 @@ public class CommandNewSupercedesTest {
 			long count = 0;
 			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
 			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
-			String link = "Supersedes ADR " + supersededADRID + " - " + supersededADRFileName ;
+			//* Supercedes [ADR{{{superceded.id}}}]({{{superceded.file}}})
+			//String link = "Supersedes ADR " + supersededADRID + " - " + supersededADRFileName ;
+			//Default template:
+			// "Supercedes [ADR {{{superceded.id}}}]({{{superceded.file}}})"
+			String link = "Supercedes [ADR " + supersededADRID + "](" + supersededADRFileName + ")";
 			count = TestUtilities.findString(link, newADRFile);
+			
+			TestUtilities.printFile(newADRFile);
 
 			assertTrue(count == 1, "The new ADR does not reference the superseded ADR [" + supersededADRID + "] in the text.");
 		}
