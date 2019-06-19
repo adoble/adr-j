@@ -131,17 +131,16 @@ public class TestUtilities {
 	/**
 	 * Create a (mock) template file based on the specified content
 	 * @param fileSystem              The file system hosting the files
-	 * @param templateDirectoryName   The directory where the mock template is put
-	 * @param initTemplateFileName    The name of the mock template file
+	 * @param initTemplateFileName    The full path name of the mock template file
 	 * @param initTemplateFileContent Contents of the mock template 
 	 */
-	public static void createTemplateFile(FileSystem fileSystem, String templateDirectoryName, String initTemplateFileName,
-			String initTemplateFileContent) {
-		Path templateDirectory = fileSystem.getPath(templateDirectoryName);
-		Path initTemplateFile = fileSystem.getPath(initTemplateFileName);   
+	public static void createTemplateFile(FileSystem fileSystem, String templateFileName, String templateContent) {
+		
+		Path templateFile = fileSystem.getPath(templateFileName);   
+		Path templateDirectory = templateFile.getParent();
 		try {
 			Files.createDirectories(templateDirectory);
-			Files.write(initTemplateFile, initTemplateFileContent.getBytes());
+			Files.write(templateFile, templateContent.getBytes());
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}

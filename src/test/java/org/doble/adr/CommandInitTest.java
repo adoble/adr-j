@@ -202,7 +202,7 @@ public class CommandInitTest {
 		String initTemplateFileContent = "ADR {{id}}: {{name}}\n"
 				+ "Date:{{date}}\n"
 				+ "Status:{{status}}";
-		TestUtilities.createTemplateFile(env.fileSystem, templateDirectoryName, initTemplateFileName, initTemplateFileContent);
+		TestUtilities.createTemplateFile(env.fileSystem, initTemplateFileName, initTemplateFileContent);
 		
 		// Now run the command
 		String[] args = {"init", "-template", templateFileName, "-i", initTemplateFileName};

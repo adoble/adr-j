@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 public class Record {
 	private final Path docsPath; // Where the adr files are stored
 	private final Optional<Path> template;
+	private final String templateExtension;
 	private final Integer id;
 	private final String idFormatted;
 	private final String name;
@@ -67,13 +68,14 @@ public class Record {
 		
 		if (builder.template.isPresent()) {
 			this.template = builder.template;
+			this.templateExtension = builder.templateExtension;
 		} else {
-			// Use the default Nygard template 
+			// Use the default Nygard template (in markdown format)
 			this.template = Optional.of(Paths.get(getClass()
 					.getClassLoader()
 					.getResource(defaultTemplateName)  
 					.toURI()));
-
+			this.templateExtension = "md";
 		}
 			
 		//this.context = builder.context;
@@ -94,7 +96,7 @@ public class Record {
 		String targetFileName = this.name.toLowerCase();
 		targetFileName = targetFileName.replace(' ', '-');    // Replace blanks with hyphens
 		//String idFormatted = String.format("%04d", this.id);
-		targetFileName = idFormatted + '-' + targetFileName + ".md";  // Compose full file name
+		targetFileName = idFormatted + '-' + targetFileName + "." + templateExtension;  // Compose full file name
 		//Path p = env.fileSystem.getPath(docsPath.toString(), fileName);
 		Path targetFile = docsPath.resolve(targetFileName); // Full path of the ADR file in the document path
 		
@@ -158,9 +160,14 @@ public class Record {
 //		}
 
 		// If the  ADR supersedes another, then add the link to the record that supersedes it
-		for (Integer adrID : supersedes) {
-			this.supersede(docsPath, adrID, this.id);
-		}
+		// REMOVED. Using user defined templates means that there is no reliable way to 
+		// insert a superceded message at predetermined location in the other ADR
+		//
+		//TODO: Change the documentation around the superceded flag 
+		//
+//		for (Integer adrID : supersedes) {
+//			this.supersede(docsPath, adrID, this.id);
+//		}
 		
         return targetFile;
 	}
@@ -251,22 +258,28 @@ public class Record {
 	 * ReverseLinkComment - The comment added to the ADR with the specified id.
 	 *
 	 * @param linkSpec The link specification as string
+	 * @return The id of the ADR linked to
 	 * @throws LinkSpecificationException Thrown if the link specification is incorrect
 	 */
-	public void addLink(String linkSpec) throws LinkSpecificationException {
+	public int addLink(String linkSpec) throws LinkSpecificationException {
+		String linkComment;
+		int linkID = -1;
 		try {
 			if (linkSpec.length() > 0) {
 				String[] linkSpecs = linkSpec.split(":");
 				if (linkSpecs.length == 2) {
-					links.add(new Link(new Integer(linkSpecs[0]), linkSpecs[1]));
+					linkID = new Integer(linkSpecs[0]);
+					linkComment = linkSpecs[1];
+					links.add(new Link(linkID, linkComment));
 				} else {
-					//throw new LinkSpecificationException();
 					throw new LinkSpecificationException();
 				}
 			}
 		} catch (NumberFormatException e) {
 			throw new LinkSpecificationException();
 		}
+
+		return linkID;
 	}
 
 	/**
@@ -310,6 +323,7 @@ public class Record {
 	public static class Builder {
 		private Path docsPath;
 		private Optional<Path> template = Optional.empty();
+		private String templateExtension = "md";  //Default to markdown
 		private int id;
 		private String idFormatted;
 		private String name;
@@ -327,9 +341,14 @@ public class Record {
 
 		public Builder template(Path template) {
 			this.template = Optional.ofNullable(template);
+			if (this.template.isPresent()) {
+				// Get the file extension
+				String fileName = this.template.get().toString();
+				this.templateExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+			}
 			return this;
 		}
-		
+
 		public Builder id(int id) {
 			this.id = id;
 			idFormatted = String.format("%04d", id);

@@ -63,6 +63,10 @@ public class CommandNewLinkTest {
 		fileSystem.close();
 	}
 
+	/** 
+	 * Create some valid links to ADRs and check if they are added. 
+	 * @throws Exception
+	 */
 	@Test
 	@Order(1)
 	public void test1Links() throws Exception {
@@ -83,10 +87,33 @@ public class CommandNewLinkTest {
 
 	}
 
+	/**
+	 * Create a invalid link specification and see if it is detected
+	 */
+	@Test
 	@Order(2)
 	public void test2MissingLInkSpec() {
 		// Create new ADR that links to another, but with a malformed Link specification
 		int exitCode = ADR.run(TestUtilities.argify("new -l Links to number 4"), env);
 		assertEquals(exitCode, CommandLine.ExitCode.USAGE);
 	}
+	
+	/**
+	 * Create a link to an ADR that does not exists and see if it is detected
+	 * 
+	 */
+	@Test 
+	@Order(3) 
+	public void testNonexistingLink() {
+		
+		assertEquals(ADR.run(TestUtilities.argify("new -l 42:\"Links to nowhere\" Links should be valid"), env), 
+				    CommandLine.ExitCode.SOFTWARE);
+		
+		
+	}
+	
+	
+	
+	
+	
 }

@@ -169,15 +169,18 @@ public class CommandNewSupercedesTest {
 		}
 
 		// Check that the superseded ADRs reference the ADR that supersedes them 
-		for (String supersededADRID : supercededIds) {
-			long count = 0;
-			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
-			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
-			Path supersededADRFile = fileSystem.getPath("/project/adr/doc/adr/", supersededADRFileName);
-			String link = "Superseded by the [architecture decision record " + newADRID + "](" + newADRFileName + ")";
-			count = TestUtilities.findString(link, supersededADRFile);
-			assertTrue(count == 1, "The superseded ADR does not reference the  (new) ADR [" + supersededADRID + "] that supersedes it in the text.");
-		}
+		// REMOVE: With user defined templates cannot reliably insert this message
+		// TODO: Check that this functionality is in help files
+		// TODO: check that this is mentioned in the documentation. 
+//		for (String supersededADRID : supercededIds) {
+//			long count = 0;
+//			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
+//			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
+//			Path supersededADRFile = fileSystem.getPath("/project/adr/doc/adr/", supersededADRFileName);
+//			String link = "Superseded by the [architecture decision record " + newADRID + "](" + newADRFileName + ")";
+//			count = TestUtilities.findString(link, supersededADRFile);
+//			assertTrue(count == 1, "The superseded ADR does not reference the  (new) ADR [" + supersededADRID + "] that supersedes it in the text.");
+//		}
 		
 		return exitCode;
 	}

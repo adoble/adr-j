@@ -4,13 +4,16 @@
 package org.doble.commands;
 
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import org.doble.adr.ADR;
 import org.doble.adr.ADRException;
@@ -95,6 +98,20 @@ public class CommandNew implements Callable<Integer> {
 			env.err.println(msg);
 			exitCode =  ADR.ERRORENVIRONMENT;
 		}
+		
+		// Set up the template file
+		Path templatePath = null;
+	    String templatePathName =  properties.getProperty("templateFile");
+	    if (templatePathName != null) {
+		    templatePath = env.fileSystem.getPath(templatePathName);
+		    if (!Files.exists(templatePath)) {
+		    	String msg = "The project has been initialised with the template \'" +
+                              templatePathName + 
+                             "\' which does not now exist.";
+		    	env.err.println("ERROR: " + msg);
+		    	throw new ADRException(msg);
+		    }
+	    }
 
 		
 		
@@ -107,14 +124,21 @@ public class CommandNew implements Callable<Integer> {
 		}
 		adrTitle = sb.toString().trim(); //Remove the last space
 		
-
+		// Build the record
 		Record record = new Record.Builder(docsPath)
 				.id(highestIndex() + 1)
 				.name(adrTitle)
 				.date(new Date())
+				.template(templatePath)
 				.build();
 
 		for (Integer supersedeId : supersedes) {
+			// Check that a ADR with the specified ID exists, i.e. there is an ADR 
+			// that can be superseded.
+			if (!checkADRExists(supersedeId)) {
+				System.err.println("ERROR: ADR to be superceded (ADR " + supersedeId + ") does not exist");
+				throw new ADRException("ADR to be superceded (ADR " + supersedeId + ") does not exist");
+			}
 			record.addSupersedes(supersedeId);
 		}
 
@@ -122,7 +146,12 @@ public class CommandNew implements Callable<Integer> {
 		
 		try {
 			for (String link: links) {
-				record.addLink(link);
+				int linkedToADRID = record.addLink(link);
+				// Check that the ADR linked to really exists.
+				if (!checkADRExists(linkedToADRID)) {
+					System.err.println("ERROR: Linked to ADR (" + linkedToADRID + "), but this ADR does not exist");
+					throw new ADRException("Linked to ADR (" + linkedToADRID + "), but this ADR does not exist");
+				}
 			}
 			
 		} catch (LinkSpecificationException e) {
@@ -136,6 +165,27 @@ public class CommandNew implements Callable<Integer> {
 		
 		
 		return exitCode;
+	}
+
+	private boolean checkADRExists(Integer adrID) throws ADRException, IOException {
+		// Get the doc path
+		Path rootPath = ADR.getRootPath(env);
+		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
+		
+		// Format the ADR ID
+		String formattedADRID = String.format("%04d", adrID);
+		
+		boolean found = false;
+		try (DirectoryStream<Path>  stream = Files.newDirectoryStream(docsPath)) {
+			for (Path entry: stream) {
+				if (entry.getFileName().toString().startsWith(formattedADRID)) {
+					found = true;
+					break;
+				}
+			}
+		}
+	    
+		return found;
 	}
 
 	private void createADR(Record record) throws ADRException {
