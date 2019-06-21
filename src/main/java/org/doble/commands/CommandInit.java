@@ -98,12 +98,8 @@ public class CommandInit implements Callable<Integer> {
 		// If no template is specified and no initial template is specified create
 		// an initial ADR using the default (Nygard) form 
 		if (template == null && initialTemplate == null) {
-			Path defaultInitialTemplate = Paths.get(getClass().getClassLoader()
-					.getResource("default_initial_template.md")
-					.toURI());
-
 			Record record = new Record.Builder(docsPath)
-					.template(defaultInitialTemplate)
+					.template("rsrc:" + ADRProperties.defaultInitialTemplateName)
 					.id(1)
 					.name("Record architecture decisions")
 					.date(new Date())
@@ -115,7 +111,7 @@ public class CommandInit implements Callable<Integer> {
 		// initial ADR using the specified initial template
 		if (template != null && initialTemplate != null) {
 			Record record = new Record.Builder(docsPath)
-					.template(env.fileSystem.getPath(initialTemplate))
+					.template(initialTemplate)
 					.id(1)
 					.name("Record architecture decisions")
 					.date(new Date())

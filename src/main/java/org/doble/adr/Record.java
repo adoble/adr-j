@@ -1,21 +1,26 @@
 package org.doble.adr;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Record {
-	private final Path docsPath; // Where the adr files are stored
-	private final Optional<Path> template;
-	private final String templateExtension;
+	private final Path docsPath;              // Where the adr files are stored
+	private final Optional<String> template;  //Using String type instead of Path as the default template is a resource. 
+	                                          //Resources are not correctly supported by Path. 
+	private final String templateExtension;;
 	private final Integer id;
 	private final String idFormatted;
 	private final String name;
@@ -57,7 +62,7 @@ public class Record {
 	 * the builder can be used to construct it.
 	 */
 	private Record(Record.Builder builder) throws URISyntaxException {
-		final String defaultTemplateName = "default_template.md";
+		//final String defaultTemplateName = ADRProperties.defaultTemplateName;
 		this.docsPath = builder.docsPath;
 		//this.template = builder.template;
 		this.id = builder.id;
@@ -66,18 +71,17 @@ public class Record {
 		this.date = builder.date;
 		this.status = builder.status;
 		
+		System.out.println("RECORD CONSTRUCTOR");	
+		
 		if (builder.template.isPresent()) {
 			this.template = builder.template;
 			this.templateExtension = builder.templateExtension;
 		} else {
-			// Use the default Nygard template (in markdown format)
-			this.template = Optional.of(Paths.get(getClass()
-					.getClassLoader()
-					.getResource(defaultTemplateName)  
-					.toURI()));
+			this.template = Optional.empty();
 			this.templateExtension = "md";
 		}
 			
+
 		//this.context = builder.context;
 		//this.decision = builder.decision;
 		//this.consequences = builder.consequences;
@@ -102,36 +106,59 @@ public class Record {
 		
 		
 		// Create the link fragment using the line in the template file
-		Path sourceFile = this.template.get();
-		String templateLinkFragment = getFragment(sourceFile, "{{{link.id}}}");
+		Optional<String> templateLinkFragment;
+		try {
+			templateLinkFragment = getFragment("{{{link.id}}}");
+		} catch (FileNotFoundException e) {
+			throw new ADRException("Template file containing link format definition cannot be read!", e);
+		}
 		
 		//Now generate link fragments (i.e. the markdown and the template field) for each of the links
 		ArrayList<String> linkFragments = new ArrayList<String>();
-		for (Link link: links) {
-			String linkFragment = templateLinkFragment;
-			linkFragments.add(linkFragment.replace("{{{link.comment}}}", 
-					                               capitalizeFirstCharacter(link.comment))
-					                      .replace("{{{link.id}}}", link.id.toString())
-					                      .replace("{{{link.file}}}", getADRFileName(link.id))
-					         );
+		String linkSectionString;
+		if (templateLinkFragment.isPresent()) {
+			for (Link link: links) {
+				String linkFragment = templateLinkFragment.get();
+				linkFragments.add(linkFragment.replace("{{{link.comment}}}", 
+						capitalizeFirstCharacter(link.comment))
+						.replace("{{{link.id}}}", link.id.toString())
+						.replace("{{{link.file}}}", getADRFileName(link.id))
+						);
+			}
+			linkSectionString = linkFragments.stream().collect(Collectors.joining("\n"));
+		} else {
+			linkSectionString = "";
 		}
-		String linkSectionString = linkFragments.stream().collect(Collectors.joining("\n"));
+
 		
 		// Create the superceded fragment using the line in the template file
-		String templateSupercededFragment = getFragment(sourceFile, "{{{superceded.id}}}");
-		// Now generate superceded string fragments 
+		Optional<String> templateSupercededFragment;
+		String supercededSectionString;
 		ArrayList<String> supercededFragments = new ArrayList<String>();
-		for (Integer supercededId: supersedes) {
-			String supercededFragment = templateSupercededFragment;
-			supercededFragments.add(supercededFragment.replace("{{{superceded.id}}}", supercededId.toString())
-												        .replace("{{{superceded.file}}}", getADRFileName(supercededId))
-					                );
+		try {
+			templateSupercededFragment = getFragment("{{{superceded.id}}}");
+		} catch (FileNotFoundException e) {
+			throw new ADRException("Template file containing superceded format definition cannot be read!", e);
 		}
-		String supercededSectionString = supercededFragments.stream().collect(Collectors.joining("\n"));
+		// Now generate superceded string fragments 
+		if (templateSupercededFragment.isPresent()) {
+			for (Integer supercededId: supersedes) {
+				String supercededFragment = templateSupercededFragment.get();
+				supercededFragments.add(supercededFragment.replace("{{{superceded.id}}}", supercededId.toString())
+						.replace("{{{superceded.file}}}", getADRFileName(supercededId))
+						);
+			}
+			supercededSectionString = supercededFragments.stream().collect(Collectors.joining("\n"));
+		} else {
+			supercededSectionString = "";
+		}
+		
+		//BufferedReader templateReader = getTemplateReader();
 		
 		// Now substitute the fields in the template and write to the ADR
 		List<String> targetContent = new ArrayList<String>();
-		try (Stream<String> lines = Files.lines(sourceFile)) {
+		
+		try (Stream<String> lines = getTemplateReader().lines()) {
 			targetContent = lines
 					.map(line -> line.replaceAll("\\{\\{id\\}\\}", id.toString()))
 					.map(line -> line.replaceAll("\\{\\{name\\}\\}", name))
@@ -203,6 +230,7 @@ public class Record {
 	 *
 	 * @param supersededID The id of the superseded ADR.
 	 * @param supersedesID The id of the ADR that supersedes it.
+	 * TODO REMOVE as this is now not used. 
 	 */
 	private void supersede(Path docsPath, int supersededID, int supersedesID) throws ADRException {
 		Path supersededADRFile;
@@ -299,19 +327,21 @@ public class Record {
 	 * Finds and returns the line in the template that contains the specified substitution field.
 	 * Assumes that all the other substitution field for the link are on the same line.
 	 * TODO make sure that the above is in the documentation
+	 * @param substitutionField The substitutionField being looked for
+	 * @returns Optional<String) The fragment found. Optional.empty if no fragment found 
+	 * (e.g. if the substitution field has not been specified in the template).
 	 */
-	private static String getFragment(Path sourceFile, String substitutionField) {
-		String templateFragment = "";
-		try (Stream<String> templateLines = Files.lines(sourceFile)) {
+	private Optional<String> getFragment(String substitutionField) throws FileNotFoundException {
+		String templateFragment; 
+		
+		BufferedReader reader = getTemplateReader();
+		try (Stream<String> templateLines = reader.lines()) {
 			templateFragment = templateLines.filter(line-> line.contains(substitutionField)).findAny().orElse(null);
 			templateLines.close();
 
 		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return templateFragment;
+		
+		return Optional.ofNullable(templateFragment);
 	}
 	
 	
@@ -320,9 +350,93 @@ public class Record {
 //		return s.substring(0, 1).toLowerCase() + s.substring(1);
 //	}
 
+	/**
+	 * Get a reader to the template file specified in the file <code>template</code>. A reader is
+	 * returned independent of if the template file is a normal file or a resource and 
+	 * independent of if the resource file is packaged in a JAR or not. 
+	 * Rules are: 
+	 * - If the template specified is a normal file (i.e. a normal file path) then a reader to that is 
+	 * returned.
+	 * - If the template is defined using "rsrc:" at the start then a reader to the resource is 
+	 * returned. For instance, if the template is defined as <code>rsrc:default_init_file.md</code>
+	 * then a reader to the resource file (under src/main/resources) is returned, independent of 
+	 * if the resource file is in a JAR or not. 
+	 * - If a template is not specified (the optional field template is empty), then a reader to the default 
+	 * template (defined in ADRProperties) is given, independent of 
+	 * if the resource file is in a JAR or not.
+	 * 
+	 * @return A reader for the template file
+	 * @throws FileNotFoundException
+	 */
+	private BufferedReader getTemplateReader() throws FileNotFoundException  {
+		// Now set up either the default template resource or the user specified template
+		BufferedReader templateReader;
+		
+		// TEST ----->
+		//TODO REMOVE 
+//		System.out.println("TEST RESOURCE READING");
+//		Path p = null;
+//		try {
+//			// See https://stackoverflow.com/questions/22605666/java-access-files-in-jar-causes-java-nio-file-filesystemnotfoundexception
+//			URI uri = ClassLoader.getSystemResource(ADRProperties.defaultTemplateName).toURI();
+//			
+//			System.out.println("URI SCHEME=" + uri.getScheme());
+//
+//			System.out.println("TEST RESOURCE URI:" + uri);
+//
+//			Map<String, String> fsProperties = new HashMap<>();
+//			String[] array = uri.toString().split("!");  // File system uri - in this case the jar file
+//			FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), fsProperties);
+//			p = fs.getPath(array[1]);
+//			System.out.println("PATH TO RESOURCE " + p.toString());
+//			//
+//			boolean exists = Files.exists(p);
+//			System.out.println("RESOURCE EXISTS:" + exists);
+//			System.out.println("RESOURCE CONTENTS-->" );
+//			Files.lines(p).forEach(System.out::println);
+//
+//			fs.close();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		// <----------- TEST
+
+		if (this.getTemplate().isPresent() && !this.getTemplate().get().substring(0,5).equals("rsrc:")) {
+			// Template has been specified by user and is a normal file
+			templateReader  = new BufferedReader(new FileReader(this.getTemplate().get()));
+		} else if (this.getTemplate().isPresent() && this.getTemplate().get().substring(0,5).equals("rsrc:")) {
+			// Template is user specified resource.
+			String resourceName = this.getTemplate().get().substring(5, this.getTemplate().get().length()); // Remove the 'resource" indicator
+			// Check that the resource name starts with '/' and if not insert it. 
+			//resourceName = resourceName.startsWith("/") ? resourceName : "/" + resourceName;
+			// Get  an input stream to the user specified template resource
+			InputStream templateInputStream =  getClass().getClassLoader().getResourceAsStream(resourceName); 
+			templateReader  = new BufferedReader(new InputStreamReader(templateInputStream));
+		} else {
+			// Template has not been specified so get an input stream to the default template resource
+			InputStream templateInputStream =  getClass().getClassLoader().getResourceAsStream(ADRProperties.defaultTemplateName);
+			templateReader  = new BufferedReader(new InputStreamReader(templateInputStream));
+		}
+
+
+		assert templateReader != null;
+
+		return templateReader;
+	}
+
+
+
+	private Optional<String> getTemplate() {
+		return template;
+	}
+
+
+
 	public static class Builder {
 		private Path docsPath;
-		private Optional<Path> template = Optional.empty();
+		private Optional<String> template = Optional.empty();
 		private String templateExtension = "md";  //Default to markdown
 		private int id;
 		private String idFormatted;
@@ -339,12 +453,21 @@ public class Record {
 		}
       
 
-		public Builder template(Path template) {
+		/** 
+		 * Sets up the path name of the template. Templates can be 
+		 * a) normal files.  In which case the string is a normal path specification
+		 * b) resources. In which case the string is preceded with "rsrc:"
+		 * @param template Path name of the template
+		 * @return Builder
+		 */
+		public Builder template(String template) {
 			this.template = Optional.ofNullable(template);
 			if (this.template.isPresent()) {
 				// Get the file extension
 				String fileName = this.template.get().toString();
 				this.templateExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+			} else {
+				this.templateExtension = "md";
 			}
 			return this;
 		}

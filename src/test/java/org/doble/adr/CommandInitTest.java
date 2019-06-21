@@ -204,6 +204,15 @@ public class CommandInitTest {
 				+ "Status:{{status}}";
 		TestUtilities.createTemplateFile(env.fileSystem, initTemplateFileName, initTemplateFileContent);
 		
+		// Create a test version of the template file
+		String templateFileContent = "ADR {{id}}: {{name}}\n"
+				+ "Date:{{date}}\n"
+				+ "Status:{{status}}"
+				+ "* Links"
+				+ "{{{link.id}}}";
+		TestUtilities.createTemplateFile(env.fileSystem, templateFileName, templateFileContent);		
+
+		
 		// Now run the command
 		String[] args = {"init", "-template", templateFileName, "-i", initTemplateFileName};
 		ADR.run(args, env);

@@ -16,7 +16,9 @@ public class ADRProperties extends Properties{
 	/**
 	 * 
 	 */
-	public  static final String defaultDocPath = "doc/adr";  //TODO is this the right place for this constant?
+	public static final String defaultDocPath = "doc/adr";  //TODO is this the right place for this constant?
+	public static final String defaultTemplateName = "default_template.md";
+	public static final String defaultInitialTemplateName = "default_initial_template.md";
 	
 	private static final long serialVersionUID = 1L;
 	

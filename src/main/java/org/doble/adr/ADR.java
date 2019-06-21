@@ -40,9 +40,9 @@ public class ADR  {
 	 * @param args  Command line arguments
 	 * 
 	 */
-	public static void mainX(String[] args) {
+	public static void main(String[] args) {
 		int errorCode = 0;
-						
+		
 		// Determine the editor from the system environment
 		String editorCommand = null;
 		editorCommand = System.getenv("EDITOR"); 

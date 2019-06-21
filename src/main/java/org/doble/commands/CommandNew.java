@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -101,7 +102,9 @@ public class CommandNew implements Callable<Integer> {
 		
 		// Set up the template file
 		Path templatePath = null;
-	    String templatePathName =  properties.getProperty("templateFile");
+		String templatePathName = properties.getProperty("templateFile");
+
+	    System.out.println("templatePathName------->"+templatePathName);
 	    if (templatePathName != null) {
 		    templatePath = env.fileSystem.getPath(templatePathName);
 		    if (!Files.exists(templatePath)) {
@@ -111,10 +114,9 @@ public class CommandNew implements Callable<Integer> {
 		    	env.err.println("ERROR: " + msg);
 		    	throw new ADRException(msg);
 		    }
-	    }
-
 		
-		
+	    } 
+	    		
 		// Create the ADR title from the arguments
 		StringBuilder sb = new StringBuilder();
 		for (String s : adrTitleParts)
@@ -124,20 +126,23 @@ public class CommandNew implements Callable<Integer> {
 		}
 		adrTitle = sb.toString().trim(); //Remove the last space
 		
+		System.out.println("TEMPLATE PATH = " + templatePath);
+		
 		// Build the record
 		Record record = new Record.Builder(docsPath)
 				.id(highestIndex() + 1)
 				.name(adrTitle)
 				.date(new Date())
-				.template(templatePath)
+				.template(templatePathName)
 				.build();
 
 		for (Integer supersedeId : supersedes) {
 			// Check that a ADR with the specified ID exists, i.e. there is an ADR 
 			// that can be superseded.
 			if (!checkADRExists(supersedeId)) {
-				System.err.println("ERROR: ADR to be superceded (ADR " + supersedeId + ") does not exist");
-				throw new ADRException("ADR to be superceded (ADR " + supersedeId + ") does not exist");
+				String msg = "ADR to be superceded (ADR " + supersedeId + ") does not exist";
+				env.err.println("ERROR: " + msg);
+				throw new ADRException(msg);
 			}
 			record.addSupersedes(supersedeId);
 		}
@@ -191,8 +196,12 @@ public class CommandNew implements Callable<Integer> {
 	private void createADR(Record record) throws ADRException {
 		// The ADR file that is created
 		Path adrPath;
+		
+		System.out.println("Creating ADR");
 
 		adrPath = record.store();
+		
+		System.out.println("Created ADR at " + adrPath.toString());
 
 		// And now start up the editor using the specified runner
 		EditorRunner runner = env.editorRunner;
