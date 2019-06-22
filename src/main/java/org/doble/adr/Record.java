@@ -106,12 +106,8 @@ public class Record {
 		
 		
 		// Create the link fragment using the line in the template file
-		Optional<String> templateLinkFragment;
-		try {
-			templateLinkFragment = getFragment("{{{link.id}}}");
-		} catch (FileNotFoundException e) {
-			throw new ADRException("Template file containing link format definition cannot be read!", e);
-		}
+		Optional<String> templateLinkFragment = getFragment("{{{link.id}}}");
+
 		
 		//Now generate link fragments (i.e. the markdown and the template field) for each of the links
 		ArrayList<String> linkFragments = new ArrayList<String>();
@@ -131,16 +127,14 @@ public class Record {
 		}
 
 		
-		// Create the superceded fragment using the line in the template file
+		// Create the superseded fragment using the line in the template file
 		Optional<String> templateSupercededFragment;
 		String supercededSectionString;
 		ArrayList<String> supercededFragments = new ArrayList<String>();
-		try {
-			templateSupercededFragment = getFragment("{{{superceded.id}}}");
-		} catch (FileNotFoundException e) {
-			throw new ADRException("Template file containing superceded format definition cannot be read!", e);
-		}
-		// Now generate superceded string fragments 
+		
+		templateSupercededFragment = getFragment("{{{superceded.id}}}");
+		
+		// Now generate superseded string fragments 
 		if (templateSupercededFragment.isPresent()) {
 			for (Integer supercededId: supersedes) {
 				String supercededFragment = templateSupercededFragment.get();
@@ -156,9 +150,10 @@ public class Record {
 		//BufferedReader templateReader = getTemplateReader();
 		
 		// Now substitute the fields in the template and write to the ADR
+		TemplateStreamer templateStreamer = new TemplateStreamer(docsPath.getFileSystem(), ADRProperties.defaultTemplateName);
 		List<String> targetContent = new ArrayList<String>();
 		
-		try (Stream<String> lines = getTemplateReader().lines()) {
+		try (Stream<String> lines = templateStreamer.lines()) {
 			targetContent = lines
 					.map(line -> line.replaceAll("\\{\\{id\\}\\}", id.toString()))
 					.map(line -> line.replaceAll("\\{\\{name\\}\\}", name))
@@ -171,7 +166,7 @@ public class Record {
 					.collect(Collectors.toList());   
 			//targetContent.removeIf(item -> item.isEmpty());  // Remove double empty lines
 			Files.write(targetFile, targetContent);  
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 		   throw new ADRException("Cannot write ADR", e.getCause());
 		}
@@ -331,14 +326,20 @@ public class Record {
 	 * @returns Optional<String) The fragment found. Optional.empty if no fragment found 
 	 * (e.g. if the substitution field has not been specified in the template).
 	 */
-	private Optional<String> getFragment(String substitutionField) throws FileNotFoundException {
+	private Optional<String> getFragment(String substitutionField) throws ADRException {
 		String templateFragment; 
 		
-		BufferedReader reader = getTemplateReader();
-		try (Stream<String> templateLines = reader.lines()) {
+		TemplateStreamer streamer = new TemplateStreamer(docsPath.getFileSystem(), ADRProperties.defaultTemplateName);
+		
+		//BufferedReader reader = getTemplateReader();
+		try (Stream<String> templateLines = streamer.lines(this.template)) {
 			templateFragment = templateLines.filter(line-> line.contains(substitutionField)).findAny().orElse(null);
 			templateLines.close();
-
+			streamer.close();
+		} 
+		catch (Exception e) {
+			String msg = "Cannot get the template containing " + substitutionField;
+			throw new ADRException(msg, e);
 		}
 		
 		return Optional.ofNullable(templateFragment);
@@ -349,84 +350,6 @@ public class Record {
 //	private String lowercaseFirstCharacter(String s) {
 //		return s.substring(0, 1).toLowerCase() + s.substring(1);
 //	}
-
-	/**
-	 * Get a reader to the template file specified in the file <code>template</code>. A reader is
-	 * returned independent of if the template file is a normal file or a resource and 
-	 * independent of if the resource file is packaged in a JAR or not. 
-	 * Rules are: 
-	 * - If the template specified is a normal file (i.e. a normal file path) then a reader to that is 
-	 * returned.
-	 * - If the template is defined using "rsrc:" at the start then a reader to the resource is 
-	 * returned. For instance, if the template is defined as <code>rsrc:default_init_file.md</code>
-	 * then a reader to the resource file (under src/main/resources) is returned, independent of 
-	 * if the resource file is in a JAR or not. 
-	 * - If a template is not specified (the optional field template is empty), then a reader to the default 
-	 * template (defined in ADRProperties) is given, independent of 
-	 * if the resource file is in a JAR or not.
-	 * 
-	 * @return A reader for the template file
-	 * @throws FileNotFoundException
-	 */
-	private BufferedReader getTemplateReader() throws FileNotFoundException  {
-		// Now set up either the default template resource or the user specified template
-		BufferedReader templateReader;
-		
-		// TEST ----->
-		//TODO REMOVE 
-//		System.out.println("TEST RESOURCE READING");
-//		Path p = null;
-//		try {
-//			// See https://stackoverflow.com/questions/22605666/java-access-files-in-jar-causes-java-nio-file-filesystemnotfoundexception
-//			URI uri = ClassLoader.getSystemResource(ADRProperties.defaultTemplateName).toURI();
-//			
-//			System.out.println("URI SCHEME=" + uri.getScheme());
-//
-//			System.out.println("TEST RESOURCE URI:" + uri);
-//
-//			Map<String, String> fsProperties = new HashMap<>();
-//			String[] array = uri.toString().split("!");  // File system uri - in this case the jar file
-//			FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), fsProperties);
-//			p = fs.getPath(array[1]);
-//			System.out.println("PATH TO RESOURCE " + p.toString());
-//			//
-//			boolean exists = Files.exists(p);
-//			System.out.println("RESOURCE EXISTS:" + exists);
-//			System.out.println("RESOURCE CONTENTS-->" );
-//			Files.lines(p).forEach(System.out::println);
-//
-//			fs.close();
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
-		// <----------- TEST
-
-		if (this.getTemplate().isPresent() && !this.getTemplate().get().substring(0,5).equals("rsrc:")) {
-			// Template has been specified by user and is a normal file
-			templateReader  = new BufferedReader(new FileReader(this.getTemplate().get()));
-		} else if (this.getTemplate().isPresent() && this.getTemplate().get().substring(0,5).equals("rsrc:")) {
-			// Template is user specified resource.
-			String resourceName = this.getTemplate().get().substring(5, this.getTemplate().get().length()); // Remove the 'resource" indicator
-			// Check that the resource name starts with '/' and if not insert it. 
-			//resourceName = resourceName.startsWith("/") ? resourceName : "/" + resourceName;
-			// Get  an input stream to the user specified template resource
-			InputStream templateInputStream =  getClass().getClassLoader().getResourceAsStream(resourceName); 
-			templateReader  = new BufferedReader(new InputStreamReader(templateInputStream));
-		} else {
-			// Template has not been specified so get an input stream to the default template resource
-			InputStream templateInputStream =  getClass().getClassLoader().getResourceAsStream(ADRProperties.defaultTemplateName);
-			templateReader  = new BufferedReader(new InputStreamReader(templateInputStream));
-		}
-
-
-		assert templateReader != null;
-
-		return templateReader;
-	}
-
-
 
 	private Optional<String> getTemplate() {
 		return template;
