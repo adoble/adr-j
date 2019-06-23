@@ -45,13 +45,52 @@ The reasons the above is **not** valid are:
 
 ## ADR-J fields
 
-  Name      | List Field | Type  | Description                                  
-------------|------------|------------------------------------------------------
- id         |            | field | The id of the ADR                            
- name       |            | field | The name of the ADR                          
- date       |            | field | The data the ADR was created                 
- supersedes |  id        | list  | Identifier of the ADR superseded by this ADR
- supersedes |  file      | list  | File name of the ADR superseded by this ADR  
- link       |  id        | list  | Identifier of the linked ADR                 
- link       |  file      | list  | File name of the linked ADR                  
- link       |  comment   | list  | Comment  about the linked ADR                
+### `id`
+
+ Type: field
+
+ Description: The identifier of the ADR
+
+
+### `name`
+
+Type: field
+
+Description: The name of the ADR   
+
+### `date`
+
+Type: field
+
+Description: The data the ADR was created                 
+
+
+### `supersedes.id`
+
+Type: list
+
+Description: Identifier of the ADR superseded by this ADR
+
+
+### `supersedes.file`
+
+Type: list
+
+Description: File name of the ADR superseded by this ADR  
+
+### `link.id`
+
+Type: list
+Description: Identifier of the linked ADR
+
+### `link.file`
+
+TYpe: list
+
+Description: File name of the linked ADR     
+
+### `link.comment`
+
+Type: list
+
+Description: Comment  about the linked ADR                
