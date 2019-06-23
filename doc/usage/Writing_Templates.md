@@ -21,15 +21,15 @@ After substitution this could look like:
 Lists are specified using `{{{list_field}}}`. This is  substituted with the each value of the field and also copies any markup and content on the same line, e.g.:
 
 ```
-* {{{supercedes}}}
+* {{{supersedes}}}
 ```
 
 could be replaced with:
 
 ```
 * Supersedes ADR 004 - Use asynchronous communication
-* Supercedes ADR 010 - Use a relational database
-* Supercedes ADR 013 - Use JMS based queueing system
+* Supersedes ADR 010 - Use a relational database
+* Supersedes ADR 013 - Use JMS based queueing system
 ```
 ## ADR-J fields
 

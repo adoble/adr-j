@@ -137,7 +137,7 @@ public class CommandNew implements Callable<Integer> {
 			// Check that a ADR with the specified ID exists, i.e. there is an ADR 
 			// that can be superseded.
 			if (!checkADRExists(supersedeId)) {
-				String msg = "ADR to be superceded (ADR " + supersedeId + ") does not exist";
+				String msg = "ADR to be superseded (ADR " + supersedeId + ") does not exist";
 				env.err.println("ERROR: " + msg);
 				throw new ADRException(msg);
 			}

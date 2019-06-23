@@ -6,7 +6,7 @@ Date: {{date}}
 
 {{status}}
 
-* Supercedes [ADR {{{superceded.id}}}]({{{superceded.file}}})
+* Supersedes [ADR {{{superseded.id}}}]({{{superseded.file}}})
 * {{{link.comment}}} [ADR {{{link.id}}}]({{{link.file}}})
 
 ## Context

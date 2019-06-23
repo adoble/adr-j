@@ -125,23 +125,23 @@ public class Record {
 
 		
 		// Create the superseded fragment using the line in the template file
-		Optional<String> templateSupercededFragment;
-		String supercededSectionString;
-		ArrayList<String> supercededFragments = new ArrayList<String>();
+		Optional<String> templateSupersededFragment;
+		String supersededSectionString;
+		ArrayList<String> supersededFragments = new ArrayList<String>();
 
-		templateSupercededFragment = getFragment("{{{superceded.id}}}");
+		templateSupersededFragment = getFragment("{{{superseded.id}}}");
        
 		// Now generate superseded string fragments 
-		if (templateSupercededFragment.isPresent()) {
-			for (Integer supercededId: supersedes) {
-				String supercededFragment = templateSupercededFragment.get();
-				supercededFragments.add(supercededFragment.replace("{{{superceded.id}}}", supercededId.toString())
-						.replace("{{{superceded.file}}}", getADRFileName(supercededId))
+		if (templateSupersededFragment.isPresent()) {
+			for (Integer supersededId: supersedes) {
+				String supersededFragment = templateSupersededFragment.get();
+				supersededFragments.add(supersededFragment.replace("{{{superseded.id}}}", supersededId.toString())
+						.replace("{{{superseded.file}}}", getADRFileName(supersededId))
 						);
 			}
-			supercededSectionString = supercededFragments.stream().collect(Collectors.joining("\n"));
+			supersededSectionString = supersededFragments.stream().collect(Collectors.joining("\n"));
 		} else {
-			supercededSectionString = "";
+			supersededSectionString = "";
 		}
 		
 		// Now substitute the fields in the template and write to the ADR
@@ -155,9 +155,9 @@ public class Record {
 					.map(line -> line.replaceAll("\\{\\{status\\}\\}", status))
 					.map(line -> line.replaceAll("\\{\\{date\\}\\}", DateFormat.getDateInstance().format(date)))
 					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0))        // Remove lines which will be blank
-					.filter(line -> !(line.contains("{{{superceded.id}}}") && supercededFragments.size() == 0)) // Remove lines which will be blank
+					.filter(line -> !(line.contains("{{{superseded.id}}}") && supersededFragments.size() == 0)) // Remove lines which will be blank
 					.map(line -> line.contains("{{{link.id}}}")?linkSectionString: line)   
-					.map(line -> line.contains("{{{superceded.id}}}")?supercededSectionString: line)
+					.map(line -> line.contains("{{{superseded.id}}}")?supersededSectionString: line)
 					.collect(Collectors.toList());   
 			//targetContent.removeIf(item -> item.isEmpty());  // Remove double empty lines
 			Files.write(targetFile, targetContent);  

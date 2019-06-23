@@ -76,8 +76,8 @@ public class CommandNewWithTemplateTest {
 				"{{status}}\n" + 
 				"## Links\n" + 
 				"* {{{link.comment}}} [ADR {{{link.id}}}]({{{link.file}}})\n" + 
-				"## Superceded\n" +
-				"* Supercedes [ADR {{{superceded.id}}}]({{{superceded.file}}})\n" + 
+				"## Superseded\n" +
+				"* Supersedes [ADR {{{superseded.id}}}]({{{superseded.file}}})\n" + 
 				"## Content" + 
 				"Some general content. ";
 		
@@ -86,7 +86,7 @@ public class CommandNewWithTemplateTest {
 				"## Status\n" + 
 				"Proposed\n" + 
 				"## Links\n" + 
-				"## Superceded\n" +
+				"## Superseded\n" +
 				"## Content" + 
 				"Some general content. ";
 		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(new Date()));
@@ -145,8 +145,8 @@ public class CommandNewWithTemplateTest {
 				"{{status}}\n" + 
 				"== Links\n" + 
 				"* {{{link.comment}}} {{{link.file}}}[ADR {{{link.id}}}]\n" + 
-				"== Superceded\n" +
-				"* Supercedes {{{superceded.file}}}[ADR {{{superceded.id}}}]\n" + 
+				"== Superseded\n" +
+				"* Supersedes {{{superseded.file}}}[ADR {{{superseded.id}}}]\n" + 
 				"== Content\n" + 
 				"Some general content written in ASCIIDOC.";
 		
@@ -155,7 +155,7 @@ public class CommandNewWithTemplateTest {
 				"== Status\n" + 
 				"Proposed\n" + 
 				"== Links\n" + 
-				"== Superceded\n" +
+				"== Superseded\n" +
 				"== Content\n" + 
 				"Some general content written in ASCIIDOC.";
 		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(new Date()));

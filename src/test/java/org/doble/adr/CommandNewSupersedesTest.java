@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CommandNewSupercedesTest {
+public class CommandNewSupersedesTest {
 	final static private String rootPathName = "/project/adr";
 	final static private String docsPath = "/doc/adr";
 
@@ -81,20 +81,20 @@ public class CommandNewSupercedesTest {
 	@Test
 	@Order(1)
 	public void test1Superseded() throws Exception {
-		int[] supercededIds = {5};
-		checkSupersedes(supercededIds);
+		int[] supersededIds = {5};
+		checkSupersedes(supersededIds);
 	}
 
 	@Test
 	@Order(2)
 	public void test2MultipleSupersedes() throws Exception {
-		int[] supercededIds = {5, 6, 8};
-		checkSupersedes(supercededIds);
+		int[] supersededIds = {5, 6, 8};
+		checkSupersedes(supersededIds);
 	}
 
 	@Test
 	@Order(3)
-	public void test3SupercedesInvalidADR() throws Exception {
+	public void test3SupersedesInvalidADR() throws Exception {
        int exitCode;
        
 		// badly formed id 
@@ -106,34 +106,34 @@ public class CommandNewSupercedesTest {
 		// Non existing adr
 		String[] nonExistingAdrIds = {"100"};
 		exitCode = checkSupersedes(nonExistingAdrIds);
-		assertEquals(CommandLine.ExitCode.SOFTWARE, exitCode);  
+		assertEquals(CommandLine.ExitCode.USAGE, exitCode);  
 		
 	}
 
-	public int checkSupersedes(int[] supercededIds) throws Exception {
-		String[] strings = new String[supercededIds.length];
+	public int checkSupersedes(int[] supersededIds) throws Exception {
+		String[] strings = new String[supersededIds.length];
 
-		for (int i = 0; i < supercededIds.length; i++) {
-			strings[i] = Integer.toString(supercededIds[i]);
+		for (int i = 0; i < supersededIds.length; i++) {
+			strings[i] = Integer.toString(supersededIds[i]);
 		}
 
 		int exitCode = checkSupersedes(strings);
 		return exitCode;
 	}
 
-	public int checkSupersedes(String[] supercededIds) throws Exception {
+	public int checkSupersedes(String[] supersededIds) throws Exception {
 		int exitCode = 0;
 
 		// Now create a new ADR that supersedes a number of ADRs
-		String newADRTitle = "This superceeds number";
-		for (String index : supercededIds) {
+		String newADRTitle = "This supersedes number";
+		for (String index : supersededIds) {
 			newADRTitle += " " + index;
 		}
 
 		// Create a new ADR that supersedes others 
 		ArrayList<String> argList = new ArrayList<String>();
 		argList.add("new");
-		for (String id : supercededIds) {
+		for (String id : supersededIds) {
 			argList.add("-s");
 			argList.add(id);
 		}
@@ -152,27 +152,27 @@ public class CommandNewSupercedesTest {
 		String newADRFileName = TestUtilities.adrFileName(newADRID, newADRTitle);
 		Path newADRFile = fileSystem.getPath(rootPathName, docsPath, newADRFileName);
 
-		for (String supersededADRID : supercededIds) {
+		for (String supersededADRID : supersededIds) {
 			long count = 0;
 			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
 			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
-			//* Supercedes [ADR{{{superceded.id}}}]({{{superceded.file}}})
+			//* Supersedes [ADR{{{superseded.id}}}]({{{superseded.file}}})
 			//String link = "Supersedes ADR " + supersededADRID + " - " + supersededADRFileName ;
 			//Default template:
-			// "Supercedes [ADR {{{superceded.id}}}]({{{superceded.file}}})"
-			String link = "Supercedes [ADR " + supersededADRID + "](" + supersededADRFileName + ")";
+			// "Supersedes [ADR {{{superseded.id}}}]({{{superseded.file}}})"
+			String link = "Supersedes [ADR " + supersededADRID + "](" + supersededADRFileName + ")";
 			count = TestUtilities.findString(link, newADRFile);
 			
 			TestUtilities.printFile(newADRFile);
 
-			assertTrue(count == 1, "The new ADR does not reference the superseded ADR [" + supersededADRID + "] in the text.");
+			assertTrue(count == 1, "The new ADR does not reference the supersceded ADR [" + supersededADRID + "] in the text.");
 		}
 
 		// Check that the superseded ADRs reference the ADR that supersedes them 
 		// REMOVE: With user defined templates cannot reliably insert this message
 		// TODO: Check that this functionality is in help files
 		// TODO: check that this is mentioned in the documentation. 
-//		for (String supersededADRID : supercededIds) {
+//		for (String supersededADRID : supersededIds) {
 //			long count = 0;
 //			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
 //			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
