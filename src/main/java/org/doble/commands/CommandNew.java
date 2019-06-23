@@ -104,7 +104,6 @@ public class CommandNew implements Callable<Integer> {
 		Path templatePath = null;
 		String templatePathName = properties.getProperty("templateFile");
 
-	    System.out.println("templatePathName------->"+templatePathName);
 	    if (templatePathName != null) {
 		    templatePath = env.fileSystem.getPath(templatePathName);
 		    if (!Files.exists(templatePath)) {
@@ -125,8 +124,6 @@ public class CommandNew implements Callable<Integer> {
 		    sb.append(" ");
 		}
 		adrTitle = sb.toString().trim(); //Remove the last space
-		
-		System.out.println("TEMPLATE PATH = " + templatePath);
 		
 		// Build the record
 		Record record = new Record.Builder(docsPath)
@@ -197,11 +194,11 @@ public class CommandNew implements Callable<Integer> {
 		// The ADR file that is created
 		Path adrPath;
 		
-		System.out.println("Creating ADR");
+		env.out.println("Creating ADR");
 
 		adrPath = record.store();
 		
-		System.out.println("Created ADR at " + adrPath.toString());
+		env.out.println("Created ADR at " + adrPath.toString());
 
 		// And now start up the editor using the specified runner
 		EditorRunner runner = env.editorRunner;
