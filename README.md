@@ -47,7 +47,7 @@ ADRs are stored in your project as Markdown files in the `doc/adr` directory.
 
     To create a new ADR that references another ADR, use the -l option.
 
-       adr new -l 4:"Links to"
+       adr new -l 4:"Links to" Use JMS interface for messaging
 
    This will create a new ADR that references ADR 4 and inserts the message
    "Links to" in the new ADR.  
