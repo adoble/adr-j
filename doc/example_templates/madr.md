@@ -1,9 +1,10 @@
 # {{name}}
 
-* Status: {{status}} {{superseded}}
+* Status: {{status}} 
 
 * Deciders: [list everyone involved in the decision] <!-- optional -->
 * Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
+* Supersedes: [ADR {{{superseded.id}}}]({{{superseded.file}}})
 
 Technical Story: [description | ticket/issue URL] <!-- optional -->
 
@@ -69,4 +70,4 @@ Chosen option: "[option 1]", because [justification. e.g., only option, which me
 
 ## Links <!-- optional -->
 
-* {{{link}}}
+* {{{link.comment}}} [ADR {{{link.id}}}]({{{link.file}}})
