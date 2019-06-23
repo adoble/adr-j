@@ -71,8 +71,6 @@ public class Record {
 		this.date = builder.date;
 		this.status = builder.status;
 		
-		System.out.println("RECORD CONSTRUCTOR");	
-		
 		if (builder.template.isPresent()) {
 			this.template = builder.template;
 			this.templateExtension = builder.templateExtension;
@@ -108,7 +106,6 @@ public class Record {
 		// Create the link fragment using the line in the template file
 		Optional<String> templateLinkFragment = getFragment("{{{link.id}}}");
 
-		
 		//Now generate link fragments (i.e. the markdown and the template field) for each of the links
 		ArrayList<String> linkFragments = new ArrayList<String>();
 		String linkSectionString;
@@ -131,9 +128,9 @@ public class Record {
 		Optional<String> templateSupercededFragment;
 		String supercededSectionString;
 		ArrayList<String> supercededFragments = new ArrayList<String>();
-		
+
 		templateSupercededFragment = getFragment("{{{superceded.id}}}");
-		
+       
 		// Now generate superseded string fragments 
 		if (templateSupercededFragment.isPresent()) {
 			for (Integer supercededId: supersedes) {
@@ -147,13 +144,11 @@ public class Record {
 			supercededSectionString = "";
 		}
 		
-		//BufferedReader templateReader = getTemplateReader();
-		
 		// Now substitute the fields in the template and write to the ADR
-		TemplateStreamer templateStreamer = new TemplateStreamer(docsPath.getFileSystem(), ADRProperties.defaultTemplateName);
+		TemplateProvider templateProvider = new TemplateProvider(docsPath.getFileSystem(), ADRProperties.defaultTemplateName);
 		List<String> targetContent = new ArrayList<String>();
 		
-		try (Stream<String> lines = templateStreamer.lines()) {
+		try (Stream<String> lines = Files.lines(templateProvider.getPath(this.template))) {
 			targetContent = lines
 					.map(line -> line.replaceAll("\\{\\{id\\}\\}", id.toString()))
 					.map(line -> line.replaceAll("\\{\\{name\\}\\}", name))
@@ -170,7 +165,7 @@ public class Record {
 			// TODO Auto-generated catch block
 		   throw new ADRException("Cannot write ADR", e.getCause());
 		}
-		
+
 		// If there are (reverse) links to other ADR files then add them. 
 		// REMOVED. Using user defined templates means that there is no reliable way to 
 		// insert a reverse link at predetermined location in the other ADR
@@ -329,13 +324,14 @@ public class Record {
 	private Optional<String> getFragment(String substitutionField) throws ADRException {
 		String templateFragment; 
 		
-		TemplateStreamer streamer = new TemplateStreamer(docsPath.getFileSystem(), ADRProperties.defaultTemplateName);
+		TemplateProvider templateProvider = new TemplateProvider(docsPath.getFileSystem(), ADRProperties.defaultTemplateName);
 		
 		//BufferedReader reader = getTemplateReader();
-		try (Stream<String> templateLines = streamer.lines(this.template)) {
+		try {
+			Path templatePath = templateProvider.getPath(this.template);
+			Stream<String> templateLines = Files.lines(templatePath);
 			templateFragment = templateLines.filter(line-> line.contains(substitutionField)).findAny().orElse(null);
 			templateLines.close();
-			streamer.close();
 		} 
 		catch (Exception e) {
 			String msg = "Cannot get the template containing " + substitutionField;
@@ -347,9 +343,8 @@ public class Record {
 	
 	
 
-//	private String lowercaseFirstCharacter(String s) {
-//		return s.substring(0, 1).toLowerCase() + s.substring(1);
-//	}
+//	
+//
 
 	private Optional<String> getTemplate() {
 		return template;
