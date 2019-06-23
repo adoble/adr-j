@@ -24,7 +24,7 @@ ADRs are stored in your project as Markdown files in the `doc/adr` directory.
 
     To use a different template to the standard, specify the path of a template:
 
-       adr int -t ~/standards/madr.md doc/architecture/decisions
+       adr init -t ~/standards/madr.md doc/architecture/decisions
 
     A guide to writing templates can be found [here](./doc/usage/Writing_Templates.md).
 
@@ -44,12 +44,12 @@ ADRs are stored in your project as Markdown files in the `doc/adr` directory.
     This will create a new ADR file that is flagged as superseding
     ADR 9.  It then opens the new ADR in your
     editor of choice.
-    
+
     To create a new ADR that references another ADR, use the -l option.
-     
+
        adr new -l 4:"Links to"
-       
-   This will create a new ADR that references ADR 4 and inserts the message 
+
+   This will create a new ADR that references ADR 4 and inserts the message
    "Links to" in the new ADR.  
 
 3. For further information, use the built in help:
