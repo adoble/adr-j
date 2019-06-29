@@ -26,9 +26,6 @@ public class Record {
 	private final String name;
 	private final Date date;
 	private final String status;
-	//private final String context;
-	//private final String decision;
-	//private final String consequences;
 
 	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
 
@@ -45,17 +42,6 @@ public class Record {
 	
 	private ArrayList<Link> links = new ArrayList<Link>();
 
-//	// Mark down template
-//	private String template = "# @ID. @Name\n\n" +
-//			"Date: @Date\n\n" +
-//			"## Status\n\n" +
-//			"@Status\n\n" +
-//			"## Context\n\n" +
-//			"@Context\n\n" +
-//			"## Decision\n\n" +
-//			"@Decision\n\n" +
-//			"## Consequences\n\n" +
-//			"@Consequences\n";
 
 	/**
 	 * Constructor for an ADR record. It has private scope so that only
@@ -78,11 +64,7 @@ public class Record {
 			this.template = Optional.empty();
 			this.templateExtension = "md";
 		}
-			
-
-		//this.context = builder.context;
-		//this.decision = builder.decision;
-		//this.consequences = builder.consequences;
+	
 	}
 
 	/**
@@ -166,26 +148,6 @@ public class Record {
 		   throw new ADRException("Cannot write ADR", e.getCause());
 		}
 
-		// If there are (reverse) links to other ADR files then add them. 
-		// REMOVED. Using user defined templates means that there is no reliable way to 
-		// insert a reverse link at predetermined location in the other ADR
-		//
-		//TODO: Change the documentation around the link specification 
-		//
-//		for (Link link : links) {
-//			addReverseLink(docsPath, link);
-//		}
-
-		// If the  ADR supersedes another, then add the link to the record that supersedes it
-		// REMOVED. Using user defined templates means that there is no reliable way to 
-		// insert a superceded message at predetermined location in the other ADR
-		//
-		//TODO: Change the documentation around the superceded flag 
-		//
-//		for (Integer adrID : supersedes) {
-//			this.supersede(docsPath, adrID, this.id);
-//		}
-		
         return targetFile;
 	}
 
@@ -313,7 +275,7 @@ public class Record {
 		return s.substring(0, 1).toUpperCase() + s.substring(1);
 	}
 	
-	/*
+	/**
 	 * Finds and returns the line in the template that contains the specified substitution field.
 	 * Assumes that all the other substitution field for the link are on the same line.
 	 * TODO make sure that the above is in the documentation
@@ -341,11 +303,6 @@ public class Record {
 		return Optional.ofNullable(templateFragment);
 	}
 	
-	
-
-//	
-//
-
 	private Optional<String> getTemplate() {
 		return template;
 	}
@@ -361,10 +318,6 @@ public class Record {
 		private String name;
 		private Date date = new Date();
 		private String status = "Proposed";
-//TODO remove commented out code
-//		private String context = "Record the architectural decisions made on this project.";
-//		private String decision = "We will use Architecture Decision Records, as described by Michael Nygard in this article: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions";
-//		private String consequences = "See Michael Nygard's article, linked above.";
 
 		public Builder(Path docsPath) {
 			this.docsPath = docsPath;
@@ -410,17 +363,6 @@ public class Record {
 			this.status = status;
 			return this;
 		}
-
-		/*
-		 * public Builder context(String context) { this.context = context; return this;
-		 * }
-		 * 
-		 * public Builder decision(String decision) { this.decision = decision; return
-		 * this; }
-		 * 
-		 * public Builder consequences(String consequences) { this.consequences =
-		 * consequences; return this; }
-		 */
 
 		public Record build() throws URISyntaxException {
 			return new Record(this);
