@@ -81,17 +81,10 @@ public class CommandNew implements Callable<Integer> {
 		
 		env = commandADR.getEnvironment();
 
-	    // Check that the directory has been initialized, i.e. the .adr directory has been created.
-		// (assuming that the proerties file has then been created).
-		Path dotADRPath = env.dir.resolve(".adr");
-		if (Files.notExists(dotADRPath)) {
-			String msg = "ERROR: The directory has not been initialised. Run \n"
-					+ "    adr init\n";
-			env.err.println(msg);
-			return CommandLine.ExitCode.USAGE;
-		}
 	    
-		
+		// Determine where the .adr directory is stored, i.e. the root path. 
+		// If the directory has not been initialized, this will throw an exception
+		Path rootPath = ADR.getRootPath(env);
 		
 		// Load the properties
 		properties = new ADRProperties(env);
@@ -100,7 +93,6 @@ public class CommandNew implements Callable<Integer> {
 
 		// Determine where the ADRs are stored and 
 		// set up the record object 
-		Path rootPath = ADR.getRootPath(env);
 		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
 
 		// Check to see if the editor command has been set.

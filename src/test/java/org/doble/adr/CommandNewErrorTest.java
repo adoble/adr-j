@@ -63,7 +63,7 @@ public class CommandNewErrorTest {
 		int exitCode = ADR.run(args, env);
 		
 		// Usage error
-		assertEquals(64, exitCode);   
+		assertEquals(70, exitCode);   
 		
 		// Now check if a message has been given
 		String commandErrorOutput = new String(errorBAOS.toByteArray());

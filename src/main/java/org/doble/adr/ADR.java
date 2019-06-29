@@ -136,8 +136,9 @@ public class ADR  {
 
 
 		 if (!rootPath.isPresent()) {
-			 String msg = "FATAL: The .adr directory cannot be found in this or parent directories.\n"
+			 String msg = "ERROR: The .adr directory cannot be found in this or parent directories.\n"
 					 + "Has the command adr init been run?";
+			 env.err.println(msg);
 			 throw new ADRException(msg);
 		 }
 
