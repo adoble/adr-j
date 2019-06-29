@@ -162,9 +162,6 @@ public class CommandNewSupersedesTest {
 			// "Supersedes [ADR {{{superseded.id}}}]({{{superseded.file}}})"
 			String link = "Supersedes [ADR " + supersededADRID + "](" + supersededADRFileName + ")";
 			count = TestUtilities.findString(link, newADRFile);
-			
-			TestUtilities.printFile(newADRFile);
-
 			assertTrue(count == 1, "The new ADR does not reference the supersceded ADR [" + supersededADRID + "] in the text.");
 		}
 

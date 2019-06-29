@@ -247,7 +247,6 @@ public class CommandInitTest {
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
-		//TestUtilities.stringDiff(expectedInitADRFileContent, actualInitADRFileContent);
 		assertEquals(expectedInitADRFileContent, actualInitADRFileContent);
 	}
 

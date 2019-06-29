@@ -126,8 +126,7 @@ public class CommandNewWithTemplateTest {
 		lines.close();
 	    
 	    // Compare
-		TestUtilities.stringDiff(expectedContents, actualContents);
-	    assertEquals(expectedContents, actualContents);
+		assertEquals(expectedContents, actualContents);
 	 		
 	}
 	
@@ -195,7 +194,6 @@ public class CommandNewWithTemplateTest {
 		lines.close();
 	    
 	    // Compare
-		TestUtilities.stringDiff(expectedContents, actualContents);
-	    assertEquals(expectedContents, actualContents);
+		assertEquals(expectedContents, actualContents);
 	}
 }

@@ -83,9 +83,6 @@ public class RecordTest {
 		String actualContents = lines.collect(Collectors.joining("\n"));
 		lines.close();
 
-	    
-		//TestUtilities.stringDiff(expectedContents, actualContents);
-		
         assertEquals(expectedContents, actualContents);
 
 	}
@@ -134,8 +131,7 @@ public class RecordTest {
 		Stream<String> lines = Files.lines(adrFile);
 		String actualContents = lines.collect(Collectors.joining("\n"));
 		lines.close();
-		
-		//TestUtilities.stringDiff(expectedContents, actualContents);
+	
 		assertEquals(expectedContents, actualContents);
 
 	}
