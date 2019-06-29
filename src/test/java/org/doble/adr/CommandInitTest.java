@@ -30,12 +30,16 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class CommandInitTest {
 	private static FileSystem fileSystem;
 	final static private String rootPath = "/project/adr";
+	final static private String templateDirectoryName = "/dev/templates/";
+	final static private String templateFileName = templateDirectoryName + "my_adr_template.md";
+	final static private String initTemplateFileName = templateDirectoryName + "my_init_template.md";
+
 
 	private Environment env;
 
 	@BeforeEach
 	public void setUp() throws Exception {
-
+		
 		// Set up the mock file system
 		fileSystem = Jimfs.newFileSystem(Configuration.unix());
 
@@ -50,6 +54,20 @@ public class CommandInitTest {
 				.userDir(rootPath)
 				.editorCommand("dummyEditor")
 				.build();
+
+		// Create a test version of an init template file
+		String initTemplateFileContent = "ADR {{id}}: {{name}}\n"
+				+ "Date:{{date}}\n"
+				+ "Status:{{status}}";
+		TestUtilities.createTemplateFile(env.fileSystem, initTemplateFileName, initTemplateFileContent);
+
+		// Create a test version of the template file
+		String templateFileContent = "ADR {{id}}: {{name}}\n"
+				+ "Date:{{date}}\n"
+				+ "Status:{{status}}"
+				+ "* Links"
+				+ "{{{link.id}}}";
+		TestUtilities.createTemplateFile(env.fileSystem, templateFileName, templateFileContent);	
 	}
 
 	@AfterEach
@@ -193,27 +211,8 @@ public class CommandInitTest {
 	
 	@Test
 	public void testInitWithTemplateAndInitTemplate() {
-		// Using the Nygard form default initial template
-		String templateDirectoryName = "/dev/templates/";
-		String templateFileName = templateDirectoryName + "my_adr_template.md";
-		String initTemplateFileName = templateDirectoryName + "my_init_template.md";
 		
-		// Create a test version of an init template file
-		String initTemplateFileContent = "ADR {{id}}: {{name}}\n"
-				+ "Date:{{date}}\n"
-				+ "Status:{{status}}";
-		TestUtilities.createTemplateFile(env.fileSystem, initTemplateFileName, initTemplateFileContent);
-		
-		// Create a test version of the template file
-		String templateFileContent = "ADR {{id}}: {{name}}\n"
-				+ "Date:{{date}}\n"
-				+ "Status:{{status}}"
-				+ "* Links"
-				+ "{{{link.id}}}";
-		TestUtilities.createTemplateFile(env.fileSystem, templateFileName, templateFileContent);		
-
-		
-		// Now run the command
+		// Now run the command using templates specified in setup
 		String[] args = {"init", "-template", templateFileName, "-i", initTemplateFileName};
 		ADR.run(args, env);
 		
@@ -257,9 +256,6 @@ public class CommandInitTest {
 	
 	@Test
 	public void testInitWithInitTemplateAlone() {
-		String templateDirectoryName = "/dev/templates/";
-		String initTemplateFileName = templateDirectoryName + "my_init_template.md";
-		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
 
@@ -283,6 +279,32 @@ public class CommandInitTest {
 		assertTrue(content.contains("ERROR"));  //At least this is shown
 		assertTrue(content.contains("[INITIALTEMPLATE]")); //At least this is shown
 		
+	}
+	
+	@Test
+	public void testtemplateFileNotFound() {
+		String nonExistingTemplate = "/dev/mytemplates/non-existing_adr_template.md";
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+
+		Environment env = new Environment.Builder(fileSystem)
+				.out(System.out)
+				.err(ps)
+				.in(System.in)
+				.userDir(rootPath)
+				.build();
+		
+		String[] args = {"init", "-t", nonExistingTemplate};
+		
+		int exitCode = ADR.run(args, env);
+		
+		assertEquals(exitCode, 64);
+		
+		String commandOutput = new String(baos.toByteArray());
+		assertTrue(commandOutput.contains("ERROR"), "No error given from init command that template file does not exist.");
+
+
 	}
 	
 	

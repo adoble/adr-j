@@ -71,12 +71,34 @@ public class CommandInit implements Callable<Integer> {
 
 		Path adrPath = env.dir.resolve(".adr");
 
-
+        // Check if the directory has already been initialized
 		if (Files.notExists(adrPath)) {
 			Files.createDirectories(adrPath);
 		} else {
-			env.out.println("Directory is already initialised for ADR.");
+			env.err.println("Directory is already initialised for ADR.");
 			return ADR.ERRORGENERAL;
+		}
+		
+		// Check that any template file specified really exists
+		if (template != null) {
+			Path templatePath = env.fileSystem.getPath(template);
+			if (!Files.exists(templatePath)) {
+				env.err.println("ERROR: The template file "
+						+ template
+						+ " does not exist!");
+				return CommandLine.ExitCode.USAGE;
+			}
+		}
+		
+		// Check that any initial template file specifed really exists 
+		if (initialTemplate != null) {
+			Path initialTemplatePath = env.fileSystem.getPath(initialTemplate);
+			if (!Files.exists(initialTemplatePath)) {
+				env.err.println("ERROR: The initial template file "
+						+ initialTemplate
+						+ " does not exist!");
+				return CommandLine.ExitCode.USAGE;
+			}
 		}
 
 
