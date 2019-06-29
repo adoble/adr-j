@@ -81,9 +81,20 @@ public class CommandNew implements Callable<Integer> {
 		
 		env = commandADR.getEnvironment();
 
-		properties = new ADRProperties(env);
+	    // Check that the directory has been initialized, i.e. the .adr directory has been created.
+		// (assuming that the proerties file has then been created).
+		Path dotADRPath = env.dir.resolve(".adr");
+		if (Files.notExists(dotADRPath)) {
+			String msg = "ERROR: The directory has not been initialised. Run \n"
+					+ "    adr init/n/n";
+			env.err.println(msg);
+			return CommandLine.ExitCode.USAGE;
+		}
+	    
+		
 		
 		// Load the properties
+		properties = new ADRProperties(env);
 		properties.load(); 
 
 
