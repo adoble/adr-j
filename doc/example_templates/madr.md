@@ -1,10 +1,10 @@
 # {{name}}
 
-* Status: {{status}} 
+* Status: {{status}}
+Supersedes: [ADR {{{superseded.id}}}]({{{superseded.file}}})
 
 * Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
-* Supersedes: [ADR {{{superseded.id}}}]({{{superseded.file}}})
+* Date: {{date}}}}
 
 Technical Story: [description | ticket/issue URL] <!-- optional -->
 
