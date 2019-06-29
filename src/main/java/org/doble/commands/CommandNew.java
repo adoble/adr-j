@@ -86,7 +86,7 @@ public class CommandNew implements Callable<Integer> {
 		Path dotADRPath = env.dir.resolve(".adr");
 		if (Files.notExists(dotADRPath)) {
 			String msg = "ERROR: The directory has not been initialised. Run \n"
-					+ "    adr init/n/n";
+					+ "    adr init\n";
 			env.err.println(msg);
 			return CommandLine.ExitCode.USAGE;
 		}
