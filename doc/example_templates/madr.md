@@ -4,7 +4,7 @@
 Supersedes: [ADR {{{superseded.id}}}]({{{superseded.file}}})
 
 * Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: {{date}}}}
+* Date: {{date}}
 
 Technical Story: [description | ticket/issue URL] <!-- optional -->
 
