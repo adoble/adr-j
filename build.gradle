@@ -1,9 +1,16 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.2'
+    id "com.palantir.graal" version "0.4.0"
 }
 
 apply plugin: 'java'
 apply plugin: 'application'
+
+graal {
+    mainClass 'org.doble.adr.ADR'
+    graalVersion '19.1.1'
+    outputName 'adr'
+}
 
 group = 'org.doble'
 version = '0.0.1-SNAPSHOT'
@@ -23,17 +30,25 @@ repositories {
     maven {
         url 'https://oss.sonatype.org/content/groups/public'
     }
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
 }
 
 dependencies {
     compile group: 'org.reflections', name: 'reflections', version:'0.9.11'
     compile 'info.picocli:picocli:4.0.2'
+    annotationProcessor 'info.picocli:picocli-codegen:4.0.2'
 
     // need 5.4 for @TestMethodOrder - see https://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestMethodOrder.html
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.0-M1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0-M1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0-M1'
     testCompile group: 'com.google.jimfs', name: 'jimfs', version:'1.1'
+}
+
+compileJava {
+    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
 }
 
 shadowJar {
