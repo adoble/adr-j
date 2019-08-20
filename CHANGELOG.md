@@ -16,7 +16,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ### Added
 
 - Users can specify their own templates [#6](https://github.com/adoble/adr-j/issues/6)
-- Support of arbitrary languages for markdown files (e.g., [AsciiDoc](http://asciidoc.org/))
+- Support of arbitrary languages for markdown files (e.g. [AsciiDoc](http://asciidoc.org/))
 
 ## [2.1] – 2019-06-04
 
@@ -28,7 +28,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 
 ### Added
 
-- Add support for unix (launc script, terminal support)
+- Add support for unix (launch script, terminal support)
 
 ## [1.0] – 2019-02-12
 
