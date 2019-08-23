@@ -28,8 +28,9 @@ import picocli.CommandLine.HelpCommand;
 		 subcommands = {CommandInit.class, 
 		         		CommandNew.class,
 				        CommandList.class,
-				        HelpCommand.class    // Built in help command
-		               }
+				        CommandVersion.class,
+				        HelpCommand.class   // Built in help command
+				       }
 		)
 public class CommandADR implements Callable<Integer> {
 	
