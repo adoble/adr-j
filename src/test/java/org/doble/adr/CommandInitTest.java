@@ -263,6 +263,7 @@ public class CommandInitTest {
 				.err(ps)
 				.in(System.in)
 				.userDir(rootPath)
+				.editorCommand("dummyEditor")
 				.build();
 		
 		String[] args = {"init",  "-initial", initTemplateFileName};
@@ -292,13 +293,14 @@ public class CommandInitTest {
 				.err(ps)
 				.in(System.in)
 				.userDir(rootPath)
+				.editorCommand("dummyEditor")
 				.build();
 		
 		String[] args = {"init", "-t", nonExistingTemplate};
 		
 		int exitCode = ADR.run(args, env);
 		
-		assertEquals(exitCode, 64);
+		assertEquals(exitCode, 2);
 		
 		String commandOutput = new String(baos.toByteArray());
 		assertTrue(commandOutput.contains("ERROR"), "No error given from init command that template file does not exist.");
