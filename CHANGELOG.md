@@ -9,28 +9,29 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 
 ### Added
 
+- Add enablement for future versions to use [GraalVM native images](https://www.graalvm.org/docs/reference-manual/aot-compilation/)
 - Add `CHANGELOG.md` following [keep a changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [3.0] – 2019-06-29
+## [3.0] - 2019-06-29
 
 ### Added
 
 - Users can specify their own templates [#6](https://github.com/adoble/adr-j/issues/6)
 - Support of arbitrary languages for markdown files (e.g. [AsciiDoc](http://asciidoc.org/))
 
-## [2.1] – 2019-06-04
+## [2.1] - 2019-06-04
 
 ### Changed
 
 - Switch to [picocli](https://picocli.info/) for command line parsing. See also [ADR-0006](https://github.com/adoble/adr-j/blob/master/doc/adr/0006-use-command-line-processing-package.md).
 
-## [2.0] – 2019-03-17
+## [2.0] - 2019-03-17
 
 ### Added
 
 - Add support for unix (launch script, terminal support)
 
-## [1.0] – 2019-02-12
+## [1.0] - 2019-02-12
 
 Initial release
 
