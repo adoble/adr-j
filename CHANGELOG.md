@@ -8,7 +8,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ## [Unreleased]
 
 ### Added
-- Add version sub-command (currently gives version as 3.1). 
+- Add version sub-command (currently gives version as 3.1.0). 
 - Add enablement for future versions to use [GraalVM native images](https://www.graalvm.org/docs/reference-manual/aot-compilation/)
 - Add `CHANGELOG.md` following [keep a changelog](https://keepachangelog.com/en/1.0.0/).
 

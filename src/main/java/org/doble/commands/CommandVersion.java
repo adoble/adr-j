@@ -20,7 +20,7 @@ import picocli.CommandLine.*;
 @Command(name = "version",
          description = "Prints the version of adr-j.")
 public class CommandVersion implements Callable<Integer> {
-	@Option(names = {"-v", "-version"}, description = "Prints the version of adr-j.")
+	
 	
 	/*******************************************************************************************
 	 *                                  VERSION NUMBER                                         *
@@ -28,7 +28,7 @@ public class CommandVersion implements Callable<Integer> {
 	 * Version numbers adhere to to Semantic Versioning:  https://semver.org/spec/v2.0.0.html  *
 	 *                                                                                         *
 	 *******************************************************************************************/
-	private String version = "3.1";  // Minor release, backwards compatible 
+	private String version = "3.1.0";  // Minor release, backwards compatible 
 		
 	
 	@ParentCommand
