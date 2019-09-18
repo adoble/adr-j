@@ -120,14 +120,8 @@ public class CommandNew implements Callable<Integer> {
 	    } 
 	    		
 		// Create the ADR title from the arguments
-		StringBuilder sb = new StringBuilder();
-		for (String s : adrTitleParts)
-		{
-		    sb.append(s);
-		    sb.append(" ");
-		}
-		adrTitle = sb.toString().trim(); //Remove the last space
-		
+		adrTitle = adrTitleParts.stream().collect(Collectors.joining(" "));
+
 		// Build the record
 		Record record = new Record.Builder(docsPath)
 				.id(highestIndex() + 1)
