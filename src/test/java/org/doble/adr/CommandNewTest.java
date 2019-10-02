@@ -73,7 +73,7 @@ public class CommandNewTest {
 
 	@Test
 	public void testSimpleCommand() throws Exception {
-		String adrTitle = "This is a test achitecture decision";
+		String adrTitle = "This is a test architecture decision";
 
 		String[] args = TestUtilities.argify("new " + adrTitle);
 
@@ -81,7 +81,7 @@ public class CommandNewTest {
 		assertEquals(0, exitCode);
 
 		// Check if the ADR file has been created
-		assertTrue(Files.exists(fileSystem.getPath("/project/adr/doc/adr/0002-this-is-a-test-achitecture-decision.md"))); // ADR id is 2 as the first ADR was setup during init.
+		assertTrue(Files.exists(fileSystem.getPath("/project/adr/doc/adr/0002-this-is-a-test-architecture-decision.md"))); // ADR id is 2 as the first ADR was setup during init.
 	}
 
 	@Test
