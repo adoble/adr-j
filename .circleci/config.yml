@@ -2,21 +2,23 @@ version: 2
 jobs:
   build:
     docker:
-      - image: oracle/graalvm-ce:19.1.1
+      - image: oracle/graalvm-ce:latest
     environment:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
       JVM_OPTS: -Xmx3200m
       TERM: dumb
     steps:
       - checkout
       - restore_cache:
           keys:
-            - gradle-dependencies
-      - run: ./gradlew --no-daemon shadowJar
+            - gradle-dependencies-native
+      - run: ./gradlew shadowJar
+      - run: ./gradlew nativeImage
       - save_cache:
           paths:
             - ~/.gradle
-          key: gradle-dependencies
-      - run: gu install native-image
-      - run: cd build/libs && find . -name "*.jar" -exec native-image -jar \{\} \; && find . -name "*-fat" -exec mv \{\} adr \;
+          key: gradle-dependencies-native
       - store_artifacts:
           path: build/libs
+      - store_artifacts:
+          path: build/graal
