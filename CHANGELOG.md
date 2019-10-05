@@ -8,6 +8,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ## [Unreleased]
 
 ### Added
+- Add edit sub command 
 - Add version sub-command (currently gives version as 3.1.0). 
 - Picocli framework now as [external dependency](https://picocli.info/#_add_as_external_dependency)
 - Add enablement for future versions to use [GraalVM native images](https://www.graalvm.org/docs/reference-manual/aot-compilation/)
