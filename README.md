@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/adoble/adr-j.svg?branch=master)](https://travis-ci.org/adoble/adr-j)
+
 ADR Tools
 =========
 
