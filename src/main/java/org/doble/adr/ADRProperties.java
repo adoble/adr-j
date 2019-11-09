@@ -38,7 +38,6 @@ public class ADRProperties extends Properties{
 	/** 
 	 * Reads the .adr properties file at the root directory of the project. 
 	 *
-	 * @return A Properties object with the data contained in the properties file
 	 * @throws ADRException if the properties file cannot be read 
 	 */
      public void load() throws ADRException {
