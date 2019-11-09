@@ -26,6 +26,7 @@ public class Record {
 	private final String name;
 	private final LocalDate date;
 	private final String status;
+	private final DateTimeFormatter dateFormatter;
 
 	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
 
@@ -56,6 +57,7 @@ public class Record {
 		this.name = builder.name;
 		this.date = builder.date;
 		this.status = builder.status;
+		this.dateFormatter = builder.dateFormatter;
 		
 		if (builder.template.isPresent()) {
 			this.template = builder.template;
@@ -135,7 +137,7 @@ public class Record {
 					.map(line -> line.replaceAll("\\{\\{id\\}\\}", id.toString()))
 					.map(line -> line.replaceAll("\\{\\{name\\}\\}", name))
 					.map(line -> line.replaceAll("\\{\\{status\\}\\}", status))
-					.map(line -> line.replaceAll("\\{\\{date\\}\\}", DateTimeFormatter.ISO_LOCAL_DATE.format(date)))
+					.map(line -> line.replaceAll("\\{\\{date\\}\\}", dateFormatter.format(date)))
 					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0))        // Remove lines which will be blank
 					.filter(line -> !(line.contains("{{{superseded.id}}}") && supersededFragments.size() == 0)) // Remove lines which will be blank
 					.map(line -> line.contains("{{{link.id}}}")?linkSectionString: line)   
@@ -318,9 +320,11 @@ public class Record {
 		private String name;
 		private LocalDate date = LocalDate.now();
 		private String status = "Proposed";
+		private DateTimeFormatter dateFormatter;
 
-		public Builder(Path docsPath) {
+		public Builder(Path docsPath, DateTimeFormatter dateFormatter) {
 			this.docsPath = docsPath;
+			this.dateFormatter = dateFormatter;
 		}
       
 

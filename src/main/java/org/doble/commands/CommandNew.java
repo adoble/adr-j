@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -118,12 +120,16 @@ public class CommandNew implements Callable<Integer> {
 		    }
 		
 	    } 
-	    		
+
+		// Set up the date formatter
+		String dateFormat = properties.getProperty("dateFormat");
+		DateTimeFormatter dateFormatter = determineDateFormatter(dateFormat);
+
 		// Create the ADR title from the arguments
 		adrTitle = adrTitleParts.stream().collect(Collectors.joining(" "));
 
 		// Build the record
-		Record record = new Record.Builder(docsPath)
+		Record record = new Record.Builder(docsPath, dateFormatter)
 				.id(highestIndex() + 1)
 				.name(adrTitle)
 				.date(LocalDate.now())
@@ -164,6 +170,34 @@ public class CommandNew implements Callable<Integer> {
 		
 		
 		return exitCode;
+	}
+
+	private DateTimeFormatter determineDateFormatter(String dateFormat) throws ADRException {
+		if (dateFormat == null || dateFormat.isEmpty()) {
+			// preserve behavior of 3.0
+			return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+		} else if (dateFormat.equals("BASIC_ISO_DATE")) {
+			return DateTimeFormatter.BASIC_ISO_DATE;
+		} else if (dateFormat.equals("ISO_DATE")) {
+			return DateTimeFormatter.ISO_DATE;
+		} else if (dateFormat.equals("ISO_LOCAL_DATE")) {
+			return DateTimeFormatter.ISO_LOCAL_DATE;
+		} else if (dateFormat.equals("ISO_OFFSET_DATE")) {
+			return DateTimeFormatter.ISO_OFFSET_DATE;
+		} else if (dateFormat.equals("ISO_ORDINAL_DATE")) {
+			return DateTimeFormatter.ISO_ORDINAL_DATE;
+		} else if (dateFormat.equals("ISO_WEEK_DATE")) {
+			return DateTimeFormatter.ISO_WEEK_DATE;
+		} else if (dateFormat.equals("SHORT")) {
+			return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+		} else if (dateFormat.equals("MEDIUM")) {
+			return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+		} else if (dateFormat.equals("LONG")) {
+			return DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+		} else if (dateFormat.equals("FULL")) {
+			return DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL);
+		}
+		throw new ADRException("ERROR: Can not parse dateFormat \'" + dateFormat + "\'");
 	}
 
 	private boolean checkADRExists(Integer adrID) throws ADRException, IOException {
