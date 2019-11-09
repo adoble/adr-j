@@ -7,8 +7,8 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.DateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -233,7 +233,7 @@ public class CommandInitTest {
 		
 		// Check to see if the initial template has been set up 
 		String expectedInitADRFileContent = "ADR 1: Record architecture decisions\n"
-				+ "Date:" + DateFormat.getDateInstance().format(new Date()) + "\n"
+				+ "Date:" + DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()) + "\n"
 				+ "Status:Proposed";
 		Path docsPath = env.dir.resolve(properties.getProperty("docPath"));
 		Path initialADRFile = docsPath.resolve("0001-record-architecture-decisions.md");

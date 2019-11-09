@@ -8,8 +8,8 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -126,7 +126,7 @@ public class CommandNew implements Callable<Integer> {
 		Record record = new Record.Builder(docsPath)
 				.id(highestIndex() + 1)
 				.name(adrTitle)
-				.date(new Date())
+				.date(LocalDate.now())
 				.template(templatePathName)
 				.build();
 

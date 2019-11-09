@@ -3,10 +3,10 @@ package org.doble.adr;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,7 +67,7 @@ public class RecordTest {
 				"\n" + 
 				"See Michael Nygard's article, linked above.";
 		
-		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(new Date()));
+		expectedContents = expectedContents.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()));
 
 		// Build the record
 		Record record = new Record.Builder(docPath).id(7).name("This is a new record").build();
@@ -92,7 +92,7 @@ public class RecordTest {
 	@Test
 	@Order(2)
 	public void test2ComplexRecordConstruction() throws Exception {
-		Date date = new Date();
+		LocalDate date = LocalDate.now();
 		
 		String expectedContents = "# 42. This is a complex record\n" + 
 				"\n" + 
@@ -114,7 +114,7 @@ public class RecordTest {
 				"## Consequences\n" + 
 				"\n" + 
 				"See Michael Nygard's article, linked above.";
-		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(date));
+		expectedContents = expectedContents.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(date));
 		
 		Record record = new Record.Builder(docPath).id(42)
 				.name("This is a complex record")

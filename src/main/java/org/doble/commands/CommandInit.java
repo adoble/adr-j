@@ -5,6 +5,7 @@ package org.doble.commands;
 
 import java.io.*;
 import java.nio.file.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -124,7 +125,7 @@ public class CommandInit implements Callable<Integer> {
 					.template("rsrc:" + ADRProperties.defaultInitialTemplateName)
 					.id(1)
 					.name("Record architecture decisions")
-					.date(new Date())
+					.date(LocalDate.now())
 					.build(); 
 			record.store(); 
 		}
@@ -136,7 +137,7 @@ public class CommandInit implements Callable<Integer> {
 					.template(initialTemplate)
 					.id(1)
 					.name("Record architecture decisions")
-					.date(new Date())
+					.date(LocalDate.now())
 					.build(); 
 			record.store();
 		}

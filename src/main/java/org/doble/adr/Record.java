@@ -5,10 +5,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
-import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class Record {
 	private final Integer id;
 	private final String idFormatted;
 	private final String name;
-	private final Date date;
+	private final LocalDate date;
 	private final String status;
 
 	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
@@ -135,7 +135,7 @@ public class Record {
 					.map(line -> line.replaceAll("\\{\\{id\\}\\}", id.toString()))
 					.map(line -> line.replaceAll("\\{\\{name\\}\\}", name))
 					.map(line -> line.replaceAll("\\{\\{status\\}\\}", status))
-					.map(line -> line.replaceAll("\\{\\{date\\}\\}", DateFormat.getDateInstance().format(date)))
+					.map(line -> line.replaceAll("\\{\\{date\\}\\}", DateTimeFormatter.ISO_LOCAL_DATE.format(date)))
 					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0))        // Remove lines which will be blank
 					.filter(line -> !(line.contains("{{{superseded.id}}}") && supersededFragments.size() == 0)) // Remove lines which will be blank
 					.map(line -> line.contains("{{{link.id}}}")?linkSectionString: line)   
@@ -316,7 +316,7 @@ public class Record {
 		private int id;
 		private String idFormatted;
 		private String name;
-		private Date date = new Date();
+		private LocalDate date = LocalDate.now();
 		private String status = "Proposed";
 
 		public Builder(Path docsPath) {
@@ -354,7 +354,7 @@ public class Record {
 			return this;
 		}
 
-		public Builder date(Date date) {
+		public Builder date(LocalDate date) {
 			this.date = date;
 			return this;
 		}
