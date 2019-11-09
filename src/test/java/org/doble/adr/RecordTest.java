@@ -161,4 +161,64 @@ public class RecordTest {
 
 	}
 
+	@Test
+	@Order(5)
+	public void testRecordConstructionWithDefaultAuthor() throws Exception {
+		String expectedContents = "# 66. This is a new record with default author\n" +
+				"\n" +
+				"Author: {{author}}";
+
+		expectedContents = expectedContents.replace("{{author}}", System.getProperty("user.name"));
+
+		// Build the record
+		Record record = new Record.Builder(docPath)
+				.id(66)
+				.name("This is a new record with default author")
+				.template("rsrc:template_with_author.md")
+				.build();
+
+		record.store();
+
+		// Check if the ADR file has been created
+		assertTrue(Files.exists(fileSystem.getPath("/test/0066-this-is-a-new-record-with-default-author.md")));
+
+		// Read in the file
+		Path adrFile = fileSystem.getPath("/test/0066-this-is-a-new-record-with-default-author.md");
+		Stream<String> lines = Files.lines(adrFile);
+		String actualContents = lines.collect(Collectors.joining("\n"));
+		lines.close();
+
+		assertEquals(expectedContents, actualContents);
+
+	}
+
+	@Test
+	@Order(6)
+	public void testRecordConstructionWithGivenAuthor() throws Exception {
+		String expectedContents = "# 67. This is a new record with given author\n" +
+				"\n" +
+				"Author: Andrew Doble";
+
+		// Build the record
+		Record record = new Record.Builder(docPath)
+				.id(67)
+				.name("This is a new record with given author")
+				.author("Andrew Doble")
+				.template("rsrc:template_with_author.md")
+				.build();
+
+		record.store();
+
+		// Check if the ADR file has been created
+		assertTrue(Files.exists(fileSystem.getPath("/test/0067-this-is-a-new-record-with-given-author.md")));
+
+		// Read in the file
+		Path adrFile = fileSystem.getPath("/test/0067-this-is-a-new-record-with-given-author.md");
+		Stream<String> lines = Files.lines(adrFile);
+		String actualContents = lines.collect(Collectors.joining("\n"));
+		lines.close();
+
+		assertEquals(expectedContents, actualContents);
+
+	}
 }

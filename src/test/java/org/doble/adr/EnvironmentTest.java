@@ -18,6 +18,7 @@ public class EnvironmentTest {
 	private Path rootPath;
 	private String editor = "C:/Users/adoble/AppData/Local/atom/bin/atom.cmd";
 	private EditorRunner runner = new TestEditorRunner();
+	private String author = "Andrew Doble";
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -41,6 +42,7 @@ public class EnvironmentTest {
 				.userDir(rootPath)
 				.editorCommand(editor)
 				.editorRunner(runner)
+				.author(author)
 				.build();
 
 		assertEquals(env.fileSystem, fileSystem);
@@ -54,5 +56,7 @@ public class EnvironmentTest {
 
 		assertEquals(env.editorCommand, editor);
 		assertEquals(env.editorRunner, runner);
+
+		assertEquals(env.author, author);
 	}
 }

@@ -127,6 +127,7 @@ public class CommandNew implements Callable<Integer> {
 				.id(highestIndex() + 1)
 				.name(adrTitle)
 				.date(new Date())
+				.author(env.author)
 				.template(templatePathName)
 				.build();
 
