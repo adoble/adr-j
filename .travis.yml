@@ -13,9 +13,14 @@ env:
     - GRADLE_OPTS=-Dorg.gradle.daemon=false
     - TERM=dumb
 
+# https://docs.travis-ci.com/user/languages/java/#caching
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - /home/travis/.gradle/
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 
 language: shell
 
@@ -24,6 +29,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install windows-sdk-7.1 kb2519277; fi
 
 script:
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then JAVA_HOME="C:/Program Files/Java/jdk1.8.0_221" ./gradlew check; else ./gradlew check; fi
   # JAR is equal on Linux and Windows. So just build on Linux
   - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then ./gradlew shadowJar; fi
   # build native executable (windows: adr.exe, linux: adr)
