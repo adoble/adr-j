@@ -69,3 +69,10 @@ task releaseJar(dependsOn: "shadowJar", type: Copy) {
     //file("$buildDir/releases/adr-j-${project.version}.jar").setExecutable(true, false)
     file("$buildDir/releases/adr-j.jar").setExecutable(true, false)
 }
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}

@@ -107,8 +107,8 @@ private Path getResourcePath(String templateFileName) throws URISyntaxException,
 	} else {
 		// Assume that the system resource is a normal file (e.g. we are running in an IDE). 
 		String pathName = uri.getSchemeSpecificPart();
-		// If there is a leading '/' then remove it so we have a correct path specification. 
-		if (pathName.startsWith("/")) { 
+		// If there is a leading '/' then remove it if we run on Windows so we have a correct path specification.
+		if (runsOnWindows() && pathName.startsWith("/")) {
 			pathName = pathName.substring(1);
 		}
 		// The resource file is in the default file system and not any file system
@@ -119,6 +119,8 @@ private Path getResourcePath(String templateFileName) throws URISyntaxException,
 	}
 	return templatePath;
 }
-   
-	
+
+	private boolean runsOnWindows() {
+		return System.getProperty("os.name").regionMatches(true, 0, "win", 0, 3);
+	}
 }
