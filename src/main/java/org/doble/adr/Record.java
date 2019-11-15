@@ -25,6 +25,7 @@ public class Record {
 	private final String idFormatted;
 	private final String name;
 	private final Date date;
+	private final String author;
 	private final String status;
 
 	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
@@ -55,6 +56,7 @@ public class Record {
 		this.idFormatted = builder.idFormatted;
 		this.name = builder.name;
 		this.date = builder.date;
+		this.author = builder.author;
 		this.status = builder.status;
 		
 		if (builder.template.isPresent()) {
@@ -135,6 +137,7 @@ public class Record {
 					.map(line -> line.replaceAll("\\{\\{id\\}\\}", id.toString()))
 					.map(line -> line.replaceAll("\\{\\{name\\}\\}", name))
 					.map(line -> line.replaceAll("\\{\\{status\\}\\}", status))
+					.map(line -> line.replaceAll("\\{\\{author\\}\\}", author))
 					.map(line -> line.replaceAll("\\{\\{date\\}\\}", DateFormat.getDateInstance().format(date)))
 					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0))        // Remove lines which will be blank
 					.filter(line -> !(line.contains("{{{superseded.id}}}") && supersededFragments.size() == 0)) // Remove lines which will be blank
@@ -316,6 +319,7 @@ public class Record {
 		private int id;
 		private String idFormatted;
 		private String name;
+		private String author = System.getProperty("user.name");
 		private Date date = new Date();
 		private String status = "Proposed";
 
@@ -356,6 +360,11 @@ public class Record {
 
 		public Builder date(Date date) {
 			this.date = date;
+			return this;
+		}
+
+		public Builder author(String author) {
+			this.author = author;
 			return this;
 		}
 

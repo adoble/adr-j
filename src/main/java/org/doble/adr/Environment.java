@@ -49,6 +49,9 @@ public class Environment {
 	/** The runner used for firing up the editor */
 	public final EditorRunner editorRunner;
 
+	/** The author used for the ADRs */
+	public final String author;
+
 	/**
 	 * Private Constructor so that only the builder can be used to 
 	 * construct the class.
@@ -62,7 +65,7 @@ public class Environment {
 		this.dir = builder.currentDirectory;
 		this.editorCommand = builder.editorCommand;
 		this.editorRunner = builder.editorRunner;
-		
+		this.author = builder.author;
 	}
 
 
@@ -75,6 +78,7 @@ public class Environment {
 		private Path currentDirectory;
 		private String editorCommand;
 		private EditorRunner editorRunner;
+		private String author;
 
 		public Builder(FileSystem fileSystem) {
 			this.fileSystem = fileSystem;
@@ -114,7 +118,12 @@ public class Environment {
 			this.editorRunner = editorRunner;
 			return this;
 		}
-		
+
+		public Builder author(String author) {
+			this.author = author;
+			return this;
+		}
+
 		public Environment build() {
 			return new Environment(this);
 		}

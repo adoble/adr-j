@@ -16,6 +16,12 @@ import org.doble.commands.*;
 //import org.doble.annotations.*;
 
 import picocli.CommandLine;
+import picocli.CommandLine.Help;
+import picocli.CommandLine.Help.Column;
+import picocli.CommandLine.Help.Column.Overflow;
+import picocli.CommandLine.Help.TextTable;
+import picocli.CommandLine.IHelpSectionRenderer;
+import picocli.CommandLine.Model.UsageMessageSpec;
 
 /**
  * Java version of the adr tool at https://github.com/npryce/adr-tools.
@@ -62,7 +68,8 @@ public class ADR  {
 				.in(System.in)
 				.userDir(System.getProperty("user.dir"))
 				.editorCommand(editorCommand)
-				.editorRunner(new SystemEditorRunner()) 
+				.editorRunner(new SystemEditorRunner())
+				.author(determineAuthor())
 				.build();
 		
 		errorCode = ADR.run(args, mainEnv);
@@ -84,6 +91,8 @@ public class ADR  {
 		CommandLine cmd = new CommandLine(new CommandADR(env))
 				.setOut(new PrintWriter(env.out))
 				.setErr(new PrintWriter(env.err));
+
+		installEnvironmentVariablesRender(cmd);
 
 		// If there are arguments then execute the subcommand
 		if (args.length == 0) 
@@ -147,4 +156,70 @@ public class ADR  {
 
 	 }
 
+	static private String determineAuthor() {
+		 String author = System.getenv("ADR_AUTHOR");
+		 return author == null ? System.getProperty("user.name") : author;
+	}
+
+	private static final String SECTION_KEY_ENV_HEADER = "environmentVariablesHeader";
+	private static final String SECTION_KEY_ENV_DETAILS = "environmentVariables";
+
+	// https://github.com/remkop/picocli/blob/master/picocli-examples/src/main/java/picocli/examples/customhelp/EnvironmentVariablesSection.java
+	private static void installEnvironmentVariablesRender(CommandLine cmd) {
+		cmd.getHelpSectionMap().put(SECTION_KEY_ENV_HEADER, help -> String.format(Locale.ROOT, "Environment Variables:%n"));
+		cmd.getHelpSectionMap().put(SECTION_KEY_ENV_DETAILS, new EnvironmentVariablesRenderer());
+		cmd.setHelpSectionKeys(insertKey(cmd.getHelpSectionKeys()));
+	}
+
+	private static List<String> insertKey(List<String> helpSectionKeys) {
+		int index = helpSectionKeys.indexOf(UsageMessageSpec.SECTION_KEY_FOOTER_HEADING);
+
+		List<String> result = new ArrayList<>(helpSectionKeys);
+		result.add(index, SECTION_KEY_ENV_HEADER);
+		result.add(index + 1, SECTION_KEY_ENV_DETAILS);
+
+		return result;
+	}
+
+	private static final class EnvironmentVariablesRenderer implements IHelpSectionRenderer {
+
+		private final Map<String, String> env;
+
+		EnvironmentVariablesRenderer() {
+			env = new HashMap<>();
+			env.put("ADR_AUTHOR", "The author of the ADR");
+		}
+
+		@Override
+		public String render(Help help) {
+			if (env.isEmpty()) {
+				return "";
+			}
+
+			int keyLength = env.keySet().stream()
+				.mapToInt(String::length)
+				.max()
+				.getAsInt();
+
+			TextTable textTable = TextTable.forColumns(help.ansi(),
+				new Column(keyLength + 3, 2, Overflow.SPAN),
+				new Column(width(help) - (keyLength + 3), 2, Overflow.WRAP));
+
+			textTable.setAdjustLineBreaksForWideCJKCharacters(adjustCJK(help));
+
+			for (Map.Entry<String, String> entry : env.entrySet()) {
+				textTable.addRowValues(entry.getKey(), entry.getValue());
+			}
+
+			return textTable.toString();
+		}
+
+		private boolean adjustCJK(Help help) {
+			return help.commandSpec().usageMessage().adjustLineBreaksForWideCJKCharacters();
+		}
+
+		private int width(Help help) {
+			return help.commandSpec().usageMessage().width();
+		}
+	}
 } // -- ADR

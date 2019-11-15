@@ -64,6 +64,13 @@ Type: field
 
 Description: The data the ADR was created                 
 
+### `author`
+
+Type: field
+
+Description: The initial author of the ADR; it is determined in the following order:
+ 1. the value of the environment variable `ADR_AUTHOR`
+ 2. the value of the JVM system property "user.name"
 
 ### `supersedes.id`
 

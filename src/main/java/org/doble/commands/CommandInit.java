@@ -125,6 +125,7 @@ public class CommandInit implements Callable<Integer> {
 					.id(1)
 					.name("Record architecture decisions")
 					.date(new Date())
+					.author(env.author)
 					.build(); 
 			record.store(); 
 		}
@@ -137,7 +138,8 @@ public class CommandInit implements Callable<Integer> {
 					.id(1)
 					.name("Record architecture decisions")
 					.date(new Date())
-					.build(); 
+					.author(env.author)
+					.build();
 			record.store();
 		}
 		
