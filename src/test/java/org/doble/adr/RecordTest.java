@@ -3,10 +3,11 @@ package org.doble.adr;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RecordTest {
 	private FileSystem fileSystem;
 	private Path docPath = null;
+	private DateTimeFormatter dateFormatter;
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -37,6 +39,8 @@ public class RecordTest {
 		docPath = fileSystem.getPath("/test");
 
 		Files.createDirectory(docPath);
+
+		dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 	}
 
 	@AfterEach
@@ -67,10 +71,10 @@ public class RecordTest {
 				"\n" + 
 				"See Michael Nygard's article, linked above.";
 		
-		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(new Date()));
+		expectedContents = expectedContents.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()));
 
 		// Build the record
-		Record record = new Record.Builder(docPath).id(7).name("This is a new record").build();
+		Record record = new Record.Builder(docPath, dateFormatter).id(7).name("This is a new record").build();
 
 		record.store();
 
@@ -92,7 +96,7 @@ public class RecordTest {
 	@Test
 	@Order(2)
 	public void test2ComplexRecordConstruction() throws Exception {
-		Date date = new Date();
+		LocalDate date = LocalDate.now();
 		
 		String expectedContents = "# 42. This is a complex record\n" + 
 				"\n" + 
@@ -114,9 +118,9 @@ public class RecordTest {
 				"## Consequences\n" + 
 				"\n" + 
 				"See Michael Nygard's article, linked above.";
-		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(date));
+		expectedContents = expectedContents.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(date));
 		
-		Record record = new Record.Builder(docPath).id(42)
+		Record record = new Record.Builder(docPath, dateFormatter).id(42)
 				.name("This is a complex record")
 				.date(date)
 				.status("Accepted")
@@ -140,7 +144,7 @@ public class RecordTest {
 	@Order(3)
 	public void nameIsLowerCased() throws Exception {
 
-		Record record = new Record.Builder(docPath).id(8).name("CDR is stored in a relational database").build();
+		Record record = new Record.Builder(docPath, dateFormatter).id(8).name("CDR is stored in a relational database").build();
 
 		record.store();
 
@@ -151,7 +155,7 @@ public class RecordTest {
 	@Test
 	@Order(4)
 	public void testLinkConstruction() throws Exception {
-		Record record = new Record.Builder(docPath).id(102).name("Contains some links").build();
+		Record record = new Record.Builder(docPath, dateFormatter).id(102).name("Contains some links").build();
         
 		// <target_adr>:<link_description>
 		record.addLink("4:Links to");
@@ -171,7 +175,7 @@ public class RecordTest {
 		expectedContents = expectedContents.replace("{{author}}", System.getProperty("user.name"));
 
 		// Build the record
-		Record record = new Record.Builder(docPath)
+		Record record = new Record.Builder(docPath, dateFormatter)
 				.id(66)
 				.name("This is a new record with default author")
 				.template("rsrc:template_with_author.md")
@@ -200,7 +204,7 @@ public class RecordTest {
 				"Author: Andrew Doble";
 
 		// Build the record
-		Record record = new Record.Builder(docPath)
+		Record record = new Record.Builder(docPath, dateFormatter)
 				.id(67)
 				.name("This is a new record with given author")
 				.author("Andrew Doble")
@@ -214,6 +218,7 @@ public class RecordTest {
 
 		// Read in the file
 		Path adrFile = fileSystem.getPath("/test/0067-this-is-a-new-record-with-given-author.md");
+
 		Stream<String> lines = Files.lines(adrFile);
 		String actualContents = lines.collect(Collectors.joining("\n"));
 		lines.close();
@@ -221,4 +226,36 @@ public class RecordTest {
 		assertEquals(expectedContents, actualContents);
 
 	}
+	
+	@Test
+	@Order(7)
+	public void testExplicitDateFormatter() throws Exception {
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+
+		String expectedContents = "Date: {{date}}";
+
+		expectedContents = expectedContents.replace("{{date}}", dateFormatter.format(LocalDate.now()));
+
+		// Build the record
+		Record record = new Record.Builder(docPath, dateFormatter)
+				.id(77)
+				.name("Only date")
+				.template("rsrc:template_only_date.md")
+				.build();
+
+		record.store();
+
+		// Check if the ADR file has been created
+		assertTrue(Files.exists(fileSystem.getPath("/test/0077-only-date.md")));
+
+		// Read in the file
+		Path adrFile = fileSystem.getPath("/test/0077-only-date.md");
+		Stream<String> lines = Files.lines(adrFile);
+		String actualContents = lines.collect(Collectors.joining("\n"));
+		lines.close();
+
+		assertEquals(expectedContents, actualContents);
+
+	}
+		
 }

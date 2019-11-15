@@ -5,6 +5,8 @@ package org.doble.commands;
 
 import java.io.*;
 import java.nio.file.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -65,7 +67,11 @@ public class CommandInit implements Callable<Integer> {
 			exitCode = ADR.ERRORENVIRONMENT;
 		} 
 
-		properties.setProperty("docPath", docPath); 
+		properties.setProperty("docPath", docPath);
+
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+		properties.setProperty("dateFormat", ADRProperties.defaultDateFormat);
+
 		if (template != null) properties.setProperty("templateFile", template.toString());
         if (initialTemplate != null) properties.setProperty("initialTemplateFile", initialTemplate.toString());
 
@@ -120,12 +126,12 @@ public class CommandInit implements Callable<Integer> {
 		// If no template is specified and no initial template is specified create
 		// an initial ADR using the default (Nygard) form 
 		if (template == null && initialTemplate == null) {
-			Record record = new Record.Builder(docsPath)
+			Record record = new Record.Builder(docsPath, dateFormatter)
 					.template("rsrc:" + ADRProperties.defaultInitialTemplateName)
 					.id(1)
 					.name("Record architecture decisions")
-					.date(new Date())
 					.author(env.author)
+					.date(LocalDate.now())
 					.build(); 
 			record.store(); 
 		}
@@ -133,13 +139,14 @@ public class CommandInit implements Callable<Integer> {
 		// If a template is specified and an initial template is specified create an
 		// initial ADR using the specified initial template
 		if (template != null && initialTemplate != null) {
-			Record record = new Record.Builder(docsPath)
+			Record record = new Record.Builder(docsPath, dateFormatter)
 					.template(initialTemplate)
 					.id(1)
 					.name("Record architecture decisions")
-					.date(new Date())
+					.date(LocalDate.now())
 					.author(env.author)
 					.build();
+
 			record.store();
 		}
 		
