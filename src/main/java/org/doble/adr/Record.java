@@ -5,10 +5,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
-import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +24,10 @@ public class Record {
 	private final Integer id;
 	private final String idFormatted;
 	private final String name;
-	private final Date date;
-	private final String author;
+	private final LocalDate date;
+    private final String author;
 	private final String status;
+	private final DateTimeFormatter dateFormatter;
 
 	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
 
@@ -58,6 +59,7 @@ public class Record {
 		this.date = builder.date;
 		this.author = builder.author;
 		this.status = builder.status;
+		this.dateFormatter = builder.dateFormatter;
 		
 		if (builder.template.isPresent()) {
 			this.template = builder.template;
@@ -138,7 +140,7 @@ public class Record {
 					.map(line -> line.replaceAll("\\{\\{name\\}\\}", name))
 					.map(line -> line.replaceAll("\\{\\{status\\}\\}", status))
 					.map(line -> line.replaceAll("\\{\\{author\\}\\}", author))
-					.map(line -> line.replaceAll("\\{\\{date\\}\\}", DateFormat.getDateInstance().format(date)))
+					.map(line -> line.replaceAll("\\{\\{date\\}\\}", dateFormatter.format(date)))
 					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0))        // Remove lines which will be blank
 					.filter(line -> !(line.contains("{{{superseded.id}}}") && supersededFragments.size() == 0)) // Remove lines which will be blank
 					.map(line -> line.contains("{{{link.id}}}")?linkSectionString: line)   
@@ -319,12 +321,15 @@ public class Record {
 		private int id;
 		private String idFormatted;
 		private String name;
-		private String author = System.getProperty("user.name");
-		private Date date = new Date();
-		private String status = "Proposed";
 
-		public Builder(Path docsPath) {
+		private String author = System.getProperty("user.name");
+		private LocalDate date = LocalDate.now();
+		private String status = "Proposed";
+		private DateTimeFormatter dateFormatter;
+
+		public Builder(Path docsPath, DateTimeFormatter dateFormatter) {
 			this.docsPath = docsPath;
+			this.dateFormatter = dateFormatter;
 		}
       
 
@@ -358,7 +363,7 @@ public class Record {
 			return this;
 		}
 
-		public Builder date(Date date) {
+		public Builder date(LocalDate date) {
 			this.date = date;
 			return this;
 		}

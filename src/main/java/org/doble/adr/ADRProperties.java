@@ -19,7 +19,8 @@ public class ADRProperties extends Properties{
 	public static final String defaultDocPath = "doc/adr";  //TODO is this the right place for this constant?
 	public static final String defaultTemplateName = "default_template.md";
 	public static final String defaultInitialTemplateName = "default_initial_template.md";
-	
+	public static final String defaultDateFormat = "ISO_LOCAL_DATE";
+
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -59,6 +60,7 @@ public class ADRProperties extends Properties{
 			} else {
 				// Set the default values. This should be stored when adr init is called, 
 				setProperty("docPath", defaultDocPath);
+				setProperty("dateFormat", defaultDateFormat);
 			}
 		} catch (Exception e) {
 			throw new ADRException("FATAL: The properties file could not be read.", e);

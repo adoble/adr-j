@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -89,7 +89,7 @@ public class CommandNewWithTemplateTest {
 				"## Superseded\n" +
 				"## Content" + 
 				"Some general content. ";
-		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(new Date()));
+		expectedContents = expectedContents.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()));
 		
 		// Create  a template
 		TestUtilities.createTemplateFile(env.fileSystem, "/usr/adoble/templates/template.md", templateContent);
@@ -157,7 +157,7 @@ public class CommandNewWithTemplateTest {
 				"== Superseded\n" +
 				"== Content\n" + 
 				"Some general content written in ASCIIDOC.";
-		expectedContents = expectedContents.replace("{{date}}", DateFormat.getDateInstance().format(new Date()));
+		expectedContents = expectedContents.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()));
 		
 		// Create  a template
 		TestUtilities.createTemplateFile(env.fileSystem, "/usr/adoble/templates/asciidoc_template.txt", templateContent);
