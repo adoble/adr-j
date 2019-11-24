@@ -36,7 +36,6 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.reflections', name: 'reflections', version:'0.9.11'
     compile 'info.picocli:picocli:4.0.2'
     annotationProcessor 'info.picocli:picocli-codegen:4.0.2'
 
