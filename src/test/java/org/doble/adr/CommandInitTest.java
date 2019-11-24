@@ -282,7 +282,7 @@ public class CommandInitTest {
 	}
 	
 	@Test
-	public void testtemplateFileNotFound() {
+	public void testTemplateFileNotFound() {
 		String nonExistingTemplate = "/dev/mytemplates/non-existing_adr_template.md";
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -307,6 +307,35 @@ public class CommandInitTest {
 
 
 	}
+	
+	@Test
+	public void testInitialTemplateFileNotFound() {
+		String nonExistingIitialTemplate = "/dev/mytemplates/non-existing_adr_initial_template.md";
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+
+		Environment env = new Environment.Builder(fileSystem)
+				.out(System.out)
+				.err(ps)
+				.in(System.in)
+				.userDir(rootPath)
+				.editorCommand("dummyEditor")
+				.build();
+		
+		String[] args = {"init", "-t", templateFileName, "-i", nonExistingIitialTemplate};
+		
+		
+     	int exitCode = ADR.run(args, env);
+		
+		assertEquals(exitCode, 2);
+		
+		String commandOutput = new String(baos.toByteArray());
+		assertTrue(commandOutput.contains("ERROR"), "No error given from init command that initial template file does not exist.");
+
+
+	}
+	
 	
 	
 }
