@@ -7,19 +7,11 @@ import java.util.*;
 import java.util.stream.*;
 
 /** 
- * This class streams the contents if templates independent of if they are normal files or
- * are in the packaged JAR file. If the template is not specified then a default template 
- * in the resources is streamed.
+ * This class delivers a <code>java.nio.file.Path</code> object to the templates independent  
+ * if they are normal files or are in the packaged JAR file. 
  * 
- * Example use: 
- * <code>
- *      FileSystem fs = templatePath.getFileSystem();
- *      TemplateStreamer templateStreamer = new TemplateStreamer(fs, defaultTemplateFileName, env);
- *		Optional<String> templateName = Optional.of("/usr/adoble/dev/templates/my_template.md");
- *	    try (Stream<String> lines = templateStreamer.lines(Optional<String> templateName)) {
- *             lines.forEach(System.out::println);
- *       }
- * </code>
+ * If the template is not specified then a Path object to the default template in the resources
+ * is returned.
  * 
  * See https://stackoverflow.com/questions/22605666/java-access-files-in-jar-causes-java-nio-file-filesystemnotfoundexception
  *			
@@ -84,43 +76,51 @@ public class TemplateProvider  {
 		return templatePath;
 
    }
+   
 
+   // Gets a path to the specified resource independent if the resource  is 
+   //   a) a resource file in an executable JAR file or
+   //   b) a resource in a "normal" file system as occurs when the junit tests are running an an IDE.
+   // 
+   // NOTE: Have tried to simplify this using the com.google.common.io.Resources package (Guava). 
+   // But still have to handle the case that the resource files are either in a JAR or a normal 
+   // file system. It didn't really simplify things. 
+   private Path getResourcePath(String templateFileName) throws URISyntaxException, IOException {
+	   Path templatePath;
+	   URI uri = ClassLoader.getSystemResource(templateFileName).toURI();
 
-private Path getResourcePath(String templateFileName) throws URISyntaxException, IOException {
-	Path templatePath;
-	URI uri = ClassLoader.getSystemResource(templateFileName).toURI();
-	
-	// Now check if the system resource is either a normal file (e.g. we are running in an IDE) or
-	// the system resource is is a packaged JAR (e.g. we are running a packaged JAR file) 
-	if (uri.getScheme().equalsIgnoreCase("jar")) {
-		// Running as a packaged JAR so set up a file system to read this jar using the first 
-		// part of the URI (separated with '!') as the file to use
-		String[] uriParts = uri.toString().split("!");
-		
-		try {
-		   jarFileSystem = FileSystems.getFileSystem(URI.create(uriParts[0]));
-		}
-		catch(FileSystemNotFoundException e) {
-			jarFileSystem = FileSystems.newFileSystem(URI.create(uriParts[0]), new HashMap<>());
-		}
-		templatePath = jarFileSystem.getPath(uriParts[1]);
-	} else {
-		// Assume that the system resource is a normal file (e.g. we are running in an IDE). 
-		String pathName = uri.getSchemeSpecificPart();
-		// If there is a leading '/' then remove it if we run on Windows so we have a correct path specification.
-		if (runsOnWindows() && pathName.startsWith("/")) {
-			pathName = pathName.substring(1);
-		}
-		// The resource file is in the default file system and not any file system
-		// that is being used for e.g. test. Returned path should therefore be 
-		// associated with the default file system. 
-		FileSystem fs = FileSystems.getDefault();
-		templatePath = fs.getPath(pathName);  
-	}
-	return templatePath;
-}
+	   // Now check if the system resource is either a normal file (e.g. we are running in an IDE) or
+	   // the system resource is is a packaged JAR (e.g. we are running a packaged JAR file) 
+	   if (uri.getScheme().equalsIgnoreCase("jar")) {
+		   // Running as a packaged JAR so set up a file system to read this jar using the first 
+		   // part of the URI (separated with '!') as the file to use
+		   String[] uriParts = uri.toString().split("!");
 
-	private boolean runsOnWindows() {
-		return System.getProperty("os.name").regionMatches(true, 0, "win", 0, 3);
-	}
+		   try {
+			   jarFileSystem = FileSystems.getFileSystem(URI.create(uriParts[0]));
+		   }
+		   catch(FileSystemNotFoundException e) {
+			   jarFileSystem = FileSystems.newFileSystem(URI.create(uriParts[0]), new HashMap<>());
+		   }
+		   templatePath = jarFileSystem.getPath(uriParts[1]);
+	   } else {
+		   // Assume that the system resource is a normal file (e.g. we are running in an IDE). 
+		   String pathName = uri.getSchemeSpecificPart();
+		   // If there is a leading '/' then remove it if we run on Windows so we have a correct path specification.
+		   // TODO is there some way to remove this "special" case. 
+		   if (runsOnWindows() && pathName.startsWith("/")) {
+			   pathName = pathName.substring(1);
+		   }
+		   // The resource file is in the default file system and not any file system
+		   // that is being used for e.g. test. Returned path should therefore be 
+		   // associated with the default file system. 
+		   FileSystem fs = FileSystems.getDefault();
+		   templatePath = fs.getPath(pathName);  
+	   }
+	   return templatePath;
+   }
+
+   private boolean runsOnWindows() {
+	   return System.getProperty("os.name").regionMatches(true, 0, "win", 0, 3);
+   }
 }
