@@ -6,7 +6,9 @@ package org.doble.adr;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
-import java.io.BufferedReader;;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;;
 
 /**
  * @author adoble
@@ -37,21 +39,21 @@ public class ADRProperties extends Properties{
 	}
 	
 	/** 
-	 * Reads the .adr properties file at the root directory of the project. 
+	 * Reads the adr.properties file and sets the properties. 
 	 *
 	 * @throws ADRException if the properties file cannot be read 
 	 */
-     public void load() throws ADRException {
+	public void load() throws ADRException {
 		//properties = new Properties();		
-		
+
 		// Get the root directory by looking for an .adr directory
-		
+
 		Path rootPath = env.dir; 
-		
+
 		Path propertiesRelPath  = env.fileSystem.getPath(ADR.ADR_DIR_NAME, "adr.properties");
-		
+
 		Path propertiesPath = rootPath.resolve(propertiesRelPath);
-		
+
 		try {
 			if (Files.exists(propertiesPath)) {
 				BufferedReader propertiesReader = Files.newBufferedReader(propertiesPath);
@@ -65,9 +67,40 @@ public class ADRProperties extends Properties{
 		} catch (Exception e) {
 			throw new ADRException("FATAL: The properties file could not be read.", e);
 		} 
-		
-		
-			
 	}
+
+
+		/** 
+		 * Stores the properties in the adr.properties file.
+		 * 
+		 */
+		public void store() throws ADRException {
+			Path rootPath = env.dir; 
+
+			Path propertiesRelPath  = env.fileSystem.getPath(ADR.ADR_DIR_NAME, "adr.properties");
+			Path propertiesPath = rootPath.resolve(propertiesRelPath);
+							
+			// Create a properties file if required. 
+			if (!Files.exists(propertiesPath)) {
+				// Create a properties file
+				try {
+					Files.createDirectories(propertiesPath.getParent());
+					Files.createFile(propertiesPath);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					throw new ADRException("FATAL: The properties file could not be created.", e);
+				}
+			}
+
+			// Now save the properties
+			try (BufferedWriter propertiesWriter = Files.newBufferedWriter(propertiesPath))
+			{
+				store(propertiesWriter, null);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				throw new ADRException("FATAL: The properties file could not be written to.", e);
+			}
+
+		}
 
 }

@@ -7,7 +7,6 @@ package org.doble.commands;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Properties;
 import java.util.concurrent.Callable;
 
 import org.doble.adr.ADR;
@@ -17,7 +16,6 @@ import org.doble.adr.Environment;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 

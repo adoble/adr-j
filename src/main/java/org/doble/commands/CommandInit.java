@@ -47,7 +47,7 @@ public class CommandInit implements Callable<Integer> {
     private CommandADR commandADR;
 	
 	private Environment env;
-	private Properties properties;
+	private ADRProperties properties;
 	
 
 	/* (non-Javadoc)
@@ -58,7 +58,7 @@ public class CommandInit implements Callable<Integer> {
 		int exitCode = 0; 
 
 		this.env = commandADR.getEnvironment();
-		properties = new Properties();
+		properties = new ADRProperties(env);
 		
 		if (env.editorCommand == null) {
 			String msg = "WARNING: Editor for the ADR has not been found in the environment variables.\n"
@@ -109,13 +109,15 @@ public class CommandInit implements Callable<Integer> {
 
 
 		// Create a properties file
-		Path propPath = adrPath.resolve("adr.properties");
-		Files.createFile(propPath);
-
-		BufferedWriter writer =  Files.newBufferedWriter(propPath);
-
-		properties.store(writer, null);
-		writer.close();
+		/*
+		 * Path propPath = adrPath.resolve("adr.properties");
+		 * Files.createFile(propPath);
+		 * 
+		 * BufferedWriter writer = Files.newBufferedWriter(propPath);
+		 * properties.store(writer, null); writer.close();
+		 */
+		
+		properties.store();
 
 		// Now create the docs directory which contains the adr directory
 		Path docsPath = env.dir.resolve(properties.getProperty("docPath"));

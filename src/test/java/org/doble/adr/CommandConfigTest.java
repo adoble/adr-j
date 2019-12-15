@@ -71,8 +71,9 @@ public class CommandConfigTest {
 
 	}
 	
+	@Test 
 	@Disabled
-	@Test void testConfigAuthor() throws Exception {
+	void testConfigAuthor() throws Exception {
 		//Catch the output 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream testOut = new PrintStream(baos);
@@ -89,6 +90,7 @@ public class CommandConfigTest {
 		assertEquals(exitCode, 0);
 
 		String list = new String(baos.toByteArray());
+		env.out.println(list);
 		assertTrue(list.contains("author=doble"));
 	}
 	

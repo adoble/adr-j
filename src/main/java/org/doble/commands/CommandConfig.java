@@ -68,17 +68,20 @@ public class CommandConfig  implements Callable<Integer> {
 	}
 	
 	//TODO 
-	/*
-	 * @Command(description = "Change the default name of the ADR author.") void
-	 * author(@Option(names = {"-f", "-force"}) boolean force,
-	 * 
-	 * @Parameters(paramLabel = "<author>") String[] author) {
-	 * 
-	 * System.out.print("AUTHOR:"); String authorFullName = ""; for (String
-	 * authorPart : author) { authorFullName += authorPart + " "; }
-	 * authorFullName.trim(); System.out.println(authorFullName);
-	 * System.out.println("FORCE:" + force); }
-	 */
+
+	@Command(description = "Change the default name of the ADR author.") 
+	void author(@Parameters(paramLabel = "<author>") String[] author) {
+
+		String authorFullName = ""; 
+		for (String	authorPart : author) 
+		{ 
+			authorFullName += authorPart + " "; 
+		}
+		authorFullName.trim(); 
+		System.out.println(authorFullName);
+		
+	}
+
 	
 
 }
