@@ -45,17 +45,7 @@ public class CommandConfig  implements Callable<Integer> {
 	@Override
 	public Integer call() throws Exception {
 		
-		env = commandADR.getEnvironment();
-		
-		properties = new ADRProperties(env);
-					
-		// Load the properties
-		try {
-			properties.load();
-		} catch (ADRException e) {
-			env.err.println("FATAL: Cannot load properties file. Exception message ->" + e.getMessage() );
-			return ADR.ERRORGENERAL;
-		}
+		ADRProperties properties = loadProperties();
 		
 		Set<String> propertyKeys= properties.stringPropertyNames();
 		String propStr = "";
@@ -66,22 +56,38 @@ public class CommandConfig  implements Callable<Integer> {
 		        
 		return 0;
 	}
-	
-	//TODO 
 
 	@Command(description = "Change the default name of the ADR author.") 
-	void author(@Parameters(paramLabel = "<author>") String[] author) {
-
+	void author(@Parameters(paramLabel = "<author>") String[] author) throws Exception {
+		
+		ADRProperties properties = loadProperties();
+	
 		String authorFullName = ""; 
 		for (String	authorPart : author) 
 		{ 
 			authorFullName += authorPart + " "; 
 		}
-		authorFullName.trim(); 
-		System.out.println(authorFullName);
+		authorFullName = authorFullName.trim(); 
+		
+		properties.setProperty("author", authorFullName);
+		properties.store();
+		
 		
 	}
 
+	private ADRProperties loadProperties()  throws ADRException {
+		env = commandADR.getEnvironment();
+		
+		properties = new ADRProperties(env);
+					
+		// Load the properties
+		properties.load();
+		
+		return properties;
+		
+	}
+
+	
 	
 
 }

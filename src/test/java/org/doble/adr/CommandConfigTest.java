@@ -72,27 +72,30 @@ public class CommandConfigTest {
 	}
 	
 	@Test 
-	@Disabled
-	void testConfigAuthor() throws Exception {
-		//Catch the output 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PrintStream testOut = new PrintStream(baos);
-		Environment localEnv = new Environment.Builder(fileSystem)
-				.out(testOut)
-				.err(System.err)
-				.in(System.in)
-				.userDir(rootPathName)
-				.editorRunner(new TestEditorRunner())
-				.build();
+	void testConfigAuthorSingleName() throws Exception {
+		
+		int exitCode = ADR.run(TestUtilities.argify("config author doble"), env);
+		assertEquals(0, exitCode);
+		
+		ADRProperties properties = new ADRProperties(env);
+		properties.load();
 
-
-		int exitCode = ADR.run(TestUtilities.argify("config author doble"), localEnv);
-		assertEquals(exitCode, 0);
-
-		String list = new String(baos.toByteArray());
-		env.out.println(list);
-		assertTrue(list.contains("author=doble"));
+		assertEquals("doble", properties.getProperty("author"));
 	}
+	
+	
+	@Test 
+	void testConfigAuthorMulitpleName() throws Exception {
+		
+		int exitCode = ADR.run(TestUtilities.argify("config author William Shakespeare the Bard"), env);
+		assertEquals(0, exitCode);
+		
+		ADRProperties properties = new ADRProperties(env);
+		properties.load();
+
+		assertEquals("William Shakespeare the Bard", properties.getProperty("author"));
+	}
+	
 	
 	
 
