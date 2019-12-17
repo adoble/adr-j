@@ -169,5 +169,16 @@ RFC_1123_DATE_TIME 	RFC 1123 / RFC 822 	'Tue, 3 Jun 2008 11:05:30 GMT'
 		assertEquals(currentDateFormat, properties.getProperty("dateFormat"));
 	}
 	
+	@Test
+	void testTemplateFile() throws Exception {
+		  
+		int exitCode = ADR.run(TestUtilities.argify("config templateFile /usr/templates/project_template.adoc"), env);
+		assertEquals(0, exitCode);
+
+		ADRProperties properties = new ADRProperties(env);
+		properties.load();
+		assertEquals("/usr/templates/project_template.adoc", properties.getProperty("templateFile"));
+	}
+	
 
 }

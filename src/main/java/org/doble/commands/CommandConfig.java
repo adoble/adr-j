@@ -129,6 +129,15 @@ RFC_1123_DATE_TIME 	RFC 1123 / RFC 822 	'Tue, 3 Jun 2008 11:05:30 GMT'
 		properties.setProperty("dateFormat", dateFormatterType.name());
 		properties.store();
 	}
+	
+	@Command(description = "Change the template file used to created ADRs.") 
+	void templateFile(@Parameters(paramLabel = "<templateFile>") String templateFile) throws Exception {
+		
+		ADRProperties properties = loadProperties();
+	
+		properties.setProperty("templateFile", templateFile);
+		properties.store();
+	}
 
 	private ADRProperties loadProperties()  throws ADRException {
 		env = commandADR.getEnvironment();
