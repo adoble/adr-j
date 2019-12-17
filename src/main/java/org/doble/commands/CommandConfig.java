@@ -26,6 +26,41 @@ public class CommandConfig  implements Callable<Integer> {
 	private Environment env;
 	private ADRProperties properties; 
 	
+	/*
+	 * BASIC_ISO_DATE 	Basic ISO date 	'20111203'
+ISO_LOCAL_DATE 	ISO Local Date 	'2011-12-03'
+ISO_OFFSET_DATE 	ISO Date with offset 	'2011-12-03+01:00'
+ISO_DATE 	ISO Date with or without offset 	'2011-12-03+01:00'; '2011-12-03'
+ISO_LOCAL_TIME 	Time without offset 	'10:15:30'
+ISO_OFFSET_TIME 	Time with offset 	'10:15:30+01:00'
+ISO_TIME 	Time with or without offset 	'10:15:30+01:00'; '10:15:30'
+ISO_LOCAL_DATE_TIME 	ISO Local Date and Time 	'2011-12-03T10:15:30'
+ISO_OFFSET_DATE_TIME 	Date Time with Offset 	2011-12-03T10:15:30+01:00'
+ISO_ZONED_DATE_TIME 	Zoned Date Time 	'2011-12-03T10:15:30+01:00[Europe/Paris]'
+ISO_DATE_TIME 	Date and time with ZoneId 	'2011-12-03T10:15:30+01:00[Europe/Paris]'
+ISO_ORDINAL_DATE 	Year and day of year 	'2012-337'
+ISO_WEEK_DATE 	Year and Week 	2012-W48-6'
+ISO_INSTANT 	Date and Time of an Instant 	'2011-12-03T10:15:30Z'
+RFC_1123_DATE_TIME 	RFC 1123 / RFC 822 	'Tue, 3 Jun 2008 11:05:30 GMT'
+	 */
+	private enum DateFormatterType {
+		BASIC_ISO_DATE,
+		ISO_LOCAL_DATE,
+		ISO_OFFSET_DATE,
+		ISO_DATE,
+		ISO_LOCAL_TIME,
+		ISO_OFFSET_TIME,
+		ISO_TIME,
+		ISO_LOCAL_DATE_TIME,
+		ISO_OFFSET_DATE_TIME,
+		ISO_ZONED_DATE_TIME,
+		ISO_DATE_TIME,
+		ISO_ORDINAL_DATE,
+		ISO_WEEK_DATE,
+		ISO_INSTANT,
+		RFC_1123_DATE_TIME 
+	}
+	
 	/**
 	 * 
 	 */
@@ -73,6 +108,26 @@ public class CommandConfig  implements Callable<Integer> {
 		properties.store();
 		
 		
+	}
+	
+	@Command(description = "Change the location where future ADRs are stored.") 
+	void docsPath(@Parameters(paramLabel = "<docsPath>") String docsPath) throws Exception {
+		
+		ADRProperties properties = loadProperties();
+	
+			
+		properties.setProperty("docsPath", docsPath);
+		properties.store();
+	}
+	
+	@Command(description = "Change how the dates in the ADRs are represented.") 
+	void dateFormat(@Parameters(paramLabel = "<dateFormat>") DateFormatterType dateFormatterType) throws Exception {
+		
+		ADRProperties properties = loadProperties();
+	
+			
+		properties.setProperty("dateFormat", dateFormatterType.name());
+		properties.store();
 	}
 
 	private ADRProperties loadProperties()  throws ADRException {
