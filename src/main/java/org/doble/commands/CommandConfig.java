@@ -96,12 +96,17 @@ public class CommandConfig  implements Callable<Integer> {
 	}
 	
 	@Command(description = "Change the location where future ADRs are stored.") 
-	void docsPath(@Parameters(paramLabel = "<docsPath>") String docsPath) throws Exception {
+	void docPath(@Parameters(paramLabel = "<docPath>") String docPathName) throws Exception {
 		
 		ADRProperties properties = loadProperties();
-	
-			
-		properties.setProperty("docsPath", docsPath);
+		
+		// Check if the directory exists and if not create it. 
+		Path docPath = env.dir.resolve(docPathName);
+		if (!Files.exists(docPath)) {
+			Files.createDirectories(docPath);
+		}
+				
+		properties.setProperty("docPath", docPathName);
 		properties.store();
 	}
 	

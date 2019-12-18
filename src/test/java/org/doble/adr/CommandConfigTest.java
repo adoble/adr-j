@@ -2,9 +2,12 @@ package org.doble.adr;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.stream.Stream;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -36,6 +39,7 @@ public class CommandConfigTest {
 				.in(System.in)
 				.userDir(rootPathName)
 				.editorCommand("dummyEditor")
+				.editorRunner(new TestEditorRunner())
 				.build();
 
 		// Initialise up the directory structure
@@ -97,15 +101,50 @@ public class CommandConfigTest {
 	}
 	
 	@Test
-	void testDocsPath() throws Exception {
-		int exitCode = ADR.run(TestUtilities.argify("config docsPath documents/ADRs"), env);
+	void testDocPath() throws Exception {
+		int exitCode = ADR.run(TestUtilities.argify("config docPath documents/ADRs"), env);
 		assertEquals(0, exitCode);
 		
 		ADRProperties properties = new ADRProperties(env);
 		properties.load();
 		
-		assertTrue(properties.getProperty("docsPath").equalsIgnoreCase("documents/ADRs"));
+		assertTrue(properties.getProperty("docPath").equalsIgnoreCase("documents/ADRs"));
 		
+		// Now check that this new directory has been created
+		Path newDir = env.dir.resolve("documents/ADRs");
+		
+		assertTrue(Files.exists(newDir));
+		
+		// Check that new ADRs are placed in this directory
+		exitCode = ADR.run(TestUtilities.argify("new testadr"), env);
+		assertEquals(0, exitCode);
+		
+		assertTrue(Files.exists(newDir.resolve("0001-testadr.md"))) ;
+	
+	
+	}
+	
+
+	@Test
+	@Disabled
+	void testDocPathExistingDirectory() throws Exception {
+		
+		// Create a directory
+		Path docPath = env.dir.resolve("documents/ADRs");
+		Files.createDirectories(docPath);
+		
+		int exitCode = ADR.run(TestUtilities.argify("config docPath documents/ADRs"), env);
+		assertEquals(0, exitCode);
+		
+		ADRProperties properties = new ADRProperties(env);
+		properties.load();
+		
+		assertTrue(properties.getProperty("docPath").equalsIgnoreCase("documents/ADRs"));
+		
+		// Now check that this new directory has been created
+		Path newDir = env.dir.resolve("documents/ADRs");
+		
+		assertTrue(Files.exists(newDir));
 	}
 	
 	@Test 
