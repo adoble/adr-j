@@ -8,7 +8,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ## [Unreleased]
 
 ### Added
-- Simple config command added
+- Command config command added together with subcommands docPath, templateFile, author and dateFormat (Issue #13)
 - ISO date formats can be set using the dateFormat property in adr.properties
 - Add edit sub command
 - Add author field substitution
