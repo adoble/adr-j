@@ -57,10 +57,8 @@ public class CommandConfig  implements Callable<Integer> {
 	 *   <code>adr config </code>
 	 * lists the currently set properties in the properties file. 
 	 * 
-	 * TODO Extend this with subcommands for each of the properties 
-	 * that can be set.
+	 * It take the subcommands author, docPath, templateFile and dateFormat. 
 	 * 
-	 * @see commands.Command#command(java.lang.String[])
 	 */
 	@Override
 	public Integer call() throws Exception {
