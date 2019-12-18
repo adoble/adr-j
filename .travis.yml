@@ -33,9 +33,9 @@ script:
   # JAR is equal on Linux and Windows. So just build on Linux
   - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then ./gradlew shadowJar; fi
   # build native executable (windows: adr.exe, linux: adr)
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then JAVA_HOME="C:/Program Files/Java/jdk1.8.0_221" ./gradlew nativeImage; else ./gradlew nativeImage; fi
+  #- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then JAVA_HOME="C:/Program Files/Java/jdk1.8.0_221" ./gradlew nativeImage; else ./gradlew nativeImage; fi
   # have one build result folder --> build/libs
-  - cp build/graal/* build/libs
+  #- cp build/graal/* build/libs
   # dpl is required for uploading to gh-pages
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then gem install bundler; gem install dpl --pre; fi
 
