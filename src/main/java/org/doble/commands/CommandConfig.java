@@ -29,8 +29,11 @@ public class CommandConfig  implements Callable<Integer> {
 	private ADRProperties properties;
 
     // The values used to specify how the dates are formatted in ADRs
-	// TODO These values are repeated in CommandNew. Refactor so that they are only specified once.
-	// FIXME changed this to public for the nativeImage target (GraalVM) 
+	// TODO These values are repeated in CommandNew. Refactor so that they are
+	//  only specified once.
+	// Note that this enum needs to have scope public. Without it, the picocli
+	// generation of the reflection configuration files required for native images
+	// with GraaVM do not work.  
 	public enum DateFormatterType {
 		BASIC_ISO_DATE,   // Basic ISO date 	'20111203'
 		ISO_DATE,         // ISO Date with or without offset 	'2011-12-03+01:00'; '2011-12-03'
