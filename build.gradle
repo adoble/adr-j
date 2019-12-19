@@ -1,16 +1,16 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.2'
-//    id "com.palantir.graal" version "0.6.0"
+    id "com.palantir.graal" version "0.6.0"
 }
 
 apply plugin: 'java'
 apply plugin: 'application'
 
-//graal {
-//    mainClass 'org.doble.adr.ADR'
-//    graalVersion '19.2.0.1'
-//    outputName 'adr'
-//}
+graal {
+    mainClass 'org.doble.adr.ADR'
+    graalVersion '19.2.0.1'
+    outputName 'adr'
+}
 
 group = 'org.doble'
 version = '3.1.0-SNAPSHOT'
