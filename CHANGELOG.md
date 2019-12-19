@@ -17,6 +17,9 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 - Add enablement for future versions to use [GraalVM native images](https://www.graalvm.org/docs/reference-manual/aot-compilation/)
 - Add `CHANGELOG.md` following [keep a changelog](https://keepachangelog.com/en/1.0.0/).
 
+### Changed
+- Now using picocli 4.1.2
+
 ## [3.0] - 2019-06-29
 
 ### Added
