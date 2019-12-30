@@ -8,17 +8,19 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ## [Unreleased]
 
 ### Added
-- Command config command added together with subcommands docPath, templateFile, author and dateFormat (Issue #13)
-- ISO date formats can be set using the dateFormat property in adr.properties
-- Add edit sub command
-- Add author field substitution
+- Command config command added together with subcommands docPath, templateFile, author and dateFormat ([iss #13](https://github.com/adoble/adr-j/issues/13))
+- ISO date formats can be set using the dateFormat property in adr.properties ([iss #28](https://github.com/adoble/adr-j/issues/28)) (thanks @sdavids)
+- Add edit sub command ([iss #19](https://github.com/adoble/adr-j/issues/19))
+- Add author field substitution ([iss #25](https://github.com/adoble/adr-j/issues/25)) (thanks @sdavids)
 - Add version sub-command (currently gives version as 3.1.0).
-- Picocli framework now as [external dependency](https://picocli.info/#_add_as_external_dependency)
-- Add enablement for future versions to use [GraalVM native images](https://www.graalvm.org/docs/reference-manual/aot-compilation/)
-- Add `CHANGELOG.md` following [keep a changelog](https://keepachangelog.com/en/1.0.0/).
+- Picocli framework now as [external dependency](https://picocli.info/#_add_as_external_dependency) (thanks @koppor)
+- Add enablement for future versions to use [GraalVM native images](https://www.graalvm.org/docs/reference-manual/aot-compilation/) ([iss #16](https://github.com/adoble/adr-j/issues/16)) (thanks @koppor)
+- Add `CHANGELOG.md` following [keep a changelog](https://keepachangelog.com/en/1.0.0/) (([iss #17](https://github.com/adoble/adr-j/issues/17)))  (thanks @koppor).
 
 ### Changed
-- Now using picocli 4.1.2
+- Now using [picocli](https://picocli.info/) 4.1.2
+- Minor fixes (([iss #20](https://github.com/adoble/adr-j/issues/20))) (thanks @koppor)
+- Unit tests enabled in gradle build (([iss #29](https://github.com/adoble/adr-j/issues/29))) (thanks @sdavids)
 
 ## [3.0] - 2019-06-29
 
