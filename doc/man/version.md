@@ -1,2 +1,7 @@
-Usage: adr version
+# Usage
+
+`adr version`
+
+# Description
+
 Prints the version of adr-j.
