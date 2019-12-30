@@ -1,13 +1,13 @@
 
-ADR Tools [![Build Status](https://travis-ci.org/adoble/adr-j.svg?branch=master)](https://travis-ci.org/adoble/adr-j)
-=========
+# ADR Tools [![Build Status](https://travis-ci.org/adoble/adr-j.svg?branch=master)](https://travis-ci.org/adoble/adr-j)
+
 
 A Java based command-line tool for working with [Architecture Decision Records][ADRs] (ADRs). More information about what ADRs are and why to use them can be found in this [article](https://adr.github.io/).
 
 ADR-J is based on the [script based tools from Nat Pryce](https://github.com/npryce/adr-tools).
 
-Quick Start
------------
+# Quick Start
+
 [Install ADR-J tool](./doc/usage/INSTALL.md)
 
 Use the `adr` command to manage ADRs.  Try running `adr help`.
@@ -53,9 +53,13 @@ ADRs are stored in your project as Markdown files in the `doc/adr` directory.
    This will create a new ADR that references ADR 4 and inserts the message
    "Links to" in the new ADR.  
 
-3. For further information, use the built in help:
+3. For further information, see the [man pages](doc/man/adr.md) or use the built in help:
 
         adr help
+
+
+
+# Architecture Decisions
 
 The decisions for this tool are recorded as [architecture decision records in the project repository](doc/adr/).
 
