@@ -6,7 +6,7 @@
 
 A Java based command-line tool for working with [Architecture Decision Records][ADRs] (ADRs). More information about what ADRs are and why to use them can be found in this [article](https://adr.github.io/).
 
-ADR-J is based on the [script based tools from Nat Pryce](https://github.com/npryce/adr-tools).
+ADR-J is based on the [script based tools from Nat Pryce](https://github.com/npryce/adr-tools). It has been extended so that custom ADR templates can be created.
 
 # Quick Start
 
