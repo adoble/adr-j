@@ -8,6 +8,15 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ## [Unreleased]
 
 ### Added
+
+*
+
+### Changed
+*
+
+## [3.1] - 2019-12-30
+
+### Added
 - Simple manual pages in markdown format
 - Command config command added together with subcommands docPath, templateFile, author and dateFormat ([iss #13](https://github.com/adoble/adr-j/issues/13))
 - ISO date formats can be set using the dateFormat property in adr.properties ([iss #28](https://github.com/adoble/adr-j/issues/28)) (thanks [Sebastian Davids](https://github.com/sdavids))
