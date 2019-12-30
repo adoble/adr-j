@@ -1,5 +1,7 @@
 
-# ADR Tools [![Build Status](https://travis-ci.org/adoble/adr-j.svg?branch=master)](https://travis-ci.org/adoble/adr-j)
+# ADR Tools 
+![Release](https://img.shields.io/github/v/release/adoble/adr-j)
+[![Build Status](https://travis-ci.org/adoble/adr-j.svg?branch=master)](https://travis-ci.org/adoble/adr-j)
 
 
 A Java based command-line tool for working with [Architecture Decision Records][ADRs] (ADRs). More information about what ADRs are and why to use them can be found in this [article](https://adr.github.io/).
