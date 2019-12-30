@@ -21,7 +21,7 @@ import picocli.CommandLine.ParentCommand;
 
 
 @Command(name = "edit",
-         description = "Starts the editor on the speified ADR"
+         description = "Starts the editor on the specified ADR"
          )
 public class CommandEdit implements Callable<Integer> {
 	@Parameters(paramLabel = "ADR_ID", description = "The identifier of the ADR to be edited.")

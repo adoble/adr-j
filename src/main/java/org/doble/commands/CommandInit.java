@@ -24,7 +24,7 @@ import picocli.CommandLine.ParentCommand;
  *
  */
 @Command(name = "init",
-         description = "Initialises the directory of architecture decision records:\n" +
+         description = "Initialise the directory of architecture decision records:\n" +
       			       " * creates a subdirectory of the current working directory\n" +
      			       " * creates the first ADR in that subdirectory, recording the decision to" +
      			       " record architectural decisions with ADRs."
