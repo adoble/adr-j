@@ -89,7 +89,7 @@ public class CommandConfig  implements Callable<Integer> {
 	}
 
 	@Command(description = "Change how the dates in the ADRs are represented.")
-	void dateFormat(@Parameters(paramLabel = "<dateFormat>") DateFormatterType dateFormatterType) throws Exception {
+	void dateFormat(@Parameters(paramLabel = "<dateFormat>") DateFormatEnum dateFormatterType) throws Exception {
 
 		ADRProperties properties = loadProperties();
 

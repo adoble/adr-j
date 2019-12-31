@@ -1,4 +1,4 @@
-package org.doble.commands;
+package org.doble.adr;
 
 // The values used to specify how the dates are formatted in ADRs
 // TODO These values are repeated in CommandNew. Refactor so that they are
@@ -6,7 +6,7 @@ package org.doble.commands;
 // Note that this enum needs to be in its own file. Without it, the picocli
 // generation of the reflection configuration files required for native images
 // with GraalVM does not work.  
-public enum DateFormatterType {
+public enum DateFormatEnum {
 	BASIC_ISO_DATE,   // Basic ISO date 	'20111203'
 	ISO_DATE,         // ISO Date with or without offset 	'2011-12-03+01:00'; '2011-12-03'
 	ISO_LOCAL_DATE,   // ISO Local Date 	'2011-12-03'
