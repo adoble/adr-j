@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import org.doble.adr.ADR;
 import org.doble.adr.ADRException;
 import org.doble.adr.ADRProperties;
+import org.doble.adr.DateFormatEnum;
 import org.doble.adr.EditorRunner;
 import org.doble.adr.Environment;
 import org.doble.adr.LinkSpecificationException;
@@ -174,31 +175,20 @@ public class CommandNew implements Callable<Integer> {
 	}
 
 	private DateTimeFormatter determineDateFormatter(String dateFormat) throws ADRException {
-		if (dateFormat == null || dateFormat.isEmpty()) {
-			// preserve behavior of 3.0
-			return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
-		} else if (dateFormat.equals("BASIC_ISO_DATE")) {
-			return DateTimeFormatter.BASIC_ISO_DATE;
-		} else if (dateFormat.equals("ISO_DATE")) {
-			return DateTimeFormatter.ISO_DATE;
-		} else if (dateFormat.equals("ISO_LOCAL_DATE")) {
-			return DateTimeFormatter.ISO_LOCAL_DATE;
-		} else if (dateFormat.equals("ISO_OFFSET_DATE")) {
-			return DateTimeFormatter.ISO_OFFSET_DATE;
-		} else if (dateFormat.equals("ISO_ORDINAL_DATE")) {
-			return DateTimeFormatter.ISO_ORDINAL_DATE;
-		} else if (dateFormat.equals("ISO_WEEK_DATE")) {
-			return DateTimeFormatter.ISO_WEEK_DATE;
-		} else if (dateFormat.equals("SHORT")) {
-			return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-		} else if (dateFormat.equals("MEDIUM")) {
-			return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
-		} else if (dateFormat.equals("LONG")) {
-			return DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
-		} else if (dateFormat.equals("FULL")) {
-			return DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL);
-		}
-		throw new ADRException("ERROR: Can not parse dateFormat \'" + dateFormat + "\'");
+		try {
+			if (dateFormat == null || dateFormat.isEmpty()) {
+				// preserve behavior of 3.0
+				return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+			} else {
+				DateFormatEnum dateFormatEnum = DateFormatEnum.valueOf(dateFormat);
+				DateTimeFormatter formatter = dateFormatEnum.getDateTimeFormatter();
+				return formatter;
+				
+			}
+		} catch (IllegalArgumentException e) {
+			throw new ADRException("ERROR: Can not parse dateFormat \'" + dateFormat + "\'");
+		} 
+		
 	}
 
 	private boolean checkADRExists(Integer adrID) throws ADRException, IOException {
