@@ -12,7 +12,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 *
 
 ### Changed
-*
+* Refactored date/time handling
 
 ## [3.1] - 2019-12-30
 
