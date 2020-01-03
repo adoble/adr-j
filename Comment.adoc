@@ -5,4 +5,4 @@ This is a ASCIIDOC comment:
 
 // This is a comment
 
-You should not be able to see it. 
+You should not be able to see it. In GitHub you do not. 
