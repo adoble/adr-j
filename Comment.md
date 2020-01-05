@@ -16,4 +16,5 @@ You should not be able to see it. And in GitHub, you can't.
 
 Some visible text <!--Some invisible text-->
 
-You should not be able to see the invisible text.
+You should not be able to see the invisible text.Unfortunately with some markdown processors
+you can see the comment. 
