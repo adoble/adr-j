@@ -31,6 +31,7 @@ import picocli.CommandLine.HelpCommand;
 				        CommandVersion.class,
 				        CommandEdit.class,
 				        CommandConfig.class, 
+				        CommandLink.class,
 				        HelpCommand.class   // Built in help command
 				       }
 		)
