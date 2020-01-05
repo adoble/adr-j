@@ -14,6 +14,6 @@ You should not be able to see it. And in GitHub, you can't.
 
 3. This is a markdown comment using html comments, *on the same line*
 
-Some visible text <!--- Some invisible text-->
+Some visible text <!--Some invisible text-->
 
 You should not be able to see the invisible text.
