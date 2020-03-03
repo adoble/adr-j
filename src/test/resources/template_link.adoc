@@ -1,0 +1,21 @@
+// {{meta}}
+
+ADR {{id}} - {{name}}
+=====================
+
+Test of links
+
+Links
+=====
+
+One two three four five six seven 
+eight nine ten eleven twelve thirteen 
+fourteen fifteen sixteen seventeen
+eighteen twenty
+
+link:{{{link.file}}}[{{{link.comment}}} ADR {{{link.id}}}]
+
+One two three four five six seven 
+eight nine ten eleven twelve thirteen 
+fourteen fifteen sixteen seventeen
+eighteen twenty

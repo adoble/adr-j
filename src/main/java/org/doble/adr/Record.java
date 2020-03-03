@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Record {
+	private static final String COMMENT_FIELD = "{{template.comment}}";
 	private final Path docsPath;              // Where the adr files are stored
 	private final Optional<String> template;  //Using String type instead of Path as the default template is a resource. 
 	                                          //Resources are not correctly supported by Path. 
@@ -28,21 +29,40 @@ public class Record {
     private final String author;
 	private final String status;
 	private final DateTimeFormatter dateFormatter;
+	private final Optional<CommentSyntax> commentSyntax;         // The text used to indicate a comment in the templates markup.
 
 	private ArrayList<Integer> supersedes = new ArrayList<Integer>();
 
 	private class Link {
 
-		Link(Integer id, String comment) {
+		Link(Integer id, String comment, String adrFileName) {
 			this.id = id;
 			this.comment = comment;
+			this.adrFileName = adrFileName; 
 		}
 
 		Integer id;
 		String comment = "";
+		String adrFileName = "";
 	}
 	
 	private ArrayList<Link> links = new ArrayList<Link>();
+	
+	private class CommentSyntax {
+	
+	  CommentSyntax (String startDelimiter, String endDelimiter) {
+		  this.startDelimiter  =  Optional.ofNullable(startDelimiter).filter(s -> !s.isEmpty());
+		  this.endDelimiter =  Optional.ofNullable(endDelimiter).filter(s -> !s.isEmpty());
+	  }
+	  
+	  CommentSyntax(Optional<String> startDelimiter, Optional<String> endDelimiter) {
+		  this.startDelimiter = startDelimiter;
+		  this.endDelimiter = endDelimiter;
+	  }
+	  
+	  Optional<String> startDelimiter; //The textual indicator before the comment
+	  Optional<String> endDelimiter ; //The textual indicator after the comment
+	}
 
 
 	/**
@@ -61,6 +81,16 @@ public class Record {
 		this.status = builder.status;
 		this.dateFormatter = builder.dateFormatter;
 		
+		if (builder.startDelimiter.isPresent() || builder.endDelimiter.isPresent()) {
+			CommentSyntax cs = new CommentSyntax(builder.startDelimiter, builder.endDelimiter);
+			this.commentSyntax = Optional.of(cs);
+		}
+		else {
+			this.commentSyntax = Optional.empty();
+		}
+
+			
+				
 		if (builder.template.isPresent()) {
 			this.template = builder.template;
 			this.templateExtension = builder.templateExtension;
@@ -77,6 +107,10 @@ public class Record {
 	 *    (adr id)-(adr name, lower case separated with hyphens).(the extension of the template file used)   //TODO extension
 	 *
 	 * @return Path The generated ADR file.
+	 * 
+	 * FIXME  This always generates the ADR from the template. Need to be able to extend the already generated ADR with new information
+	 * (e.g. links, see https://github.com/adoble/adr-j/issues/32. Need to a) generate initial ADT from template and insert commented out meta data
+	 * b) for existing ADRs, read this in an extend wit using the meta data placed in step (a). 
 	 */
 	public Path store() throws ADRException {
 	
@@ -156,25 +190,28 @@ public class Record {
         return targetFile;
 	}
 
-	private String getADRFileName(int adrId) {
+	
+	private String getADRFileName(int adrId) { 
 		String fileName;
 
-		try {
+		try { 
 			Path[] paths = Files.list(docsPath).filter(ADRFilter.filter(adrId)).toArray(Path[]::new);
 
-			if (paths.length == 1) {
-				fileName = paths[0].getFileName().toString();
-			} else {
-				// Gracefully fail and return an empty string
-				fileName = "";
-			}
-		} catch (IOException e) {
-			// Gracefully fail and return an empty string
-			fileName = "";
+			if (paths.length == 1) { 
+				fileName = paths[0].getFileName().toString(); 
+			} 
+			else { // Gracefully fail and return an empty string 
+				fileName = ""; 
+			} 
+		} 
+		catch (IOException e) { // Gracefully fail and return an empty string 
+			fileName =	  ""; 
 		}
 
 		return fileName;
+
 	}
+
 
 	
 
@@ -230,9 +267,12 @@ public class Record {
 	 *
 	 * @param id             the id of the ADR being linked to.
 	 * @param comment        The link comment in this ADR
+	 * @param adrFileName	 The name of the ADR file linked to
+	 * @returns              The id of the ADR being linked to 
 	 **/
-	public void addLink(Integer id, String comment) {
-		links.add(new Link(id, comment));
+	public int addLink(Integer id, String comment, String adrFileName) {
+		links.add(new Link(id, comment, adrFileName));
+		return id;
 	}
 
 	/**
@@ -242,12 +282,13 @@ public class Record {
 	 * LinkComment        - The link comment in this ADR
 	 * ReverseLinkComment - The comment added to the ADR with the specified id.
 	 *
-	 * @param linkSpec The link specification as string
-	 * @return The id of the ADR linked to
-	 * @throws LinkSpecificationException Thrown if the link specification is incorrect
+	 * @param linkSpec      The link specification as string
+	 * @return              The id of the ADR linked to
+	 * @throws              LinkSpecificationException Thrown if the link specification is incorrect
 	 */
 	public int addLink(String linkSpec) throws LinkSpecificationException {
 		String linkComment;
+		
 		int linkID = -1;
 		try {
 			if (linkSpec.length() > 0) {
@@ -255,7 +296,8 @@ public class Record {
 				if (linkSpecs.length == 2) {
 					linkID = new Integer(linkSpecs[0]);
 					linkComment = linkSpecs[1];
-					links.add(new Link(linkID, linkComment));
+					String adrFileName = getADRFileName(linkID);
+					links.add(new Link(linkID, linkComment, adrFileName));   
 				} else {
 					throw new LinkSpecificationException();
 				}
@@ -263,6 +305,8 @@ public class Record {
 		} catch (NumberFormatException e) {
 			throw new LinkSpecificationException();
 		}
+		
+	
 
 		return linkID;
 	}
@@ -282,7 +326,7 @@ public class Record {
 	
 	/**
 	 * Finds and returns the line in the template that contains the specified substitution field.
-	 * Assumes that all the other substitution field for the link are on the same line.
+	 * Assumes that all the other associated substitution fields are on the same line.
 	 * TODO make sure that the above is in the documentation
 	 * @param substitutionField The substitutionField being looked for
 	 * @returns Optional<String) The fragment found. Optional.empty if no fragment found 
@@ -308,13 +352,52 @@ public class Record {
 		return Optional.ofNullable(templateFragment);
 	}
 	
-	private Optional<String> getTemplate() {
-		return template;
-	}
+	private Optional<CommentSyntax> getTemplateCommentSyntax() throws ADRException {
+		Optional<CommentSyntax> commentSyntax;
+		String commentSyntaxLine;
+		
+		TemplateProvider templateProvider = new TemplateProvider(docsPath.getFileSystem(), ADRProperties.defaultTemplateName);
+		
+		try {
+			Path templatePath = templateProvider.getPath(this.template);
+			Stream<String> templateLines = Files.lines(templatePath);
+			commentSyntaxLine = templateLines.filter(line-> line.contains(COMMENT_FIELD)).findAny().orElse(null);
+			templateLines.close();
+		} 
+		catch (Exception e) {
+			String msg = "Cannot get the template containing " + COMMENT_FIELD;
+			throw new ADRException(msg, e);
+		}
+		
+		
+	    
+		if (commentSyntaxLine != null) {
+			// Get  the start delimiter for the constant
+			int pos = commentSyntaxLine.indexOf( COMMENT_FIELD, 0);
+			String startDelimiter = commentSyntaxLine.substring(0, pos -1 );
+			String endDelimiter = "";
+			if (pos + COMMENT_FIELD.length() < commentSyntaxLine.length() -1) {
+				endDelimiter = commentSyntaxLine.substring(pos + COMMENT_FIELD.length(), commentSyntaxLine.length()- 1);
+			}
+			commentSyntax = Optional.of(new CommentSyntax(startDelimiter, endDelimiter));
+		} else {	
+			// If the comment field has not been specified in the template then set the 
+			// comment syntax as empty. This is part of a strategy to preserve backwards
+			// compatibility.
+			commentSyntax = Optional.empty();
+		}
 
+		return commentSyntax;
+		
+	}
+	
+	/* TODO remove this
+	 * private Optional<String> getTemplate() { return template; }
+	 */
 
 
 	public static class Builder {
+		
 		private Path docsPath;
 		private Optional<String> template = Optional.empty();
 		private String templateExtension = "md";  //Default to markdown
@@ -326,7 +409,9 @@ public class Record {
 		private LocalDate date = LocalDate.now();
 		private String status = "Proposed";
 		private DateTimeFormatter dateFormatter;
-
+		private Optional<String>  startDelimiter = Optional.empty();
+		private Optional<String>  endDelimiter = Optional.empty();
+		
 		public Builder(Path docsPath, DateTimeFormatter dateFormatter) {
 			this.docsPath = docsPath;
 			this.dateFormatter = dateFormatter;
@@ -375,6 +460,16 @@ public class Record {
 
 		public Builder status(String status) {
 			this.status = status;
+			return this;
+		}
+		
+		public Builder startDelimiter(String startDelimiter) {
+			this.startDelimiter = Optional.ofNullable(startDelimiter);
+			return this;
+		}
+
+		public Builder endDelimiter(String endDelimiter) {
+			this.endDelimiter = Optional.ofNullable(endDelimiter);
 			return this;
 		}
 

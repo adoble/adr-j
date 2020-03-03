@@ -41,7 +41,7 @@ Link: {{link.comment}} See:
 ```
 The reasons the above is **not** valid are:
 * No link.id field
-* Fields are on seperate lines.  
+* Fields are on separate lines.  
 
 ## ADR-J fields
 
@@ -100,4 +100,23 @@ Description: File name of the linked ADR
 
 Type: list
 
-Description: Comment  about the linked ADR                
+Description: Comment  about the linked ADR
+
+### `template.comment`
+
+Type: field
+
+Description: Certain commands (such as link) insert additional, but hidden, information into the ADRs as comments. 
+These are required for when ADR-J modifies or reads the ADR after it has been created. 
+To do this, they need to know how text is commented out in the template's markup language. This 
+(valueless) field is used to do this, by surrounding it with the text used for commenting. 
+
+For instance, a markdown template would use HTML comments:
+
+`<! –– {{template.comment}} ––>`
+
+An ASCIIDOC template would use: 
+
+`// {{template.comment}}`
+
+      

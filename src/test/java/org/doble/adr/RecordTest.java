@@ -155,13 +155,40 @@ public class RecordTest {
 	@Test
 	@Order(4)
 	public void testLinkConstruction() throws Exception {
+		
+		// Create some ADR files that are going to be linked to.
+		Path adrTestFilePath = docPath.resolve("0004-linked-to.md");
+		Files.createFile(adrTestFilePath);
+		adrTestFilePath = docPath.resolve("0005-also-linked-to.md");
+		Files.createFile(adrTestFilePath);
+		
+	
+		
 		Record record = new Record.Builder(docPath, dateFormatter).id(102).name("Contains some links").build();
+        record.store();
         
 		// <target_adr>:<link_description>
 		record.addLink("4:Links to");
 		record.addLink("5:Also links to");
 				
 		record.store();
+		
+		// Now check that the links have been added
+		Path adrFile = fileSystem.getPath("/test/0102-contains-some-links.md");
+	    Stream<String> lines = Files.lines(adrFile);
+	    
+	    //boolean result = lines.anyMatch("* Links to [ADR 4](004-contains-some-links.md)"::equals);
+	    String contents = lines.collect(Collectors.joining("\n"));
+		lines.close();
+		
+		assertTrue(contents.contains("* Links to [ADR 4](0004-linked-to.md)"));
+		assertTrue(contents.contains("* Also links to [ADR 5](0005-also-linked-to.md)"));
+		
+// TODO reinstate these tests
+//		assertTrue(contents.contains("\n<!--* {{{link.comment= \"Links to\"}}} [ADR {{{link.id=\"4\"}}}]({{{link.file=\"0004-contains-some-links.md\"}}})-->\n"));
+//		assertTrue(contents.contains("\n<!--* {{{link.comment= \"Also links to\"}}} [ADR {{{link.id=\"5\"}}}]({{{link.file=\"0005-also-linked-to.md\"}}})-->\n"));
+				
+				//TODO test reverse links
 
 	}
 
