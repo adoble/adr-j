@@ -1,8 +1,17 @@
 package org.doble.adr;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -14,15 +23,9 @@ import java.util.stream.Stream;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class RecordTest {
@@ -152,6 +155,10 @@ public class RecordTest {
 		assertTrue(Files.exists(fileSystem.getPath("/test/0008-cdr-is-stored-in-a-relational-database.md")));
 	}
 	
+	/**
+	 * Tests link construction without the addition of link meta information (as comments) embedded in the ADR. 
+	 * @throws Exception
+	 */
 	@Test
 	@Order(4)
 	public void testLinkConstruction() throws Exception {
@@ -184,7 +191,7 @@ public class RecordTest {
 		assertTrue(contents.contains("* Links to [ADR 4](0004-linked-to.md)"));
 		assertTrue(contents.contains("* Also links to [ADR 5](0005-also-linked-to.md)"));
 		
-// TODO reinstate these tests
+// TODO reinstate these in another test
 //		assertTrue(contents.contains("\n<!--* {{{link.comment= \"Links to\"}}} [ADR {{{link.id=\"4\"}}}]({{{link.file=\"0004-contains-some-links.md\"}}})-->\n"));
 //		assertTrue(contents.contains("\n<!--* {{{link.comment= \"Also links to\"}}} [ADR {{{link.id=\"5\"}}}]({{{link.file=\"0005-also-linked-to.md\"}}})-->\n"));
 				
@@ -283,6 +290,72 @@ public class RecordTest {
 
 		assertEquals(expectedContents, actualContents);
 
+	}
+	
+	
+	
+	@Test
+	@Order(8)
+	public void testLinkConstructionWithTemplate() throws Exception
+	{
+		String name = "Target expected";
+		
+		// Create some ADR files that are going to be linked to.
+		Path adrTestFilePath = docPath.resolve("0002-first-source-expected.md");
+		Files.createFile(adrTestFilePath);
+		adrTestFilePath = docPath.resolve("0003-second-source-expected.md");
+		Files.createFile(adrTestFilePath);
+		
+	
+		
+		Record record = new Record.Builder(docPath, dateFormatter)
+				                  .id(1).
+				                  name(name)
+				                  .template("rsrc:template_link.md")
+				                  .build();
+        //record.store();
+        
+		// <target_adr>:<link_description>
+		record.addLink("2:Referenced by");
+		record.addLink("3:Referenced by");
+				
+		Path adrPath = record.store();
+		
+		// Now check that the generated ADR matches the expected contents
+		Stream<String> actualLines = Files.lines(adrPath);
+		String actualContents = actualLines.collect(Collectors.joining("\n"));
+		actualLines.close();
+		
+
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		//URL url = classLoader.getResource("test_link/markdown/0001-target-expected.md"); // no leading slash
+				
+		InputStream inputStream  = classLoader.getResourceAsStream("test_link/markdown/0001-target-expected.md");
+		
+		assertNotNull(inputStream);
+		
+		
+		StringBuilder expectedContentsBuilder = new StringBuilder();
+		 
+	    try (Reader reader = new BufferedReader(new InputStreamReader
+	      (inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
+	        int c = 0;
+	        while ((c = reader.read()) != -1) {
+	            expectedContentsBuilder.append((char) c);
+	        }
+	    }
+		
+		assertEquals(expectedContentsBuilder.toString(), actualContents);
+		
+		
+	}
+	
+	@Disabled
+	@Test
+	@Order(9)
+	void testReverseLinks() {
+		fail("Not yet implemented");
+		//TODO implement this 
 	}
 		
 }

@@ -6,15 +6,15 @@ Test of links
 
 # Links
 
-One two three four five six seven 
-eight nine ten eleven twelve thirteen 
+One two three four five six seven
+eight nine ten eleven twelve thirteen
 fourteen fifteen sixteen seventeen
 eighteen twenty
 
-* [{{{link.comment}}} ADR {{{link.id}}}]({{{link.file}}})
+* {{{link.comment}}} [ADR {{{link.id}}}]({{{link.file}}})
 
-One two three four five six seven 
-eight nine ten eleven twelve thirteen 
+One two three four five six seven
+eight nine ten eleven twelve thirteen
 fourteen fifteen sixteen seventeen
 eighteen twenty
 
