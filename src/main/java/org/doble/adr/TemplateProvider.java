@@ -85,9 +85,9 @@ public class TemplateProvider  {
    // NOTE: Have tried to simplify this using the com.google.common.io.Resources package (Guava). 
    // But still have to handle the case that the resource files are either in a JAR or a normal 
    // file system. It didn't really simplify things. 
-   private Path getResourcePath(String templateFileName) throws URISyntaxException, IOException {
-	   Path templatePath;
-	   URI uri = ClassLoader.getSystemResource(templateFileName).toURI();
+   private Path getResourcePath(String resourceFileName) throws URISyntaxException, IOException {
+	   Path resourcePath;
+	   URI uri = ClassLoader.getSystemResource(resourceFileName).toURI();
 
 	   // Now check if the system resource is either a normal file (e.g. we are running in an IDE) or
 	   // the system resource is is a packaged JAR (e.g. we are running a packaged JAR file) 
@@ -102,7 +102,7 @@ public class TemplateProvider  {
 		   catch(FileSystemNotFoundException e) {
 			   jarFileSystem = FileSystems.newFileSystem(URI.create(uriParts[0]), new HashMap<>());
 		   }
-		   templatePath = jarFileSystem.getPath(uriParts[1]);
+		   resourcePath = jarFileSystem.getPath(uriParts[1]);
 	   } else {
 		   // Assume that the system resource is a normal file (e.g. we are running in an IDE). 
 		   String pathName = uri.getSchemeSpecificPart();
@@ -115,9 +115,9 @@ public class TemplateProvider  {
 		   // that is being used for e.g. test. Returned path should therefore be 
 		   // associated with the default file system. 
 		   FileSystem fs = FileSystems.getDefault();
-		   templatePath = fs.getPath(pathName);  
+		   resourcePath = fs.getPath(pathName);  
 	   }
-	   return templatePath;
+	   return resourcePath;
    }
 
    private boolean runsOnWindows() {
