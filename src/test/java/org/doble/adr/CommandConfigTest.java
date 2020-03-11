@@ -126,7 +126,6 @@ public class CommandConfigTest {
 	
 
 	@Test
-	@Disabled
 	void testDocPathExistingDirectory() throws Exception {
 		
 		// Create a directory
