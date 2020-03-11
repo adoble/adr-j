@@ -4,20 +4,12 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -337,9 +329,7 @@ public class RecordTest {
 		
 		StringBuilder expectedContentsBuilder = new StringBuilder();
 		 
-	    try (Reader reader = new BufferedReader(new InputStreamReader
-	    //		(inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
-	    	(inputStream))) {
+	    try (Reader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 	  	        int c = 0;
 	        while ((c = reader.read()) != -1) {
 	        	if (c != '\r') {  // Remove windows based returns
