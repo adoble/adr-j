@@ -1,4 +1,4 @@
-<!––{{template.comment}}––>
+<!--{{template.comment}}-->
 
 # ADR {{id}} - {{name}}
 

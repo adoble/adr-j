@@ -338,10 +338,13 @@ public class RecordTest {
 		StringBuilder expectedContentsBuilder = new StringBuilder();
 		 
 	    try (Reader reader = new BufferedReader(new InputStreamReader
-	      (inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
-	        int c = 0;
+	    //		(inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
+	    	(inputStream))) {
+	  	        int c = 0;
 	        while ((c = reader.read()) != -1) {
-	            expectedContentsBuilder.append((char) c);
+	        	if (c != '\r') {  // Remove windows based returns
+	        		expectedContentsBuilder.append((char) c);
+	        	}
 	        }
 	    }
 		

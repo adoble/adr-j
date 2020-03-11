@@ -1,4 +1,4 @@
-<!––{{template.comment}}––>
+<!--{{template.comment}}-->
 
 # ADR 1 - Target expected
 

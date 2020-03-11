@@ -104,12 +104,13 @@ public class Record {
 	/**
 	 * Generate and store an ADR using the data stored in this record. 
 	 * Generate a file with a name of the form: 
-	 *    (adr id)-(adr name, lower case separated with hyphens).(the extension of the template file used)   //TODO extension
+	 *    (adr id)-(adr name, lower case separated with hyphens).(the extension of the template file used) 
 	 *
 	 * @return Path The generated ADR file.
 	 * 
-	 * FIXME  This always generates the ADR from the template. Need to be able to extend the already generated ADR with new information
-	 * (e.g. links, see https://github.com/adoble/adr-j/issues/32. Need to a) generate initial ADT from template and insert commented out meta data
+	 * FIXME  This always generates the ADR from the template. Need to be able to extend the already generated 
+	 * ADR with new information (e.g. links, see https://github.com/adoble/adr-j/issues/32). Need to 
+	 * a) generate initial ADT from template and insert commented out meta data
 	 * b) for existing ADRs, read this in an extend wit using the meta data placed in step (a). 
 	 */
 	public Path store() throws ADRException {
@@ -123,8 +124,14 @@ public class Record {
 		Path targetFile = docsPath.resolve(targetFileName); // Full path of the ADR file in the document path
 		
 		
+
 		// Create the link fragment using the line in the template file
 		Optional<String> templateLinkFragment = getFragment("{{{link.id}}}");
+		
+		// Create a fragment of the template that shows how comments used for meta-data are to be represented 
+		Optional<String> templateCommentFragment = getFragment("{{template.comment}}");
+		
+		
 
 		//Now generate link fragments (i.e. the markdown and the template field) for each of the links
 		ArrayList<String> linkFragments = new ArrayList<String>();
@@ -137,6 +144,19 @@ public class Record {
 						.replace("{{{link.id}}}", link.id.toString())
 						.replace("{{{link.file}}}", getADRFileName(link.id))
 						);
+				// If the template has specified comments for meta-data then extend to link fragment with the comment
+				if (templateCommentFragment.isPresent()) {
+					//Surround with newlines as this is required by some markdown processors to render the comment invisible.
+					String expandedCommentFragment = "\n" + templateCommentFragment.get() + "\n";   
+					// Replace the files with their meta-data equivalents
+					linkFragments.add(expandedCommentFragment
+							.replace("{{template.comment}}", linkFragment)
+							.replace("{{{link.comment}}}", "{{{link.comment=\"" + capitalizeFirstCharacter(link.comment) + "\"}}}")
+							.replace("{{{link.id}}}", "{{{link.id=\"" + link.id.toString() +"\"}}}")
+							.replace("{{{link.file}}}", "{{{link.file=\"" + getADRFileName(link.id) + "\"}}}")
+							);
+				}
+				
 			}
 			linkSectionString = linkFragments.stream().collect(Collectors.joining("\n"));
 		} else {
