@@ -183,12 +183,6 @@ public class RecordTest {
 		assertTrue(contents.contains("* Links to [ADR 4](0004-linked-to.md)"));
 		assertTrue(contents.contains("* Also links to [ADR 5](0005-also-linked-to.md)"));
 		
-// TODO reinstate these in another test
-//		assertTrue(contents.contains("\n<!--* {{{link.comment= \"Links to\"}}} [ADR {{{link.id=\"4\"}}}]({{{link.file=\"0004-contains-some-links.md\"}}})-->\n"));
-//		assertTrue(contents.contains("\n<!--* {{{link.comment= \"Also links to\"}}} [ADR {{{link.id=\"5\"}}}]({{{link.file=\"0005-also-linked-to.md\"}}})-->\n"));
-				
-				//TODO test reverse links
-
 	}
 
 	@Test
@@ -349,6 +343,14 @@ public class RecordTest {
 	void testReverseLinks() {
 		fail("Not yet implemented");
 		//TODO implement this 
+	}
+	
+	@Disabled
+	@Test
+	@Order(10)
+	void testUpdatingLinks()  {
+		fail("Not yet implmented");
+		//TODO implement this
 	}
 		
 }
