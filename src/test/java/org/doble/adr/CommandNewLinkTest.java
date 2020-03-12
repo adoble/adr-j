@@ -68,7 +68,6 @@ public class CommandNewLinkTest {
 	 * @throws Exception
 	 */
 	@Test
-	@Order(1)
 	public void test1Links() throws Exception {
 		// Create some ADRs
 		assertEquals(ADR.run(TestUtilities.argify("new An ADR"), env), 0);
@@ -91,7 +90,6 @@ public class CommandNewLinkTest {
 	 * Create a invalid link specification and see if it is detected
 	 */
 	@Test
-	@Order(2)
 	public void test2MissingLInkSpec() {
 		// Create new ADR that links to another, but with a malformed Link specification
 		int exitCode = ADR.run(TestUtilities.argify("new -l Links to number 4"), env);
@@ -103,7 +101,6 @@ public class CommandNewLinkTest {
 	 * 
 	 */
 	@Test 
-	@Order(3) 
 	public void testNonexistingLink() {
 		
 		assertEquals(ADR.run(TestUtilities.argify("new -l 42:\"Links to nowhere\" Links should be valid"), env), 
