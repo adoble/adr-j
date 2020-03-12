@@ -287,21 +287,21 @@ public class RecordTest {
 		String name = "Target expected";
 		
 		// Create some ADR files that are going to be linked to.
-		Path adrTestFilePath = docPath.resolve("0002-first-link-target-expected.md");
+		Path adrTestFilePath = docPath.resolve("0001-first-link-target-expected.md");
 		Files.createFile(adrTestFilePath);
-		adrTestFilePath = docPath.resolve("0003-second-link-target-expected.md");
+		adrTestFilePath = docPath.resolve("0002-second-link-target-expected.md");
 		Files.createFile(adrTestFilePath);
 	
 		Record record = new Record.Builder(docPath, dateFormatter)
-				                  .id(1).
+				                  .id(3).
 				                  name(name)
 				                  .template("rsrc:template_link.md")
 				                  .build();
         //record.store();
         
 		// <target_adr>:<link_description>
+		record.addLink("1:See also");
 		record.addLink("2:See also");
-		record.addLink("3:See also");
 				
 		Path adrPath = record.store();
 		
@@ -314,7 +314,7 @@ public class RecordTest {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		//URL url = classLoader.getResource("test_link/markdown/0001-target-expected.md"); // no leading slash
 				
-		InputStream inputStream  = classLoader.getResourceAsStream("test_link/markdown/0001-link-source-expected.md");
+		InputStream inputStream  = classLoader.getResourceAsStream("test_link/markdown/0003-link-source-expected.md");
 		
 		assertNotNull(inputStream);
 		
@@ -329,7 +329,7 @@ public class RecordTest {
 	        	}
 	        }
 	    }
-		
+		// Check that the created ADR has referenced the other ADRS and the meta-data has been correctly added. 
 		assertEquals(expectedContentsBuilder.toString(), actualContents);
 		
 		
