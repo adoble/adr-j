@@ -28,13 +28,15 @@ public class Record {
 
 	private class Link {
 
-		Link(Integer id, String comment, String adrFileName) {
+		Link(Integer id, String comment, String adrFileName, String reverseComment) {
 			this.id = id;
 			this.comment = comment;
+			this.reverseComment = reverseComment;
 		}
 
 		Integer id;
 		String comment = "";
+		String reverseComment = "";
 	}
 	
 	private ArrayList<Link> links = new ArrayList<Link>();
@@ -253,10 +255,11 @@ public class Record {
 	 * @param id             the id of the ADR being linked to.
 	 * @param comment        The link comment in this ADR
 	 * @param adrFileName	 The name of the ADR file linked to
+	 * @param revereComment  The link comment referring back to the ADR
 	 * @returns              The id of the ADR being linked to 
 	 **/
-	public int addLink(Integer id, String comment, String adrFileName) {
-		links.add(new Link(id, comment, adrFileName));
+	public int addLink(Integer id, String comment, String adrFileName, String reverseComment) {
+		links.add(new Link(id, comment, adrFileName, reverseComment));
 		return id;
 	}
 
@@ -265,27 +268,30 @@ public class Record {
 	 * and add it to the record.
 	 * LinkId             - The id of the ADR being linked to.
 	 * LinkComment        - The link comment in this ADR
-	 * ReverseLinkComment - The comment added to the ADR with the specified id.
+	 * ReverseLinkComment - The comment added to a referenced (linked) ADR with the specified id.
 	 *
 	 * @param linkSpec      The link specification as string
 	 * @return              The id of the ADR linked to
 	 * @throws              LinkSpecificationException Thrown if the link specification is incorrect
 	 */
 	public int addLink(String linkSpec) throws LinkSpecificationException {
-		String linkComment;
-		
 		int linkID = -1;
+		String linkComment = "";  //TODO add a default value to the template
+		String linkReverseComment = ""; //TODO add a default value to the template
+		
 		try {
 			if (linkSpec.length() > 0) {
 				String[] linkSpecs = linkSpec.split(":");
-				if (linkSpecs.length == 2) {
-					linkID = new Integer(linkSpecs[0]);
-					linkComment = linkSpecs[1];
-					String adrFileName = getADRFileName(linkID);
-					links.add(new Link(linkID, linkComment, adrFileName));   
-				} else {
+				if (linkSpecs.length >= 1) linkID = new Integer(linkSpecs[0]);
+				if (linkSpecs.length >= 2) linkComment = linkSpecs[1];
+				if (linkSpecs.length == 3) linkReverseComment = linkSpecs[2];
+				if (linkSpecs.length > 3 || linkSpecs.length == 0) {
 					throw new LinkSpecificationException();
 				}
+				String adrFileName = getADRFileName(linkID);
+				links.add(new Link(linkID, linkComment, adrFileName, linkReverseComment));   
+		
+				
 			}
 		} catch (NumberFormatException e) {
 			throw new LinkSpecificationException();
