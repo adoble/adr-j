@@ -11,13 +11,13 @@ eight nine ten eleven twelve thirteen
 fourteen fifteen sixteen seventeen
 eighteen twenty
 
-* Referenced by [ADR 2](0002-first-source-expected.md)
+* See also [ADR 2](0002-first-link-target-expected.md)
 
-<!--* {{{link.comment="Referenced by"}}} [ADR {{{link.id="2"}}}]({{{link.file="0002-first-source-expected.md"}}})-->
+<!--* {{{link.comment="See also"}}} [ADR {{{link.id="2"}}}]({{{link.file="0002-first-link-target-expected.md"}}})-->
 
-* Referenced by [ADR 3](0003-second-source-expected.md)
+* See also [ADR 3](0003-second-link-target-expected.md)
 
-<!--* {{{link.comment="Referenced by"}}} [ADR {{{link.id="3"}}}]({{{link.file="0003-second-source-expected.md"}}})-->
+<!--* {{{link.comment="See also"}}} [ADR {{{link.id="3"}}}]({{{link.file="0003-second-link-target-expected.md"}}})-->
 
 
 One two three four five six seven
