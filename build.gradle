@@ -36,8 +36,9 @@ repositories {
 }
 
 dependencies {
-    compile 'info.picocli:picocli:4.1.2'
-    annotationProcessor 'info.picocli:picocli-codegen:4.1.2'
+    compile 'info.picocli:picocli:4.2.0'
+    //annotationProcessor 'info.picocli:picocli-codegen:4.1.2'
+    annotationProcessor 'info.picocli:picocli-codegen:4.2.0'
 
     // need 5.4 for @TestMethodOrder - see https://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestMethodOrder.html
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.0-M1'
