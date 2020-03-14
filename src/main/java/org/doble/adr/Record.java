@@ -33,6 +33,37 @@ public class Record {
 			this.comment = comment;
 			this.reverseComment = reverseComment;
 		}
+		
+		/**
+		 * Based on a link specification of the form "LinkID:LinkComment:ReverseLinkComment" create a link
+		 * LinkId             - The id of the ADR being linked to.
+		 * LinkComment        - The link comment in this ADR  (optional)
+		 * ReverseLinkComment - The comment added to a referenced (linked) ADR with the specified id (optional).
+		 *
+		 * @param linkSpec      The link specification as string
+		 * @throws              LinkSpecificationException Thrown if the link specification is incorrect
+		 */
+		Link(String linkSpec) throws LinkSpecificationException {
+			int linkID = -1;
+			String linkComment = "";  //TODO add a default value to the template
+			String linkReverseComment = ""; //TODO add a default value to the template
+
+			try {
+				if (linkSpec.length() > 0) {
+					String[] linkSpecs = linkSpec.split(":");
+					if (linkSpecs.length >= 1) id = new Integer(linkSpecs[0]);
+					if (linkSpecs.length >= 2) comment = linkSpecs[1];
+					if (linkSpecs.length == 3) reverseComment = linkSpecs[2];
+					if (linkSpecs.length > 3 || linkSpecs.length == 0) {
+						throw new LinkSpecificationException();
+					}
+					String adrFileName = getADRFileName(linkID);
+			}
+			} catch (NumberFormatException e) {
+				throw new LinkSpecificationException();
+			}
+
+		}
 
 		Integer id;
 		String comment = "";
@@ -170,8 +201,7 @@ public class Record {
 			//targetContent.removeIf(item -> item.isEmpty());  // Remove double empty lines
 			Files.write(targetFile, targetContent);  
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-		   throw new ADRException("Cannot write ADR", e.getCause());
+			throw new ADRException("Cannot write ADR", e.getCause());
 		}
 
         return targetFile;
@@ -267,39 +297,18 @@ public class Record {
 	 * Based on a link specification of the form "LinkID:LinkComment:ReverseLinkComment" create a link
 	 * and add it to the record.
 	 * LinkId             - The id of the ADR being linked to.
-	 * LinkComment        - The link comment in this ADR
-	 * ReverseLinkComment - The comment added to a referenced (linked) ADR with the specified id.
+	 * LinkComment        - The link comment in this ADR  (optional)
+	 * ReverseLinkComment - The comment added to a referenced (linked) ADR with the specified id (optional).
 	 *
 	 * @param linkSpec      The link specification as string
 	 * @return              The id of the ADR linked to
 	 * @throws              LinkSpecificationException Thrown if the link specification is incorrect
 	 */
 	public int addLink(String linkSpec) throws LinkSpecificationException {
-		int linkID = -1;
-		String linkComment = "";  //TODO add a default value to the template
-		String linkReverseComment = ""; //TODO add a default value to the template
-		
-		try {
-			if (linkSpec.length() > 0) {
-				String[] linkSpecs = linkSpec.split(":");
-				if (linkSpecs.length >= 1) linkID = new Integer(linkSpecs[0]);
-				if (linkSpecs.length >= 2) linkComment = linkSpecs[1];
-				if (linkSpecs.length == 3) linkReverseComment = linkSpecs[2];
-				if (linkSpecs.length > 3 || linkSpecs.length == 0) {
-					throw new LinkSpecificationException();
-				}
-				String adrFileName = getADRFileName(linkID);
-				links.add(new Link(linkID, linkComment, adrFileName, linkReverseComment));   
-		
-				
-			}
-		} catch (NumberFormatException e) {
-			throw new LinkSpecificationException();
-		}
-		
-	
+		Link link = new Link(linkSpec);
+		links.add(link);
 
-		return linkID;
+		return link.id;
 	}
 
 	/**
