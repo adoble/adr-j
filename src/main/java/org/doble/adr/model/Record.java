@@ -1,4 +1,4 @@
-package org.doble.adr;
+package org.doble.adr.model;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -10,6 +10,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.doble.adr.ADRException;
+import org.doble.adr.ADRFilter;
+import org.doble.adr.ADRProperties;
+import org.doble.adr.LinkSpecificationException;
+import org.doble.adr.TemplateProvider;
 
 public class Record {
 	private final Path docsPath;              // Where the adr files are stored

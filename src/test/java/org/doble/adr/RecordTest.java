@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+
+import org.doble.adr.model.Record;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

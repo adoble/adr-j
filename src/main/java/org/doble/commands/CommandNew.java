@@ -25,8 +25,7 @@ import org.doble.adr.DateFormatEnum;
 import org.doble.adr.EditorRunner;
 import org.doble.adr.Environment;
 import org.doble.adr.LinkSpecificationException;
-import org.doble.adr.Record;
-//import org.doble.annotations.Cmd;
+import org.doble.adr.model.Record;
 
 import picocli.CommandLine;
 import picocli.CommandLine.*;

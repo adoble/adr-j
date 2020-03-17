@@ -53,7 +53,7 @@ public class TemplateProvider  {
 	 * template (defined in ADRProperties) is given, independent of 
 	 * if the resource file is in a JAR or not.
 	 */
-   Path getPath(Optional<String> templateFileName) throws IOException, URISyntaxException{
+   public Path getPath(Optional<String> templateFileName) throws IOException, URISyntaxException{
 	   
 	   Path templatePath;
 		if (templateFileName.isPresent() && !templateFileName.get().substring(0,5).equals("rsrc:")) {
