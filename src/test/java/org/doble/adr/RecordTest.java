@@ -71,7 +71,7 @@ public class RecordTest {
 		// Build the record
 		Record record = new Record.Builder(docPath, dateFormatter).id(7).name("This is a new record").build();
 
-		record.store();
+		record.createPeristentRepresentation();
 
 		// Check if the ADR file has been created
 		assertTrue(Files.exists(fileSystem.getPath("/test/0007-this-is-a-new-record.md")));
@@ -120,7 +120,7 @@ public class RecordTest {
 				.date(date)
 				.status("Accepted")
 				.build();
-		record.store();
+		record.createPeristentRepresentation();
 
 		// Check if the ADR file has been created
 		assertTrue(Files.exists(fileSystem.getPath("/test/0042-this-is-a-complex-record.md")));
@@ -141,7 +141,7 @@ public class RecordTest {
 
 		Record record = new Record.Builder(docPath, dateFormatter).id(8).name("CDR is stored in a relational database").build();
 
-		record.store();
+		record.createPeristentRepresentation();
 
 		// Check if the ADR file has been created
 		assertTrue(Files.exists(fileSystem.getPath("/test/0008-cdr-is-stored-in-a-relational-database.md")));
@@ -164,13 +164,13 @@ public class RecordTest {
 	
 		
 		Record record = new Record.Builder(docPath, dateFormatter).id(102).name("Contains some links").build();
-        record.store();
+        record.createPeristentRepresentation();
         
 		// <target_adr>:<link_description>
 		record.addLink("4:Links to");
 		record.addLink("5:Also links to");
 				
-		record.store();
+		record.createPeristentRepresentation();
 		
 		// Now check that the links have been added
 		Path adrFile = fileSystem.getPath("/test/0102-contains-some-links.md");
@@ -201,7 +201,7 @@ public class RecordTest {
 				.template("rsrc:template_with_author.md")
 				.build();
 
-		record.store();
+		record.createPeristentRepresentation();
 
 		// Check if the ADR file has been created
 		assertTrue(Files.exists(fileSystem.getPath("/test/0066-this-is-a-new-record-with-default-author.md")));
@@ -231,7 +231,7 @@ public class RecordTest {
 				.template("rsrc:template_with_author.md")
 				.build();
 
-		record.store();
+		record.createPeristentRepresentation();
 
 		// Check if the ADR file has been created
 		assertTrue(Files.exists(fileSystem.getPath("/test/0067-this-is-a-new-record-with-given-author.md")));
@@ -263,7 +263,7 @@ public class RecordTest {
 				.template("rsrc:template_only_date.md")
 				.build();
 
-		record.store();
+		record.createPeristentRepresentation();
 
 		// Check if the ADR file has been created
 		assertTrue(Files.exists(fileSystem.getPath("/test/0077-only-date.md")));
@@ -303,7 +303,7 @@ public class RecordTest {
 		record.addLink("1:See also");
 		record.addLink("2:See also");
 				
-		Path adrPath = record.store();
+		Path adrPath = record.createPeristentRepresentation();
 		
 		// Now check that the generated ADR matches the expected contents
 		Stream<String> actualLines = Files.lines(adrPath);

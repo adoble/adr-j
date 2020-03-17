@@ -221,7 +221,7 @@ public class CommandNew implements Callable<Integer> {
 		
 		env.out.println("Creating ADR");
 
-		adrPath = record.store();
+		adrPath = record.createPeristentRepresentation();
 		
 		env.out.println("Created ADR at " + adrPath.toString());
 

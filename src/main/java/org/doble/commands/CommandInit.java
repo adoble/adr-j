@@ -135,7 +135,7 @@ public class CommandInit implements Callable<Integer> {
 					.author(env.author)
 					.date(LocalDate.now())
 					.build(); 
-			record.store(); 
+			record.createPeristentRepresentation(); 
 		}
 		
 		// If a template is specified and an initial template is specified create an
@@ -149,7 +149,7 @@ public class CommandInit implements Callable<Integer> {
 					.author(env.author)
 					.build();
 
-			record.store();
+			record.createPeristentRepresentation();
 		}
 		
 		// If an initial template is specified, but no template give error message

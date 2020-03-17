@@ -100,7 +100,7 @@ public class Record {
 	}
 
 	/**
-	 * Generate and store an ADR using the data stored in this record. 
+	 * Generate and store a new ADR using the data stored in this record. 
 	 * Generate a file with a name of the form: 
 	 *    (adr id)-(adr name, lower case separated with hyphens).(the extension of the template file used) 
 	 *
@@ -111,7 +111,7 @@ public class Record {
 	 * a) generate initial ADT from template and insert commented out meta data
 	 * b) for existing ADRs, read this in an extend wit using the meta data placed in step (a). 
 	 */
-	public Path store() throws ADRException {
+	public Path createPeristentRepresentation() throws ADRException {
 	
 		// Create a file name for the ADR
 		String targetFileName = this.name.toLowerCase();
