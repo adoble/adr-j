@@ -2,7 +2,9 @@
 
 # ADR {{id}} - {{name}}
 
-Test of links
+Test of meta-data
+
+
 
 # Links
 
@@ -26,3 +28,7 @@ und stets das Gute schafft
 * Ersetzt [ADR {{{supercedes.id}}}]({{{supercedes.file}}})
 
 Die Botschaft hör ich wohl, allein mir fehlt der Glaube.
+
+# References
+
+* {{{reverseLink.comment}}} [ADR {{{reverseLink.id}}}]({{{reverseLink.file}}}})
