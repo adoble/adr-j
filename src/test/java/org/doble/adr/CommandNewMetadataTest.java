@@ -101,10 +101,57 @@ class CommandNewMetadataTest {
 		Path newADRFile = fileSystem.getPath(rootPathName, docsPath, "0003-link-source-adr.md");
 		assertNotNull(newADRFile);
 		
+		
 			
 		// Check that the metadata is there 		
 		assertTrue(TestUtilities.contains("<!--* {{{link.comment=\"References\"}}} [ADR {{{link.id=\"1\"}}}]({{{link.file=\"0001-first-link-target-adr.md\"}}})-->", newADRFile));
 
 	}
+	
+	@Test
+	@Disabled
+	public void testReverseLinksWithMetaData() throws Exception {
+		//  Create some ADRs using a template with a {{template.comment}} field so that meta data is used. 
+		assertEquals(ADR.run(TestUtilities.argify("new First Link Target ADR"), env), 0);  // ADR #1
+		assertEquals(ADR.run(TestUtilities.argify("new Second Link Target ADR"), env), 0);  // ADR #2
+		assertEquals(ADR.run(TestUtilities.argify("new "
+				+ "-l \"1:References:Is referenced by\" "
+				+ "Link Source ADR"
+				), env), 0);  // ADR #3
+
+		Path targetADRFile = fileSystem.getPath(rootPathName, docsPath, "0001-first-link-target-adr.md");
+		assertNotNull(targetADRFile);
+
+		TestUtilities.printFile(targetADRFile);	
+		
+		assertTrue(TestUtilities.contains("Is referenced by [ADR 3](0003-link-source-adr.md)", targetADRFile));
+	
+	}
+	
+	@Test
+	@Disabled
+	public void testSupercecedesMetaData() throws Exception {
+		 fail("To be implemented");	
+	}
+	
+	/** Test is no links are present then the template data is not shown alone in the ADR
+	 * 
+	 */
+	@Test
+	@Disabled
+	public void testEmptyLinks() throws Exception {
+		 fail("To be implemented");	
+	}
+	
+	/** Test is ADR is not superseded then the template data is not shown alone in the ADR
+	 * 
+	 */
+	@Test
+	@Disabled
+	public void testEmptySupercedes() throws Exception {
+		 fail("To be implemented");	
+	}
+	
+	
 
 }

@@ -58,7 +58,7 @@ public class CommandNew implements Callable<Integer> {
     		+ " <link_description> is the description of the link created in the new ADR."
     		+ "Multiple -l options can be given, so that the new ADR can link to multiple existing ADRs"
     		)
-	ArrayList<String> links = new ArrayList<String>();;
+	ArrayList<String> links = new ArrayList<String>();
 
 	@Option(names = {"-s", "supersedes"}, description = "A reference (number) of a previous"
 			+ " decision that the new decision supersedes. A markdown"
@@ -149,16 +149,17 @@ public class CommandNew implements Callable<Integer> {
 			record.addSupersedes(supersedeId);
 		}
 
-		//TODO check that record can handle multiple links
-		
 		try {
 			for (String link: links) {
 				int linkedToADRID = record.addLink(link);
 				// Check that the ADR linked to really exists.
 				if (!checkADRExists(linkedToADRID)) {
-					System.err.println("ERROR: Linked to ADR (" + linkedToADRID + "), but this ADR does not exist");
-					throw new ADRException("Linked to ADR (" + linkedToADRID + "), but this ADR does not exist");
+					String msg = "Linked to ADR (" + linkedToADRID + "), but this ADR does not exist";
+					System.err.println("ERROR: " + msg);
+					throw new ADRException(msg);
 				}
+				// Now update the the ADR linking to this with the reverse link
+				//TODO record.storeReverseLinks(link);
 			}
 			
 		} catch (LinkSpecificationException e) {
@@ -173,6 +174,8 @@ public class CommandNew implements Callable<Integer> {
 		
 		return exitCode;
 	}
+
+	
 
 	private DateTimeFormatter determineDateFormatter(String dateFormat) throws ADRException {
 		try {
