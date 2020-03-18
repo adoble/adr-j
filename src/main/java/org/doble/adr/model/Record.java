@@ -72,7 +72,7 @@ public class Record {
 	 *         able to extend the already generated ADR with new information (e.g.
 	 *         links, see https://github.com/adoble/adr-j/issues/32). Need to a)
 	 *         generate initial ADT from template and insert commented out meta data
-	 *         b) for existing ADRs, read this in an extend wit using the meta data
+	 *         b) for existing ADRs, read this in an extended with  the meta data
 	 *         placed in step (a).
 	 */
 	public Path createPeristentRepresentation() throws ADRException {
@@ -97,27 +97,10 @@ public class Record {
 		ArrayList<String> linkFragments = new ArrayList<String>();
 		String linkSectionString;
 		if (templateLinkFragment.isPresent()) {
-			for (Link link : links) {
-				String linkFragment = templateLinkFragment.get();
-				linkFragments.add(linkFragment.replace("{{{link.comment}}}", capitalizeFirstCharacter(link.comment))
-						.replace("{{{link.id}}}", link.id.toString())
-						.replace("{{{link.file}}}", ADR.getADRFileName(link.id, docsPath)));
-				// If the template has specified comments for meta-data then extend to link
-				// fragment with the comment
-				if (templateCommentFragment.isPresent()) {
-					// Surround with newlines as this is required by some markdown processors to
-					// render the comment invisible.
-					String expandedCommentFragment = "\n" + templateCommentFragment.get() + "\n";
-					// Replace the fields with their meta-data equivalents
-					linkFragments.add(expandedCommentFragment.replace("{{template.comment}}", linkFragment)
-							.replace("{{{link.comment}}}",
-									"{{{link.comment=\"" + capitalizeFirstCharacter(link.comment) + "\"}}}")
-							.replace("{{{link.id}}}", "{{{link.id=\"" + link.id.toString() + "\"}}}")
-							.replace("{{{link.file}}}",
-									"{{{link.file=\"" + ADR.getADRFileName(link.id, docsPath) + "\"}}}"));
-				}
-
-			}
+			for (Link link : links)
+				//linkFragments.add(linkFragment(link, templateLinkFragment, templateCommentFragment));
+			    linkFragments.add(link.fragment(templateLinkFragment, templateCommentFragment, docsPath));
+				//linkFragements(templateLinkFragment, templateCommentFragment, linkFragments, link);
 			linkSectionString = linkFragments.stream().collect(Collectors.joining("\n"));
 		} else {
 			linkSectionString = "";
@@ -173,6 +156,33 @@ public class Record {
 
 		return targetFile;
 	}
+
+	private String linkFragment(Link link, Optional<String> templateLinkFragment, Optional<String> templateCommentFragment) {
+
+		//String templateLinkFragment = templateLinkFragment.get();
+		String linkFragment = templateLinkFragment.get().replace("{{{link.comment}}}", capitalizeFirstCharacter(link.comment))
+				.replace("{{{link.id}}}", link.id.toString())
+				.replace("{{{link.file}}}", ADR.getADRFileName(link.id, docsPath));
+		// If the template has specified comments for meta-data then extend to link
+		// fragment with the comment
+		String expandedCommentFragment = "";
+		if (templateCommentFragment.isPresent()) {
+			// Surround with newlines as this is required by some markdown processors to
+			// render the comment invisible.
+			expandedCommentFragment = "\n" + templateCommentFragment.get() + "\n";
+			// Replace the fields with their meta-data equivalents
+			expandedCommentFragment = expandedCommentFragment.replace("{{template.comment}}", templateLinkFragment.get())
+					.replace("{{{link.comment}}}",
+							"{{{link.comment=\"" + capitalizeFirstCharacter(link.comment) + "\"}}}")
+					.replace("{{{link.id}}}", "{{{link.id=\"" + link.id.toString() + "\"}}}")
+					.replace("{{{link.file}}}",
+							"{{{link.file=\"" + ADR.getADRFileName(link.id, docsPath) + "\"}}}");
+		}
+		
+		return linkFragment + "\n" + expandedCommentFragment;
+
+	}
+	
 
 	/**
 	 * Writes the ADR (status section) with id supersededID that it has been
@@ -287,7 +297,6 @@ public class Record {
 		TemplateProvider templateProvider = new TemplateProvider(docsPath.getFileSystem(),
 				ADRProperties.defaultTemplateName);
 
-		// BufferedReader reader = getTemplateReader();
 		try {
 			Path templatePath = templateProvider.getPath(this.template);
 			Stream<String> templateLines = Files.lines(templatePath);

@@ -1,6 +1,7 @@
 package org.doble.adr.model;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.doble.adr.ADR;
 import org.doble.adr.LinkSpecificationException;
@@ -49,5 +50,33 @@ public class Link {
 
 	}
 
+	public String fragment(Optional<String> templateLinkFragment, Optional<String> templateCommentFragment, Path docsPath) {
+
+		
+		String linkFragment = templateLinkFragment.get().replace("{{{link.comment}}}", capitalizeFirstCharacter(this.comment))
+				.replace("{{{link.id}}}", this.id.toString())
+				.replace("{{{link.file}}}", ADR.getADRFileName(this.id, docsPath));
+		// If the template has specified comments for meta-data then extend to link
+		// fragment with the comment
+		String expandedCommentFragment = "";
+		if (templateCommentFragment.isPresent()) {
+			// Surround with newlines as this is required by some markdown processors to
+			// render the comment invisible.
+			expandedCommentFragment = "\n" + templateCommentFragment.get() + "\n";
+			// Replace the fields with their meta-data equivalents
+			expandedCommentFragment = expandedCommentFragment.replace("{{template.comment}}", templateLinkFragment.get())
+					.replace("{{{link.comment}}}",
+							"{{{link.comment=\"" + capitalizeFirstCharacter(this.comment) + "\"}}}")
+					.replace("{{{link.id}}}", "{{{link.id=\"" + this.id.toString() + "\"}}}")
+					.replace("{{{link.file}}}",
+							"{{{link.file=\"" + ADR.getADRFileName(this.id, docsPath) + "\"}}}");
+		}
+		
+		return linkFragment + "\n" + expandedCommentFragment;
+
+	}	
 	
+	private String capitalizeFirstCharacter(String s) {
+		return s.substring(0, 1).toUpperCase() + s.substring(1);
+	}
 }
