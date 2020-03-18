@@ -17,7 +17,6 @@ import org.doble.adr.ADRFilter;
 import org.doble.adr.ADRProperties;
 import org.doble.adr.LinkSpecificationException;
 import org.doble.adr.TemplateProvider;
-import org.doble.adr.model.*;
 
 public class Record {
 	private final Path docsPath; // Where the adr files are stored
