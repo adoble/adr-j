@@ -50,7 +50,7 @@ public class Link {
 
 	}
 
-	public String fragment(Optional<String> templateLinkFragment, Optional<String> templateCommentFragment, Path docsPath) {
+	public String getFragment(Optional<String> templateLinkFragment, Optional<String> templateCommentFragment, Path docsPath) {
 
 		
 		String linkFragment = templateLinkFragment.get().replace("{{{link.comment}}}", capitalizeFirstCharacter(this.comment))

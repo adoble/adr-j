@@ -1,13 +1,10 @@
 package org.doble.adr.model;
 
-import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -97,10 +94,9 @@ public class Record {
 		ArrayList<String> linkFragments = new ArrayList<String>();
 		String linkSectionString;
 		if (templateLinkFragment.isPresent()) {
-			for (Link link : links)
-				//linkFragments.add(linkFragment(link, templateLinkFragment, templateCommentFragment));
-			    linkFragments.add(link.fragment(templateLinkFragment, templateCommentFragment, docsPath));
-				//linkFragements(templateLinkFragment, templateCommentFragment, linkFragments, link);
+			for (Link link : links) {
+				linkFragments.add(link.getFragment(templateLinkFragment, templateCommentFragment, docsPath));
+			}
 			linkSectionString = linkFragments.stream().collect(Collectors.joining("\n"));
 		} else {
 			linkSectionString = "";
@@ -157,31 +153,7 @@ public class Record {
 		return targetFile;
 	}
 
-	private String linkFragment(Link link, Optional<String> templateLinkFragment, Optional<String> templateCommentFragment) {
 
-		//String templateLinkFragment = templateLinkFragment.get();
-		String linkFragment = templateLinkFragment.get().replace("{{{link.comment}}}", capitalizeFirstCharacter(link.comment))
-				.replace("{{{link.id}}}", link.id.toString())
-				.replace("{{{link.file}}}", ADR.getADRFileName(link.id, docsPath));
-		// If the template has specified comments for meta-data then extend to link
-		// fragment with the comment
-		String expandedCommentFragment = "";
-		if (templateCommentFragment.isPresent()) {
-			// Surround with newlines as this is required by some markdown processors to
-			// render the comment invisible.
-			expandedCommentFragment = "\n" + templateCommentFragment.get() + "\n";
-			// Replace the fields with their meta-data equivalents
-			expandedCommentFragment = expandedCommentFragment.replace("{{template.comment}}", templateLinkFragment.get())
-					.replace("{{{link.comment}}}",
-							"{{{link.comment=\"" + capitalizeFirstCharacter(link.comment) + "\"}}}")
-					.replace("{{{link.id}}}", "{{{link.id=\"" + link.id.toString() + "\"}}}")
-					.replace("{{{link.file}}}",
-							"{{{link.file=\"" + ADR.getADRFileName(link.id, docsPath) + "\"}}}");
-		}
-		
-		return linkFragment + "\n" + expandedCommentFragment;
-
-	}
 	
 
 	/**
@@ -277,10 +249,7 @@ public class Record {
 		supersedes.add(new Integer(adrId));
 	}
 
-	private String capitalizeFirstCharacter(String s) {
-		return s.substring(0, 1).toUpperCase() + s.substring(1);
-	}
-
+	
 	/**
 	 * Finds and returns the line in the template that contains the specified
 	 * substitution field. Assumes that all the other associated substitution fields
