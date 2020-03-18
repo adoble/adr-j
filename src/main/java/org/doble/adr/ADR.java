@@ -1,6 +1,7 @@
 package org.doble.adr;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
 //import java.lang.reflect.Constructor;
 import java.nio.file.*;
@@ -153,6 +154,34 @@ public class ADR  {
 
 		 return rootPath.get();
 
+
+	 }
+	 
+	 /**
+	  * Get the name of the file contaning the specified id. 
+	 * @param adrId The id of the ADR.
+	 * @param docsPath The path containing the ADRs.
+	 * @return The file name of the ADR
+	 */
+	static public String getADRFileName(int adrId, Path docsPath) { 
+		 String fileName;
+
+		 try { 
+			 Path[] paths = Files.list(docsPath).filter(ADRFilter.filter(adrId)).toArray(Path[]::new);
+
+
+			 if (paths.length == 1) { 
+				 fileName = paths[0].getFileName().toString(); 
+			 } 
+			 else { // Gracefully fail and return an empty string 
+				 fileName = ""; 
+			 } 
+		 } 
+		 catch (IOException e) { // Gracefully fail and return an empty string 
+			 fileName =	  ""; 
+		 }
+
+		 return fileName;
 
 	 }
 

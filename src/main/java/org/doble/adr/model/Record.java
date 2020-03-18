@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.doble.adr.ADR;
 import org.doble.adr.ADRException;
 import org.doble.adr.ADRFilter;
 import org.doble.adr.ADRProperties;
@@ -63,7 +64,7 @@ public class Record {
 					if (linkSpecs.length > 3 || linkSpecs.length == 0) {
 						throw new LinkSpecificationException();
 					}
-					String adrFileName = getADRFileName(linkID);
+					String adrFileName = ADR.getADRFileName(linkID, docsPath);
 			}
 			} catch (NumberFormatException e) {
 				throw new LinkSpecificationException();
@@ -146,7 +147,7 @@ public class Record {
 				linkFragments.add(linkFragment.replace("{{{link.comment}}}", 
 						capitalizeFirstCharacter(link.comment))
 						.replace("{{{link.id}}}", link.id.toString())
-						.replace("{{{link.file}}}", getADRFileName(link.id))
+						.replace("{{{link.file}}}", ADR.getADRFileName(link.id, docsPath))
 						);
 				// If the template has specified comments for meta-data then extend to link fragment with the comment
 				if (templateCommentFragment.isPresent()) {
@@ -157,7 +158,7 @@ public class Record {
 							.replace("{{template.comment}}", linkFragment)
 							.replace("{{{link.comment}}}", "{{{link.comment=\"" + capitalizeFirstCharacter(link.comment) + "\"}}}")
 							.replace("{{{link.id}}}", "{{{link.id=\"" + link.id.toString() +"\"}}}")
-							.replace("{{{link.file}}}", "{{{link.file=\"" + getADRFileName(link.id) + "\"}}}")
+							.replace("{{{link.file}}}", "{{{link.file=\"" + ADR.getADRFileName(link.id, docsPath) + "\"}}}")
 							);
 				}
 				
@@ -180,7 +181,7 @@ public class Record {
 			for (Integer supersededId: supersedes) {
 				String supersededFragment = templateSupersededFragment.get();
 				supersededFragments.add(supersededFragment.replace("{{{superseded.id}}}", supersededId.toString())
-						.replace("{{{superseded.file}}}", getADRFileName(supersededId))
+						.replace("{{{superseded.file}}}", ADR.getADRFileName(supersededId, docsPath))
 						);
 			}
 			supersededSectionString = supersededFragments.stream().collect(Collectors.joining("\n"));
@@ -214,26 +215,7 @@ public class Record {
 	}
 
 	
-	private String getADRFileName(int adrId) { 
-		String fileName;
 
-		try { 
-			Path[] paths = Files.list(docsPath).filter(ADRFilter.filter(adrId)).toArray(Path[]::new);
-
-			if (paths.length == 1) { 
-				fileName = paths[0].getFileName().toString(); 
-			} 
-			else { // Gracefully fail and return an empty string 
-				fileName = ""; 
-			} 
-		} 
-		catch (IOException e) { // Gracefully fail and return an empty string 
-			fileName =	  ""; 
-		}
-
-		return fileName;
-
-	}
 
 
 	
@@ -268,7 +250,7 @@ public class Record {
 				for (int index = 0; index < lines.size(); index++) {
 					line = lines.get(index);
 					if (line.startsWith("## Context")) {  // TODO Need to have use constants for the titles
-						lines.add(index, "Superseded by the [architecture decision record " + supersedesID + "](" + getADRFileName(supersedesID) + ")");
+						lines.add(index, "Superseded by the [architecture decision record " + supersedesID + "](" + ADR.getADRFileName(supersedesID, docsPath) + ")");
 						lines.add(index + 1, "");
 						break;
 					}
