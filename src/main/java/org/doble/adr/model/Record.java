@@ -95,7 +95,7 @@ public class Record {
 		String linkSectionString;
 		if (templateLinkFragment.isPresent()) {
 			for (Link link : links) {
-				linkFragments.add(link.getFragment(templateLinkFragment, templateCommentFragment, docsPath));
+				linkFragments.add(link.getFragment(templateLinkFragment, templateCommentFragment));
 			}
 			linkSectionString = linkFragments.stream().collect(Collectors.joining("\n"));
 		} else {
@@ -216,7 +216,7 @@ public class Record {
 	 * @returns The id of the ADR being linked to
 	 **/
 	public int addLink(Integer id, String comment, String adrFileName, String reverseComment) {
-		links.add(new Link(id, comment, adrFileName, reverseComment));
+		links.add(new Link(id, comment, adrFileName, reverseComment, docsPath));
 		return id;
 	}
 
@@ -233,7 +233,7 @@ public class Record {
 	 *                                    incorrect
 	 */
 	public int addLink(String linkSpec) throws LinkSpecificationException {
-		Link link = new Link(linkSpec);
+		Link link = new Link(linkSpec, docsPath);
 		links.add(link);
 
 		return link.id;

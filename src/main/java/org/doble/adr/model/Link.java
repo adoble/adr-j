@@ -10,17 +10,20 @@ public class Link {
 	Integer id;
 	String comment = "";
 	String reverseComment = "";
+	private Path docsPath;
 	
 	/**
 	 * Create a (forward)link using the filed values directly.
 	 * @param id The id of the ADR being linked to.
 	 * @param comment The link comment in this ADR.
 	 * @param reverseComment The comment added to a referenced (reverse link) ADR with the specified id 
+	 * @param docsPath The path containing the ADRs.
 	 */
-	Link(Integer id, String comment, String adrFileName, String reverseComment) {
+	Link(Integer id, String comment, String adrFileName, String reverseComment, Path docsPath) {
 		this.id = id;
 		this.comment = comment;
 		this.reverseComment = reverseComment;
+		this.docsPath = docsPath;
 	}
 	
 	/**
@@ -30,9 +33,10 @@ public class Link {
 	 * ReverseLinkComment - The comment added to a referenced (linked) ADR with the specified id (optional).
 	 *
 	 * @param linkSpec      The link specification as string
+	 * @param docsPath The path containing the ADRs.
 	 * @throws              LinkSpecificationException Thrown if the link specification is incorrect
 	 */
-	Link(String linkSpec) throws LinkSpecificationException {
+	Link(String linkSpec, Path docsPath) throws LinkSpecificationException {
 
 		try {
 			if (linkSpec.length() > 0) {
@@ -47,15 +51,16 @@ public class Link {
 		} catch (NumberFormatException e) {
 			throw new LinkSpecificationException();
 		}
+		this.docsPath = docsPath;
 
 	}
 
-	public String getFragment(Optional<String> templateLinkFragment, Optional<String> templateCommentFragment, Path docsPath) {
+	public String getFragment(Optional<String> templateLinkFragment, Optional<String> templateCommentFragment) {
 
 		
 		String linkFragment = templateLinkFragment.get().replace("{{{link.comment}}}", capitalizeFirstCharacter(this.comment))
 				.replace("{{{link.id}}}", this.id.toString())
-				.replace("{{{link.file}}}", ADR.getADRFileName(this.id, docsPath));
+				.replace("{{{link.file}}}", ADR.getADRFileName(this.id, this.docsPath));
 		// If the template has specified comments for meta-data then extend to link
 		// fragment with the comment
 		String expandedCommentFragment = "";
@@ -69,7 +74,7 @@ public class Link {
 							"{{{link.comment=\"" + capitalizeFirstCharacter(this.comment) + "\"}}}")
 					.replace("{{{link.id}}}", "{{{link.id=\"" + this.id.toString() + "\"}}}")
 					.replace("{{{link.file}}}",
-							"{{{link.file=\"" + ADR.getADRFileName(this.id, docsPath) + "\"}}}");
+							"{{{link.file=\"" + ADR.getADRFileName(this.id, this.docsPath) + "\"}}}");
 		}
 		
 		return linkFragment + "\n" + expandedCommentFragment;
