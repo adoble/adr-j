@@ -25,26 +25,26 @@ import picocli.CommandLine.ParentCommand;
          )
 public class CommandEdit implements Callable<Integer> {
 	@Parameters(paramLabel = "ADR_ID", description = "The identifier of the ADR to be edited.")
-	private int adrId;
+	private int adrId; 
 
 	@ParentCommand
 	private CommandADR commandADR;
-
+	
 	private Environment env;
 	private ADRProperties properties;
-
+	
 	@Override
 	public Integer call() throws Exception {
-		int exitCode = CommandLine.ExitCode.OK;
+		int exitCode = CommandLine.ExitCode.OK; 
 
 		env = commandADR.getEnvironment();
 
 		// Load the properties
 		properties = new ADRProperties(env);
-		properties.load();
+		properties.load(); 
 
 
-		// Determine where the .adr directory is stored, i.e. the root path.
+		// Determine where the .adr directory is stored, i.e. the root path. 
 		// If the directory has not been initialised, this will throw an exception
 		Path rootPath = ADR.getRootPath(env);
 
@@ -84,5 +84,5 @@ public class CommandEdit implements Callable<Integer> {
 	}
 
 
-
+	
 }

@@ -10,7 +10,7 @@
 
   [`init`](init.md)  Initialise the directory of architecture decision records.
 
-[`new`](new.md) Creates a new, numbered ADR.
+[`new`](new.md) Creates a new, numbered ADR.  
 
 [`list`](list.md) Lists the filenames of the currently created architecture decision records.
 
