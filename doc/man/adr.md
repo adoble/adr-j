@@ -10,7 +10,7 @@
 
   [`init`](init.md)  Initialise the directory of architecture decision records.
 
-[`new`](new.md) Creates a new, numbered ADR.  
+[`new`](new.md) Creates a new, numbered ADR.
 
 [`list`](list.md) Lists the filenames of the currently created architecture decision records.
 
@@ -32,3 +32,5 @@ Exit Codes:
 
 # Environment Variables:
   `ADR_AUTHOR`   The author of the ADR
+  `ADR_EDITOR`   The editor to open ADRs
+  `ADR_VISUAL`   The editor to open ADRs. Ignored when `ADR_EDITOR` set
