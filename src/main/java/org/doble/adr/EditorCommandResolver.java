@@ -28,7 +28,7 @@ public class EditorCommandResolver {
 	 * @return the command if there is a set environment variable or null, if no variable set.
 	 */
 	public String editorCommand() {
-		return Stream.of("EDITOR", "VISUAL")
+		return Stream.of("ADR_EDITOR", "ADR_VISUAL", "EDITOR", "VISUAL")
 			.map(env::get)
 			.filter(Objects::nonNull)
 			.findFirst()

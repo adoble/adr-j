@@ -52,4 +52,33 @@ class EditorCommandResolverTest {
 		assertEquals( "editor", editorCommand,
 			"The EDITOR variable has higher priority than VISUAL. The command must come from the EDITOR variable");
 	}
+
+	@Test
+	void preferPrefixedVisualToSystemEditors() {
+		Map<String, String> env = new HashMap<>();
+		env.put("VISUAL", "visual");
+		env.put("EDITOR", "editor");
+		env.put("ADR_VISUAL", "adr-visual");
+		EditorCommandResolver resolver = new EditorCommandResolver(env);
+
+		String editorCommand = resolver.editorCommand();
+
+		assertEquals( "adr-visual", editorCommand,
+			"The ADR-prefixed variable has higher priority than system variables");
+	}
+
+	@Test
+	void preferPrefixedEditorToAllOtherEditors() {
+		Map<String, String> env = new HashMap<>();
+		env.put("VISUAL", "visual");
+		env.put("ADR_EDITOR", "adr-editor");
+		env.put("EDITOR", "editor");
+		env.put("ADR_VISUAL", "adr-visual");
+		EditorCommandResolver resolver = new EditorCommandResolver(env);
+
+		String editorCommand = resolver.editorCommand();
+
+		assertEquals( "adr-editor", editorCommand,
+			"The ADR_EDITOR variable has highest priority");
+	}
 }
