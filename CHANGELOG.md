@@ -14,7 +14,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ### Changed
 * 
 
-## 3.2] - 2021-02-01
+## [3.2] - 2021-02-01
 
 ### Added
 
