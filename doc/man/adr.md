@@ -32,3 +32,5 @@ Exit Codes:
 
 # Environment Variables:
   `ADR_AUTHOR`   The author of the ADR
+  `ADR_EDITOR`   The editor to open ADRs
+  `ADR_VISUAL`   The editor to open ADRs. Ignored when `ADR_EDITOR` set

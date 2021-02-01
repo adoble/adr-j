@@ -54,7 +54,7 @@ public class CommandEdit implements Callable<Integer> {
 		// Check to see if the editor command has been set.
 		if (env.editorCommand == null) {
 			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
-					+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
+					+ "Have you set the environment variable ADR_EDITOR, ADR_VISUAL, EDITOR or VISUAL with the editor program you want to use?\n";
 			env.err.println(msg);
 			exitCode =  CommandLine.ExitCode.SOFTWARE;
 		}

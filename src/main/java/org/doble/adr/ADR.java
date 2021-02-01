@@ -51,12 +51,8 @@ public class ADR  {
 		int errorCode = 0;
 		
 		// Determine the editor from the system environment
-		String editorCommand = null;
-		editorCommand = System.getenv("EDITOR"); 
-		if (editorCommand == null) {
-			// Try VISUAL
-			editorCommand = System.getenv("VISUAL");
-		}
+		EditorCommandResolver editorCommandResolver = new EditorCommandResolver();
+		String editorCommand = editorCommandResolver.editorCommand();
 		// else leave as null to be picked up later
 		// TODO change this to an optional variable or an entry in the configuration file
 		
@@ -217,6 +213,8 @@ public class ADR  {
 		EnvironmentVariablesRenderer() {
 			env = new HashMap<>();
 			env.put("ADR_AUTHOR", "The author of the ADR");
+			env.put("ADR_EDITOR", "The editor to use to edit ADRs");
+			env.put("ADR_VISUAL", "The editor to use to edit ADRs. Ignored, if ADR_EDITOR set");
 		}
 
 		@Override
