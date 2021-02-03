@@ -27,5 +27,5 @@ We will reflect adding new variables in the docs.
 
 ## Consequences
 
-* The ADR tool behavior remains backward-compatible;
-* Editor command resolving will move out of launcher class;
+* The ADR tool behavior remains backward-compatible.
+* Editor command resolving will move out of launcher class.
