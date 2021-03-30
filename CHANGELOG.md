@@ -9,20 +9,21 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ## [Unreleased]
 
 ### Added
-* 
+*
 
 ### Changed
-* 
+*
 
 ## [3.2] - 2021-02-01
 
 ### Added
 
-* No new functionality added. This release is to tidy up some loose ends after a pause in development. 
+* No new functionality added. This release is to tidy up some loose ends after a pause in development.
 
 ### Changed
 * Refactored date/time handling
 * Now uses environment variables prefixed with "ADR_" ([iss #4](https://github.com/adoble/adr-j/issues/4)))  (thanks [Dymytro Kovalchuk](https://github.com/dimasmith))
+* Removed dependency to JCenter ([iss #35](https://github.com/adoble/adr-j/issues/35))  (thanks [Marcel van den Brink](https://github.com/Leviter))
 
 
 
