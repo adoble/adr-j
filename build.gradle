@@ -26,7 +26,6 @@ tasks.withType(JavaCompile) {
 
 repositories {
     mavenLocal()
-    jcenter()
     maven {
         url 'https://oss.sonatype.org/content/groups/public'
     }
