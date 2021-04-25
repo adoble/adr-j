@@ -16,8 +16,8 @@ group = 'org.doble'
 version = '3.1.0-SNAPSHOT'
 
 description = "adr-j"
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 mainClassName = "org.doble.adr.ADR"
 
 tasks.withType(JavaCompile) {
