@@ -9,14 +9,15 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ## [Unreleased]
 
 ### Added
-*
+* CI build now done with GitHub actions
 
 ### Changed
-* Upgraded to use Java 11. 
+* The default git and GitHub branch is now named 'main'
+* Upgraded to use Java 11.
 * Upgraded to use version 6.8.2 of Gradle
 
 ### Fixed
-* Fixed [issue #37](https://github.com/adoble/adr-j/issues/37) 
+* Fixed [issue #37](https://github.com/adoble/adr-j/issues/37)
 
 
 ## [3.2] - 2021-02-01
