@@ -17,6 +17,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Disabled;
 
 //import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -106,7 +107,8 @@ public class CommandNewSupersedesTest {
 		// Non existing adr
 		String[] nonExistingAdrIds = {"100"};
 		exitCode = checkSupersedes(nonExistingAdrIds);
-		assertEquals(CommandLine.ExitCode.USAGE, exitCode);  
+		
+		assertEquals(CommandLine.ExitCode.SOFTWARE, exitCode);  
 		
 	}
 
