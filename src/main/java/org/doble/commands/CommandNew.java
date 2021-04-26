@@ -59,7 +59,7 @@ public class CommandNew implements Callable<Integer> {
     		)
 	ArrayList<String> links = new ArrayList<String>();
 
-	@Option(names = {"-s", "supersedes"}, description = "A reference (number) of a previous"
+	@Option(names = {"-s", "-supersedes"}, description = "A reference (number) of a previous"
 			+ " decision that the new decision supersedes. A markdown"
 			+ " to the superseded ADR is inserted into the Status section."
 			+ "	The status of the superseded ADR is changed to record that"
