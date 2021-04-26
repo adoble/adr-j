@@ -1,6 +1,6 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.2'
-    id "com.palantir.graal" version "0.6.0"
+    id "com.palantir.graal" version "0.7.2"
 }
 
 apply plugin: 'java'
@@ -44,7 +44,7 @@ dependencies {
     //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0-M1'
     //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0-M1'
     //testCompile group: 'com.google.jimfs', name: 'jimfs', version:'1.1'
-    
+
     implementation 'info.picocli:picocli:4.6.1'
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.hamcrest:hamcrest:2.2'
@@ -54,7 +54,7 @@ dependencies {
 
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    
+
 }
 
 compileJava {
