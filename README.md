@@ -1,7 +1,7 @@
 
 # ADR-J Tool
 ![Release](https://img.shields.io/github/v/release/adoble/adr-j)
-![Build Status](https://github.com/adoble/adr-j/workflows/Build/badge.svg)
+![Build Status](https://github.com/adoble/adr-j/actions/workflows/gradle.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
