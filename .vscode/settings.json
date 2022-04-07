@@ -1,0 +1,8 @@
+"java.test.config" : [
+    {
+        "name" : "Unit tests",
+        "workingDirectory" : "${workspaceFolder}",
+
+
+    },
+]
