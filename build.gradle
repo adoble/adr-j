@@ -1,5 +1,6 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '4.0.2'
+    //id 'com.github.johnrengelman.shadow' version '4.0.2'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
     id "com.palantir.graal" version "0.7.2"
 }
 
@@ -16,8 +17,10 @@ group = 'org.doble'
 version = '3.1.0-SNAPSHOT'
 
 description = "adr-j"
-sourceCompatibility = 11
-targetCompatibility = 11
+// sourceCompatibility = 11
+// targetCompatibility = 11
+sourceCompatibility = 17
+targetCompatibility = 17
 mainClassName = "org.doble.adr.ADR"
 
 tasks.withType(JavaCompile) {
