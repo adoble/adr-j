@@ -50,7 +50,7 @@ ADRs are stored in your project as markup files in the `doc/adr` directory.
         adr new Implement as Unix shell scripts
 
     This will create a new, numbered ADR file and open it in your
-    editor of choice (as specified by the VISUAL or EDITOR environment
+    editor of choice (as specified by the ADR_EDITOR environment
     variable).
 
     To create a new ADR that supersedes a previous one (ADR 9, for example), use the -s option.
