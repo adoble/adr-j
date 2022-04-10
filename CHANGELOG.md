@@ -19,6 +19,8 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 ### Fixed
 * Fixed [issue #39](https://github.com/adoble/adr-j/issues/39) in handling reverse links with ASCCIDOC templates (thanks [Torsten Keiber](https://github.com/tkleiber))
 * Fixed [issue #37](https://github.com/adoble/adr-j/issues/37)
+* Fixed [issee #42](https://github.com/adoble/adr-j/issues/42). ADR 2 now superseded by ADR 8. 
+
 
 
 ## [3.2] - 2021-02-01

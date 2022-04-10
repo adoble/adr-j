@@ -6,6 +6,8 @@ Date: 21.07.2017
 
 Accepted
 
+* Superseded by [ADR 8](0008-use-java-lts-versions.md)
+
 ## Context
 
 ADRS need to be created on a wide variety of operating systems.
