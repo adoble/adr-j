@@ -17,8 +17,6 @@ group = 'org.doble'
 version = '3.1.0-SNAPSHOT'
 
 description = "adr-j"
-// sourceCompatibility = 11
-// targetCompatibility = 11
 sourceCompatibility = 17
 targetCompatibility = 17
 mainClassName = "org.doble.adr.ADR"
