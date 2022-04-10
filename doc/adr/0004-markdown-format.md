@@ -6,6 +6,8 @@ Date: 21.07.2017
 
 Accepted
 
+- Superseded by [ADR 9](0009-plain-text-format.md)
+
 
 
 ## Context
