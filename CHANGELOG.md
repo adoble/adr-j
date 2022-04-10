@@ -12,14 +12,17 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 * CI build now done with GitHub actions
 
 ### Changed
-* The default git and GitHub branch is now named 'main'
+* The default git and GitHub branch is now named `main`.
 * Upgraded to use Java 17.
 * Upgraded to use version 7.4.2 of Gradle
 
 ### Fixed
 * Fixed [issue #39](https://github.com/adoble/adr-j/issues/39) in handling reverse links with ASCCIDOC templates (thanks [Torsten Keiber](https://github.com/tkleiber))
 * Fixed [issue #37](https://github.com/adoble/adr-j/issues/37)
-* Fixed [issee #42](https://github.com/adoble/adr-j/issues/42). ADR 2 now superseded by ADR 8. 
+
+### Documentation Fixes
+* Fixed [issue #42](https://github.com/adoble/adr-j/issues/42). ADR 2 now superseded by ADR 8. 
+* Fixed [issue #41](https://github.com/adoble/adr-j/issues/42). ADR 4 now superseded by ADR 9. Readme updated. 
 
 
 
