@@ -3,10 +3,13 @@
 ## Windows
 
 1. Download the source code.
+2. Make sure you have [Java version 17](https://www.oracle.com/java/technologies/downloads/#java17) or higher installed.
 2. Make sure you have gradle installed (https://gradle.org/).
 3. Run `gradlew releaseJar`. This should create a file `build/releases/adr-j.jar`.
 4. Set the environment variable `ADR_HOME` to the folder where you downloaded the source code. This should contain the `build` folder.
-5. Set the environment variable `ADR_EDITOR` or `ADR_VISUAL` to the location of the editor you what to use for editing the ADRs (e.g. Atom). If none of those variables set, ADR will use `EDITOR` and `VISUAL` variables.
+5. Set the environment variable `ADR_EDITOR` or `ADR_VISUAL` to the location of the editor you what to use for editing the ADRs (e.g. Atom). If none of those variables set, ADR will use `EDITOR` and `VISUAL` variables. It the path to the editor has spaces in it, do **not** use quotes in the enviroment variable, e.g.  instead of `..\Programs\"Microsoft VS Code"\bin\code.cmd` use instead `..\Programs\Microsoft VS Code\bin\code.cmd`.
+
+
 6. Add `%ADR_HOME%\launch-scripts` to the `PATH` environment variable
 
 You should now be able to type `adr` from the command line and see a response.
