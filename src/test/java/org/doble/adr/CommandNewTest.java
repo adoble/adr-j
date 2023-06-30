@@ -124,6 +124,43 @@ public class CommandNewTest {
 		assertTrue(actualFileNames.containsAll(expectedFileNames), "File(s) missing");
 		assertTrue(expectedFileNames.containsAll(actualFileNames), "Unexpected file(s) found");
 	}
+
+	// Tests to check that issue 43 has been corrected
+	@Test
+	public void testOtherFilesInADRDirectory () throws Exception {
+		String adrTitle1 = "Test architecture decision 1";
+        String adrTitle2 = "Test architecture decision 2";
+
+		String[] args = TestUtilities.argify("new " + adrTitle1);
+
+		int exitCode = ADR.run(args, env);
+		assertEquals(0, exitCode);
+
+		args = TestUtilities.argify("new " + adrTitle2);
+
+		exitCode = ADR.run(args, env);
+		assertEquals(0, exitCode);
+
+
+		// Add a new file that does not follow the ADR naming convention. 
+		Files.createFile(fileSystem.getPath(rootPathName, docsPath, "other_doc.md"));  
+		
+		// Try and create a new ADR. It should work.
+		args = TestUtilities.argify("new " + "New decision");
+
+		exitCode = ADR.run(args, env);
+		assertEquals(0, exitCode);
+
+		// Add a new directory to the adr directory
+		Files.createDirectory(fileSystem.getPath(rootPathName, docsPath, "images"));
+
+		// Try and create a new ADR. It should work.
+		args = TestUtilities.argify("new " + "Another decision");
+
+		exitCode = ADR.run(args, env);
+		assertEquals(0, exitCode);
+
+	}
 	
 
 }

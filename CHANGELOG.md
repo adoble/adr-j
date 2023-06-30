@@ -17,6 +17,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 * Upgraded to use version 7.4.2 of Gradle
 
 ### Fixed
+* Fixed [issue 43](https://github.com/adoble/adr-j/issues/43) allowing a user to add other files and directories in the same directory as the ADRs (thanks [maxandersen](https://github.com/maxandersen) for pointing this out). The behaviour is now that files and directories that are not "well formed" ADRs are ignored.
 * Fixed [issue #39](https://github.com/adoble/adr-j/issues/39) in handling reverse links with ASCCIDOC templates (thanks [Torsten Keiber](https://github.com/tkleiber))
 * Fixed [issue #37](https://github.com/adoble/adr-j/issues/37)
 

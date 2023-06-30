@@ -19,7 +19,7 @@ import picocli.CommandLine.HelpCommand;
 
 @Command(name = "adr",
 		 description = "Creation and management of architectural decision records (ADRs)",
-		 version = "2.1",
+		 version = "3.2.1",
 		 exitCodeListHeading = "Exit Codes:%n",
 		 exitCodeList        = { " 0:Successful program execution.",
 				 				 "64:Invalid input: an unknown option or invalid parameter was specified.",

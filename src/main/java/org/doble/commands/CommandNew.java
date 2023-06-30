@@ -236,7 +236,7 @@ public class CommandNew implements Callable<Integer> {
 
 	/**
 	 * Find the highest index of the ADRs in the adr directory by iterating
-	 * through all the files
+	 * through all the files that start with an  adr index number (i.e. dddd where d is a digit)
 	 *
 	 * @return int The highest index found. If no files are found returns 0.
 	 */
@@ -248,19 +248,58 @@ public class CommandNew implements Callable<Integer> {
 		Path adrPath = rootPath.resolve(docPath);
 
 		try {
-			highestIndex = Files.list(adrPath).mapToInt(CommandNew::toInt).max();
+			highestIndex = Files.list(adrPath).filter(CommandNew::wellFormedADR).mapToInt(CommandNew::toInt).max();
+			
 		} catch (IOException e) {
 			throw new ADRException("FATAL: Unable to determine the indexes of the ADRs.", e);
-		}
+		} 
 
 		return (highestIndex.isPresent() ? highestIndex.getAsInt() : 0);
 	}
 
+	// Convert a ADR file name to its id number
+	// Assumes that the ADR file name is well formed.
 	private static int toInt(Path p) {
 		String name = p.getFileName().toString();
 
-		// Extract the first 4 characters
-		String id = name.substring(0, 4);
-		return new Integer(id);
+		// Extract the first 4 characters and creat an integer from them
+		String id = name.substring(0, ADR.MAX_ID_LENGTH);
+		return Integer.parseInt(id);
+		
 	}
+
+	/*
+	 * A well formed ADR has the form:
+	 *     dddd-*
+	 * where 'd' is a digit
+	 * and * refers to any number of charaters.
+	 */
+	private static boolean wellFormedADR(Path p) {
+		
+		String name = p.getFileName().toString();
+
+		// Instead of using a regex do some simple, and fast, checks
+
+		// Check that the file is longer than the id length and the '-'
+		if (name.length() < ADR.MAX_ID_LENGTH + 1) {
+			return false;
+		}
+
+		// Check that the 5th character is a '-'
+		if (name.indexOf('-') != ADR.MAX_ID_LENGTH) return false;
+
+		// Check that the first 4 characters are digits
+		boolean is_adr_with_index = name.chars().mapToObj(i -> (char)i).limit(ADR.MAX_ID_LENGTH).allMatch(c -> Character.isDigit(c));
+		if (!is_adr_with_index) {
+			return false;
+		}
+
+		
+
+		// All checks passed
+		return true;
+
+	}
+
+	
 }
