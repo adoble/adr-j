@@ -1,6 +1,7 @@
 plugins {
     //id 'com.github.johnrengelman.shadow' version '4.0.2'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    //id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id "com.palantir.graal" version "0.7.2"
 }
 
@@ -64,7 +65,7 @@ compileJava {
 
 shadowJar {
     transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer)
-    classifier 'fat'
+    //classifier 'fat' 
 }
 
 task releaseJar(dependsOn: "shadowJar", type: Copy) {
