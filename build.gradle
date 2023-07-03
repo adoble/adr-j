@@ -14,13 +14,20 @@ graal {
     outputName 'adr'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17 
+    mainClassName =   "org.doble.adr.ADR"  
+}
+
 group = 'org.doble'
-version = '3.1.0-SNAPSHOT'
+//version = '3.1.0-SNAPSHOT'
+version = '3.2.1'
 
 description = "adr-j"
-sourceCompatibility = 17
-targetCompatibility = 17
-mainClassName = "org.doble.adr.ADR"
+//sourceCompatibility = 17
+//targetCompatibility = 17
+//mainClassName = "org.doble.adr.ADR"
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
@@ -71,10 +78,15 @@ shadowJar {
 task releaseJar(dependsOn: "shadowJar", type: Copy) {
     group = 'ADR-J - Release'
     description "Creates a JAR release."
-    from("$buildDir/libs/adr-j-${project.version}-fat.jar")
+    // from("$buildDir/libs/adr-j-${project.version}-fat.jar")
+    // rename { String fileName ->
+    //     //fileName.replace('-fat', '')
+    //     fileName.replace("-${project.version}-fat", "")
+    // }
+    // into("$buildDir/releases")
+    from("$buildDir/libs/adr-j-${project.version}-all.jar")
     rename { String fileName ->
-        //fileName.replace('-fat', '')
-        fileName.replace("-${project.version}-fat", "")
+        fileName.replace("-${project.version}-all", "")
     }
     into("$buildDir/releases")
     // set executable with read permissions (first true) and for all (false)
