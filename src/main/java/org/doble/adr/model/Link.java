@@ -41,7 +41,8 @@ public class Link {
 		try {
 			if (linkSpec.length() > 0) {
 				String[] linkSpecs = linkSpec.split(":");
-				if (linkSpecs.length >= 1) id = new Integer(linkSpecs[0]);
+				if (linkSpecs.length >= 1) id = Integer.valueOf(linkSpecs[0]);
+				
 				if (linkSpecs.length >= 2) comment = linkSpecs[1];
 				if (linkSpecs.length == 3) reverseComment = linkSpecs[2];
 				if (linkSpecs.length > 3 || linkSpecs.length == 0) {

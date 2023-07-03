@@ -70,7 +70,7 @@ public class TestUtilities {
 	 * Generate the file name of an ADR
 	 */
 	public static String adrFileName(String idstr, String title) {
-		int id = new Integer(idstr).intValue();
+		int id = Integer.parseInt(idstr);
 
 		return adrFileName(id, title);
 	}

@@ -228,9 +228,13 @@ public class ADR  {
 				.max()
 				.getAsInt();
 
-			TextTable textTable = TextTable.forColumns(help.ansi(),
-				new Column(keyLength + 3, 2, Overflow.SPAN),
-				new Column(width(help) - (keyLength + 3), 2, Overflow.WRAP));
+			// TextTable textTable = TextTable.forColumns(help.ansi(),
+			// 	new Column(keyLength + 3, 2, Overflow.SPAN),
+			// 	new Column(width(help) - (keyLength + 3), 2, Overflow.WRAP));
+		
+			TextTable textTable = TextTable.forColumns(help.colorScheme(),
+			new Column(keyLength + 3, 2, Overflow.SPAN),
+			new Column(width(help) - (keyLength + 3), 2, Overflow.WRAP));
 
 			textTable.setAdjustLineBreaksForWideCJKCharacters(adjustCJK(help));
 

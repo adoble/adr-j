@@ -246,7 +246,7 @@ public class Record {
 	 * @param adrId The id of the ADR superseded by this ADR.
 	 */
 	public void addSupersedes(int adrId) {
-		supersedes.add(new Integer(adrId));
+		supersedes.add(Integer.valueOf(adrId));
 	}
 
 	

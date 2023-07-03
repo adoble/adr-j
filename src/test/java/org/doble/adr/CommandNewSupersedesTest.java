@@ -156,7 +156,8 @@ public class CommandNewSupersedesTest {
 
 		for (String supersededADRID : supersededIds) {
 			long count = 0;
-			String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
+			//String title = adrTitles[(new Integer(supersededADRID)).intValue() - 2];
+			String title = adrTitles[Integer.parseInt(supersededADRID) - 2]; 
 			String supersededADRFileName = TestUtilities.adrFileName(supersededADRID, title);
 			//* Supersedes [ADR{{{superseded.id}}}]({{{superseded.file}}})
 			//String link = "Supersedes ADR " + supersededADRID + " - " + supersededADRFileName ;
