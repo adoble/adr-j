@@ -44,6 +44,8 @@ ADRs are stored in your project as markup files in the `doc/adr` directory.
 
         adr init -t ~/standards/madr.md doc/architecture/decisions
 
+    After initialisation, a [properties file](./doc/usage/properties_file.md) is created in the directory `.adr`.
+
 
 2. Create Architecture Decision Records
 

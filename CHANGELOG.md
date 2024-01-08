@@ -17,10 +17,12 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 * Upgraded to use version 8.2 of Gradle.
 * Removed deprecated Java methods.
 
+
 ### Fixed
+* Fixed [issue 46](https://github.com/adoble/adr-j/issues/46) by providing some basic documentation of the `adr.properties` file (thanks [Sebastian Davis](https://github.com/sdavids) for raising this).
 * Fixed [issue 43](https://github.com/adoble/adr-j/issues/43) allowing a user to add other files and directories in the same directory as the ADRs (thanks [maxandersen](https://github.com/maxandersen) for pointing this out). The behaviour is now that files and directories that are not "well formed" ADRs are ignored.
-* Fixed [issue #39](https://github.com/adoble/adr-j/issues/39) in handling reverse links with ASCCIDOC templates (thanks [Torsten Keiber](https://github.com/tkleiber))
-* Fixed [issue #37](https://github.com/adoble/adr-j/issues/37)
+* Fixed [issue #39](https://github.com/adoble/adr-j/issues/39) in handling reverse links with ASCIIDOC templates (thanks [Torsten Keiber](https://github.com/tkleiber))
+* Fixed [issue #37](https://github.com/adoble/adr-j/issues/37).
 
 ### Documentation Fixes
 * Fixed [issue #42](https://github.com/adoble/adr-j/issues/42). ADR 2 now superseded by ADR 8. 
