@@ -19,6 +19,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 
 
 ### Fixed
+* Partial Fix [issue 47](https://github.com/adoble/adr-j/issues/47). The help documentation has been corrected so that modification of superseded ADRs is **not** implied. (thanks [cloudbackenddev](https://github.com/cloudbackenddev) for pointing this out). The main issue - editing superceded ADRs to reflect their new status - has not been corrected.   
 * Fixed [issue 46](https://github.com/adoble/adr-j/issues/46) by providing some basic documentation of the `adr.properties` file (thanks [Sebastian Davis](https://github.com/sdavids) for raising this).
 * Fixed [issue 43](https://github.com/adoble/adr-j/issues/43) allowing a user to add other files and directories in the same directory as the ADRs (thanks [maxandersen](https://github.com/maxandersen) for pointing this out). The behaviour is now that files and directories that are not "well formed" ADRs are ignored.
 * Fixed [issue #39](https://github.com/adoble/adr-j/issues/39) in handling reverse links with ASCIIDOC templates (thanks [Torsten Keiber](https://github.com/tkleiber))
