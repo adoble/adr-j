@@ -5,8 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and from version 4.0.0 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [Unreleased]
+
+* No changes as yet
+
+## [3.2.2]
 
 ### Added
 * CI build now done with GitHub actions
@@ -19,6 +22,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 
 
 ### Fixed
+* Fixed [issue 48](https://github.com/adoble/adr-j/issues/48).
 * Partial Fix [issue 47](https://github.com/adoble/adr-j/issues/47). The help documentation has been corrected so that modification of superseded ADRs is **not** implied. (thanks [cloudbackenddev](https://github.com/cloudbackenddev) for pointing this out). The main issue - editing superceded ADRs to reflect their new status - has not been corrected.   
 * Fixed [issue 46](https://github.com/adoble/adr-j/issues/46) by providing some basic documentation of the `adr.properties` file (thanks [Sebastian Davis](https://github.com/sdavids) for raising this).
 * Fixed [issue 43](https://github.com/adoble/adr-j/issues/43) allowing a user to add other files and directories in the same directory as the ADRs (thanks [maxandersen](https://github.com/maxandersen) for pointing this out). The behaviour is now that files and directories that are not "well formed" ADRs are ignored.
