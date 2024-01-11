@@ -87,12 +87,20 @@ public class CommandNew implements Callable<Integer> {
 		// set up the record object
 		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
 
-		// Check to see if the editor command has been set.
+		// Check to see if the editor command has been set and is correct.
+		// Need to recheck here as the the user may have changed the environement
+		// variable since running an initialisation.
 		if (env.editorCommand == null) {
 			String msg = "ERROR: Editor for the ADR has not been found in the environment variables.\n"
 					+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
 			env.err.println(msg);
 			exitCode = ADR.ERRORENVIRONMENT;
+		} else if (env.editorCommand.contains("\"") || env.editorCommand.contains("\'")) {
+			String msg = "ERROR: Editor for the ADR has been set in the environment variable,\n"
+					+ "but contains invalid characters such as \" or \'.\n";
+			env.err.println(msg);
+			return ADR.ERRORENVIRONMENT;
+
 		}
 
 		// Set up the template file

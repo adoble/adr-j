@@ -34,12 +34,11 @@ public class CommandInitTest {
 	final static private String templateFileName = templateDirectoryName + "my_adr_template.md";
 	final static private String initTemplateFileName = templateDirectoryName + "my_init_template.md";
 
-
 	private Environment env;
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		
+
 		// Set up the mock file system
 		fileSystem = Jimfs.newFileSystem(Configuration.unix());
 
@@ -67,7 +66,7 @@ public class CommandInitTest {
 				+ "Status:{{status}}"
 				+ "* Links"
 				+ "{{{link.id}}}";
-		TestUtilities.createTemplateFile(env.fileSystem, templateFileName, templateFileContent);	
+		TestUtilities.createTemplateFile(env.fileSystem, templateFileName, templateFileContent);
 	}
 
 	@AfterEach
@@ -77,7 +76,7 @@ public class CommandInitTest {
 
 	@Test
 	public void testInit() throws Exception {
-		String[] args = {"init"};
+		String[] args = { "init" };
 
 		ADR.run(args, env);
 
@@ -87,7 +86,7 @@ public class CommandInitTest {
 		boolean exists = Files.exists(p);
 		assertTrue(exists);
 
-		//Now see if the  standard docs directory has been created
+		// Now see if the standard docs directory has been created
 		pathName = rootPath + "/doc/adr";
 		p = fileSystem.getPath(pathName);
 		exists = Files.exists(p);
@@ -105,12 +104,13 @@ public class CommandInitTest {
 		List<String> contents = Files.readAllLines(p);
 
 		// Sample the contents
-		//TODO refactor this with the use of templates
+		// TODO refactor this with the use of templates
 		int matches = 0;
 		for (String line : contents) {
-			if (line.contains("Record architecture decisions")) matches++;
-//			if (line.contains("## Decision")) matches++;
-//			if (line.contains("Nygard")) matches++;
+			if (line.contains("Record architecture decisions"))
+				matches++;
+			// if (line.contains("## Decision")) matches++;
+			// if (line.contains("Nygard")) matches++;
 		}
 
 		assertTrue(matches == 1);
@@ -120,42 +120,41 @@ public class CommandInitTest {
 	public void testInitCustomDirectory() throws Exception {
 		String customDir = "myStuff/myDocs/myADRs";
 
-		String[] args = {"init", customDir};
+		String[] args = { "init", customDir };
 
 		ADR.run(args, env);
 
-		// Check to see if the custom directory has been created. 
+		// Check to see if the custom directory has been created.
 		String pathName = rootPath + "/" + customDir;
 		Path p = fileSystem.getPath(pathName);
 		boolean exists = Files.exists(p);
 		assertTrue(exists);
 	}
-	
-	
 
 	/**
-	 * Test to see if a re initialization of the directory causes error code to be given
+	 * Test to see if a re initialization of the directory causes error code to be
+	 * given
 	 */
 	@Test
 	public void testReInit() throws Exception {
 		int errorCode;
 
 		// Initialize the ADR directories
-		String[] args = {"init"};
+		String[] args = { "init" };
 
-		 errorCode = ADR.run(args, env);
-		
+		errorCode = ADR.run(args, env);
+
 		assertTrue(errorCode == 0);
 
-		// Re-initialize to see if an error code is given  is raised
-	
-		errorCode = 	ADR.run(args, env);
-		
+		// Re-initialize to see if an error code is given is raised
+
+		errorCode = ADR.run(args, env);
+
 		assertTrue(errorCode == ADR.ERRORGENERAL);
-			
+
 	}
-	
-	//TODO test for other error codes. 
+
+	// TODO test for other error codes.
 
 	/**
 	 * Test to see if the init command still goes through even
@@ -174,72 +173,75 @@ public class CommandInitTest {
 				.editorCommand(null)
 				.build();
 
-		String[] args = {"init"};
+		String[] args = { "init" };
 
 		int exitCode = ADR.run(args, envWithoutEditor);
-		
+
 		assertEquals(ADR.ERRORENVIRONMENT, exitCode, "Exit code  does not indicate that init has errors");
 		String commandOutput = new String(baos.toByteArray());
 		assertTrue(commandOutput.contains("WARNING"), "No warning given from init command that edit has not been set.");
 
-		// Check to see if the .adr directory has been created even though an error is there .
+		// Check to see if the .adr directory has been created even though an error is
+		// there .
 		String pathName = rootPath + "/.adr";
 		Path p = fileSystem.getPath(pathName);
 		boolean exists = Files.exists(p);
 		assertTrue(exists);
 	}
-	
-	
+
 	@Test
 	public void testInitWithTemplate() throws Exception {
 		String expectedTemplate = "/dev/templates/my_adr_template.md";
-		String[] args = {"init", "-t", expectedTemplate};
+		String[] args = { "init", "-t", expectedTemplate };
 
 		ADR.run(args, env);
-		
-		// Now check to see if the properties files (.adr) has been 
-		// created with the template file property. 
-        ADRProperties properties = new ADRProperties(env);
-        properties.load();
-        
-       String actualTemplate = properties.getProperty("templateFile").replace('\\', '/');  // Convert to unix delimitors
-                         
-       assertEquals(expectedTemplate, actualTemplate);
-		
-		
+
+		// Now check to see if the properties files (.adr) has been
+		// created with the template file property.
+		ADRProperties properties = new ADRProperties(env);
+		properties.load();
+
+		String actualTemplate = properties.getProperty("templateFile").replace('\\', '/'); // Convert to unix delimitors
+
+		assertEquals(expectedTemplate, actualTemplate);
+
 	}
-	
+
 	@Test
 	public void testInitWithTemplateAndInitTemplate() {
-		
+
 		// Now run the command using templates specified in setup
-		String[] args = {"init", "-template", templateFileName, "-i", initTemplateFileName};
+		String[] args = { "init", "-template", templateFileName, "-i", initTemplateFileName };
 		ADR.run(args, env);
-		
-		// Now check to see if the properties files (.adr) has been 
-		// created with the template file property. 
+
+		// Now check to see if the properties files (.adr) has been
+		// created with the template file property.
 		ADRProperties properties = new ADRProperties(env);
 		try {
 			properties.load();
 		} catch (ADRException e) {
 			fail(e.getMessage());
 		}
-		String actualTemplate = properties.getProperty("templateFile").replace('\\', '/');  // Convert to Unix-style delimiters
+		String actualTemplate = properties.getProperty("templateFile").replace('\\', '/'); // Convert to Unix-style
+																							// delimiters
 		assertEquals(templateFileName, actualTemplate);
-		
+
 		// Check to see if the initial template has been set in the properties file
-		String actualInitTemplateFileName = properties.getProperty("initialTemplateFile").replace('\\', '/');  // Convert to unix delimitors
+		String actualInitTemplateFileName = properties.getProperty("initialTemplateFile").replace('\\', '/'); // Convert
+																												// to
+																												// unix
+																												// delimitors
 		assertEquals(initTemplateFileName, actualInitTemplateFileName);
-		
-		// Check to see if the initial template has been set up 
+
+		// Check to see if the initial template has been set up
 		String expectedInitADRFileContent = "ADR 1: Record architecture decisions\n"
 				+ "Date:" + DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()) + "\n"
 				+ "Status:Proposed";
 		Path docsPath = env.dir.resolve(properties.getProperty("docPath"));
 		Path initialADRFile = docsPath.resolve("0001-record-architecture-decisions.md");
-		 
-		assertTrue(Files.exists(initialADRFile));	
-		
+
+		assertTrue(Files.exists(initialADRFile));
+
 		// Now check the contents
 		String actualInitADRFileContent = "";
 		try {
@@ -250,9 +252,6 @@ public class CommandInitTest {
 		assertEquals(expectedInitADRFileContent, actualInitADRFileContent);
 	}
 
-
-	
-	
 	@Test
 	public void testInitWithInitTemplateAlone() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -265,10 +264,10 @@ public class CommandInitTest {
 				.userDir(rootPath)
 				.editorCommand("dummyEditor")
 				.build();
-		
-		String[] args = {"init",  "-initial", initTemplateFileName};
+
+		String[] args = { "init", "-initial", initTemplateFileName };
 		int errorCode = ADR.run(args, env);
-		
+
 		assertEquals(CommandLine.ExitCode.USAGE, errorCode);
 
 		// read the output
@@ -276,15 +275,15 @@ public class CommandInitTest {
 
 		assertTrue(content.length() > 0);
 
-		assertTrue(content.contains("ERROR"));  //At least this is shown
-		assertTrue(content.contains("[INITIALTEMPLATE]")); //At least this is shown
-		
+		assertTrue(content.contains("ERROR")); // At least this is shown
+		assertTrue(content.contains("[INITIALTEMPLATE]")); // At least this is shown
+
 	}
-	
+
 	@Test
 	public void testTemplateFileNotFound() {
 		String nonExistingTemplate = "/dev/mytemplates/non-existing_adr_template.md";
-		
+
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
 
@@ -295,23 +294,23 @@ public class CommandInitTest {
 				.userDir(rootPath)
 				.editorCommand("dummyEditor")
 				.build();
-		
-		String[] args = {"init", "-t", nonExistingTemplate};
-		
-		int exitCode = ADR.run(args, env);
-		
-		assertEquals(exitCode, 2);
-		
-		String commandOutput = new String(baos.toByteArray());
-		assertTrue(commandOutput.contains("ERROR"), "No error given from init command that template file does not exist.");
 
+		String[] args = { "init", "-t", nonExistingTemplate };
+
+		int exitCode = ADR.run(args, env);
+
+		assertEquals(exitCode, 2);
+
+		String commandOutput = new String(baos.toByteArray());
+		assertTrue(commandOutput.contains("ERROR"),
+				"No error given from init command that template file does not exist.");
 
 	}
-	
+
 	@Test
 	public void testInitialTemplateFileNotFound() {
 		String nonExistingIitialTemplate = "/dev/mytemplates/non-existing_adr_initial_template.md";
-		
+
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
 
@@ -322,20 +321,45 @@ public class CommandInitTest {
 				.userDir(rootPath)
 				.editorCommand("dummyEditor")
 				.build();
-		
-		String[] args = {"init", "-t", templateFileName, "-i", nonExistingIitialTemplate};
-		
-		
-     	int exitCode = ADR.run(args, env);
-		
-		assertEquals(exitCode, 2);
-		
-		String commandOutput = new String(baos.toByteArray());
-		assertTrue(commandOutput.contains("ERROR"), "No error given from init command that initial template file does not exist.");
 
+		String[] args = { "init", "-t", templateFileName, "-i", nonExistingIitialTemplate };
+
+		int exitCode = ADR.run(args, env);
+
+		assertEquals(exitCode, 2);
+
+		String commandOutput = new String(baos.toByteArray());
+		assertTrue(commandOutput.contains("ERROR"),
+				"No error given from init command that initial template file does not exist.");
 
 	}
-	
-	
-	
+
+	// Test to check if issue 48 has been corrected.
+	@Test
+	public void testEditorEnvironmentVariable() {
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+
+		Environment env = new Environment.Builder(fileSystem)
+				.out(System.out)
+				.err(ps)
+				.in(System.in)
+				.userDir(rootPath)
+				.editorCommand("programs/\"My Editor\"/editor.exe") // Contains apostrophes
+				.build();
+
+		String[] args = { "init" };
+
+		int exitCode = ADR.run(args, env);
+
+		// assertEquals(exitCode, 2);
+		assertEquals(exitCode, ADR.ERRORENVIRONMENT);
+
+		String commandOutput = new String(baos.toByteArray());
+		assertTrue(commandOutput.contains("ERROR"),
+				"No error given from init command that the editor environment variable is incorrect.");
+
+	}
+
 }

@@ -30,22 +30,22 @@ public class Environment {
 
 	/** The file system that is being used */
 	public final FileSystem fileSystem;
-	
-	/** The  output stream used for this program. */
+
+	/** The output stream used for this program. */
 	public final PrintStream out;
-	
-	/** The  error  stream used for this program. */
+
+	/** The error stream used for this program. */
 	public final PrintStream err;
-	
-	/** The  input stream used for this program. */
+
+	/** The input stream used for this program. */
 	public final InputStream in;
-	
+
 	/** The directory where the tool is running */
-	public final Path dir; 
-	
+	public final Path dir;
+
 	/** The command line to run the editor used for editing the ADRs */
-	public final String editorCommand;  
-	
+	public final String editorCommand;
+
 	/** The runner used for firing up the editor */
 	public final EditorRunner editorRunner;
 
@@ -53,8 +53,9 @@ public class Environment {
 	public final String author;
 
 	/**
-	 * Private Constructor so that only the builder can be used to 
+	 * Private Constructor so that only the builder can be used to
 	 * construct the class.
+	 * 
 	 * @param builder The builder used
 	 */
 	private Environment(Builder builder) {
@@ -67,8 +68,6 @@ public class Environment {
 		this.editorRunner = builder.editorRunner;
 		this.author = builder.author;
 	}
-
-
 
 	public static class Builder {
 		private FileSystem fileSystem;
@@ -108,12 +107,12 @@ public class Environment {
 			this.currentDirectory = fileSystem.getPath(currentDirectory);
 			return this;
 		}
-         
+
 		public Builder editorCommand(String editorCommand) {
 			this.editorCommand = editorCommand;
 			return this;
 		}
-		
+
 		public Builder editorRunner(EditorRunner editorRunner) {
 			this.editorRunner = editorRunner;
 			return this;

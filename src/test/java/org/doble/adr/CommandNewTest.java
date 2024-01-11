@@ -1,6 +1,8 @@
 package org.doble.adr;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,14 +31,14 @@ public class CommandNewTest {
 	final static private String docsPath = "/doc/adr";
 	private static FileSystem fileSystem;
 	private Environment env;
-	
-	private String[] adrTitles = {"another test architecture decision",
+
+	private String[] adrTitles = { "another test architecture decision",
 			"yet another test architecture decision",
 			"and still the adrs come",
 			"to be superseded",
 			"some functional name",
 			"something to link to",
-			"a very important decision"};
+			"a very important decision" };
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -59,7 +61,7 @@ public class CommandNewTest {
 				.build();
 
 		// Set up the directory structure
-		String[] args = {"init"};
+		String[] args = { "init" };
 		ADR.run(args, env);
 
 	}
@@ -79,15 +81,27 @@ public class CommandNewTest {
 		assertEquals(0, exitCode);
 
 		// Check if the ADR file has been created
-		assertTrue(Files.exists(fileSystem.getPath("/project/adr/doc/adr/0002-this-is-a-test-architecture-decision.md"))); // ADR id is 2 as the first ADR was setup during init.
+		assertTrue(
+				Files.exists(fileSystem.getPath("/project/adr/doc/adr/0002-this-is-a-test-architecture-decision.md"))); // ADR
+																														// id
+																														// is
+																														// 2
+																														// as
+																														// the
+																														// first
+																														// ADR
+																														// was
+																														// setup
+																														// during
+																														// init.
 	}
 
 	@Test
 	public void testWithoutTitle() {
-		String[] args = {"new"};
-		int exitCode = ADR.run(args,  env);
-		
-		assertTrue(exitCode == CommandLine.ExitCode.USAGE);  // Usage exit code
+		String[] args = { "new" };
+		int exitCode = ADR.run(args, env);
+
+		assertTrue(exitCode == CommandLine.ExitCode.USAGE); // Usage exit code
 	}
 
 	@Test
@@ -115,7 +129,7 @@ public class CommandNewTest {
 			ADR.run(args, env);
 		}
 
-		// Check to see if the names exist 
+		// Check to see if the names exist
 		Path docsDir = fileSystem.getPath(rootPathName, docsPath);
 
 		Stream<String> actualFileNamesStream = Files.list(docsDir).map(Path::toString);
@@ -127,9 +141,9 @@ public class CommandNewTest {
 
 	// Tests to check that issue 43 has been corrected
 	@Test
-	public void testOtherFilesInADRDirectory () throws Exception {
+	public void testOtherFilesInADRDirectory() throws Exception {
 		String adrTitle1 = "Test architecture decision 1";
-        String adrTitle2 = "Test architecture decision 2";
+		String adrTitle2 = "Test architecture decision 2";
 
 		String[] args = TestUtilities.argify("new " + adrTitle1);
 
@@ -141,10 +155,9 @@ public class CommandNewTest {
 		exitCode = ADR.run(args, env);
 		assertEquals(0, exitCode);
 
+		// Add a new file that does not follow the ADR naming convention.
+		Files.createFile(fileSystem.getPath(rootPathName, docsPath, "other_doc.md"));
 
-		// Add a new file that does not follow the ADR naming convention. 
-		Files.createFile(fileSystem.getPath(rootPathName, docsPath, "other_doc.md"));  
-		
 		// Try and create a new ADR. It should work.
 		args = TestUtilities.argify("new " + "New decision");
 
@@ -161,6 +174,32 @@ public class CommandNewTest {
 		assertEquals(0, exitCode);
 
 	}
-	
+
+	// Test to check if issue 48 has been corrected.
+	@Test
+	public void testEditorEnvironmentVariable() {
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+
+		Environment env = new Environment.Builder(fileSystem)
+				.out(System.out)
+				.err(ps)
+				.in(System.in)
+				.userDir(rootPathName)
+				.editorCommand("programs/\"My Editor\"/editor.exe") // Contains apostrophes
+				.build();
+
+		String[] args = { "new", "Test", "ADR" };
+
+		int exitCode = ADR.run(args, env);
+
+		assertEquals(exitCode, ADR.ERRORENVIRONMENT);
+
+		String commandOutput = new String(baos.toByteArray());
+		assertTrue(commandOutput.contains("ERROR"),
+				"No error given from init command that the editor environment variable is incorrect.");
+
+	}
 
 }
