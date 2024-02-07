@@ -25,7 +25,7 @@ public class CommandVersion implements Callable<Integer> {
 	 * https://semver.org/spec/v2.0.0.html *
 	 * *
 	 *******************************************************************************************/
-	private String version = "3.2.2"; // Minor release, backwards compatible
+	private String version = "3.2.3-alpha"; // Minor release, backwards compatible
 
 	@ParentCommand
 	CommandADR commandADR;
