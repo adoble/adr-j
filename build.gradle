@@ -19,7 +19,7 @@ java {
 }
 
 group = 'org.doble'
-version = '3.2.1'
+version = '3.2.3-alpha'
 
 description = "adr-j"
 
