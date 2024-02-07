@@ -7,7 +7,14 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 
 ## [Unreleased]
 
-* No changes as yet
+### Addded
+* Nothing added as yet
+
+### Changed
+* Updated to use Java 21
+
+### Fixed
+* Nothing fixed as yet
 
 ## [3.2.2]
 
