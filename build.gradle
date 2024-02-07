@@ -1,6 +1,4 @@
 plugins {
-    //id 'com.github.johnrengelman.shadow' version '4.0.2'
-    //id 'com.github.johnrengelman.shadow' version '7.0.0'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id "com.palantir.graal" version "0.7.2"
 }
@@ -15,19 +13,16 @@ graal {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17 
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21 
     mainClassName =   "org.doble.adr.ADR"  
 }
 
 group = 'org.doble'
-//version = '3.1.0-SNAPSHOT'
 version = '3.2.1'
 
 description = "adr-j"
-//sourceCompatibility = 17
-//targetCompatibility = 17
-//mainClassName = "org.doble.adr.ADR"
+
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
@@ -44,16 +39,6 @@ repositories {
 }
 
 dependencies {
-    //compile 'info.picocli:picocli:4.2.0'
-    ////annotationProcessor 'info.picocli:picocli-codegen:4.1.2'
-    //annotationProcessor 'info.picocli:picocli-codegen:4.2.0'
-    //
-    //// need 5.4 for @TestMethodOrder - see https://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestMethodOrder.html
-    //testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.0-M1'
-    //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0-M1'
-    //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0-M1'
-    //testCompile group: 'com.google.jimfs', name: 'jimfs', version:'1.1'
-
     implementation 'info.picocli:picocli:4.6.1'
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.hamcrest:hamcrest:2.2'
@@ -78,19 +63,12 @@ shadowJar {
 task releaseJar(dependsOn: "shadowJar", type: Copy) {
     group = 'ADR-J - Release'
     description "Creates a JAR release."
-    // from("$buildDir/libs/adr-j-${project.version}-fat.jar")
-    // rename { String fileName ->
-    //     //fileName.replace('-fat', '')
-    //     fileName.replace("-${project.version}-fat", "")
-    // }
-    // into("$buildDir/releases")
     from("$buildDir/libs/adr-j-${project.version}-all.jar")
     rename { String fileName ->
         fileName.replace("-${project.version}-all", "")
     }
     into("$buildDir/releases")
     // set executable with read permissions (first true) and for all (false)
-    //file("$buildDir/releases/adr-j-${project.version}.jar").setExecutable(true, false)
     file("$buildDir/releases/adr-j.jar").setExecutable(true, false)
 }
 
