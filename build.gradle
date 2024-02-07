@@ -39,7 +39,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'info.picocli:picocli:4.6.1'
+    //implementation 'info.picocli:picocli:4.6.1'
+    implementation 'info.picocli:picocli:4.7.5'
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation(platform('org.junit:junit-bom:5.7.1'))
