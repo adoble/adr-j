@@ -1,8 +1,8 @@
 rootProject.name = 'adr-j'
 
-buildCache {
-  // force travis to use different build caches for each OS
-  local {
-    directory = "${settingsDir}/.gradle/caches/build-cache-${System.properties['os.name'].substring(0, 4).toLowerCase(Locale.ROOT)}"
-  }
-}
+// buildCache {
+//   // force travis to use different build caches for each OS
+//   local {
+//     directory = "${settingsDir}/.gradle/caches/build-cache-${System.properties['os.name'].substring(0, 4).toLowerCase(Locale.ROOT)}"
+//   }
+// }
