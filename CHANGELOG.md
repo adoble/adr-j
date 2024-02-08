@@ -12,6 +12,7 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 
 ### Changed
 * Updated to use Java 21
+* Updated the installation instructions to show how JBang can be used to simpify installation. See #26. Many thanks to @maxandersen for showing how this can be done. 
 
 ### Fixed
 * Nothing fixed as yet
