@@ -8,7 +8,7 @@ The easier way to installl is to use [JBang](https://www.jbang.dev/).
 2. Run 
 
     ```
-    jbang app install --name adr https://github.com/adoble/adr-j/releases/download/v3.2.3/adr-j.jar
+    jbang app install adr@adoble
     ```
 
 3. Set up the [environment variables](#setting-up-environment-variables) depending on your OS.
@@ -38,10 +38,15 @@ The easier way to installl is to use [JBang](https://www.jbang.dev/).
 1. Download the source code.
 2. Make sure you have [Java version 21](https://jdk.java.net/21/) or higher installed.
 3. Make sure you have Gradle installed (https://gradle.org/).
-4. Run `gradlew releaseJar`. This should create a file `build/releases/adr-j.jar`.
+4. Run `gradlew releaseJar`. This should create a file `build\releases\adr-j.jar`.
 5. Set up the [environment variables](#setting-up-environment-variables) depending on you OS.
 
-6. Add `%ADR_HOME%\launch-scripts` to the `PATH` environment variable
+6. Either
+   - Add {project directory}\launch-scripts` to the `PATH` environment variable. 
+   - Or install using JBang (see above) using:
+       ```
+      jbang app install {project directory}\build\releases\adr-j.jar 
+      ```
 
 You should now be able to type `adr` from the command line and see a response.
 
@@ -50,10 +55,14 @@ You should now be able to type `adr` from the command line and see a response.
 1. Download the source code.
 2. Make sure you have gradle installed (https://gradle.org/).
 3. Run `.\gradlew releaseJar`. This should create a file `build/releases/adr-j.jar`.
-5. Set up the [environment variables](#setting-up-environment-variables) depending on you OS.
+4. Set up the [environment variables](#setting-up-environment-variables) depending on you OS.
 
-
-6. Move `%ADR_HOME%\launch-scripts\adr` to the `~/bin` directory.
+5. Either
+   - Move `{project directory}/launch-scripts/adr` to the `~/bin` directory.
+   - Or install using JBang (see above) using:
+       ```
+      jbang app install {project directory}/build/releases/adr-j.jar 
+      ```
 
 You should now be able to type `adr` from the command line and see a response.
 
@@ -64,22 +73,13 @@ Of course, there are many other ways to install adr-j on unix depending on your 
 
 ### Windows
 
-1. Set the environment variable `ADR_HOME` to the folder where you downloaded the source code. This should contain the `build` folder.
-
-2. Set the environment variable `ADR_EDITOR` or `ADR_VISUAL` to the location of the editor you what to use for editing the ADRs (e.g. VSCode). If none of those variables set, ADR will use `EDITOR` and `VISUAL` variables. If the path to the editor has spaces in it, do **not** use quotes in the enviroment variable, e.g.  instead of `...\Programs\"Microsoft VS Code"\bin\code.cmd` use instead `...\Programs\Microsoft VS Code\bin\code.cmd`.
+Set the environment variable `ADR_EDITOR` or `ADR_VISUAL` to the location of the editor you what to use for editing the ADRs (e.g. VSCode). If none of those variables are set, ADR will use `EDITOR` and `VISUAL` variables. If the path to the editor has spaces in it, do **not** use quotes in the enviroment variable, e.g.  instead of `...\Programs\"Microsoft VS Code"\bin\code.cmd` use instead `...\Programs\Microsoft VS Code\bin\code.cmd`.
 
 
 
 ### Unix
 
-1. Set the environment variable `ADR_HOME` to the folder where you downloaded the source code. This should contain the `build` folder. For instance this could be done by using the adding the following to the `~/.bashrc` file:
-    
-    ```
-    # For example
-    export ADR_HOME=~/adr-j
-    ```
-
-2. Set the environment variable `EDITOR` or `VISUAL` to the location of the editor you what to use for editing the ADRs (e.g. VSCode), e.g. in the `~/.bashrc` file:
+Set the environment variable `EDITOR` or `VISUAL` to the location of the editor you what to use for editing the ADRs (e.g. VSCode), e.g. in the `~/.bashrc` file:
 
     ```
     # For example
