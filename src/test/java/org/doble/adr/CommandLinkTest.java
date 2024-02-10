@@ -13,13 +13,13 @@ import picocli.CommandLine;
 
 import org.junit.jupiter.api.*;
 
-//import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CommandLinkTest {
 	final static private String rootPathName = "/project/adr";
-	final static private String docsPath = "/doc/adr";
+	// final static private String docsPath = "/doc/adr";
 
 	private static FileSystem fileSystem;
 
@@ -47,10 +47,9 @@ public class CommandLinkTest {
 				.build();
 
 		// Initialize up the directory structure
-		
-		assertEquals(ADR.run(TestUtilities.argify("init -t rsrc:template_link.md"), env), 0); 
-		
-		
+
+		assertEquals(ADR.run(TestUtilities.argify("init -t rsrc:template_link.md"), env), 0);
+
 	}
 
 	@AfterEach
@@ -58,8 +57,9 @@ public class CommandLinkTest {
 		fileSystem.close();
 	}
 
-	/** 
-	 * Create some valid links to ADRs and check if they are added. 
+	/**
+	 * Create some valid links to ADRs and check if they are added.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -67,35 +67,35 @@ public class CommandLinkTest {
 	@Disabled
 	public void testLinks() throws Exception {
 		// Create some ADRs
-		assertEquals(ADR.run(TestUtilities.argify("new Target expected"), env), 0);         // ADr id 1
-		assertEquals(ADR.run(TestUtilities.argify("new First source expected"), env), 0);   // ADR id 2
-		assertEquals(ADR.run(TestUtilities.argify("new Second source expected"), env), 0);  // ADR id 3
-
+		assertEquals(ADR.run(TestUtilities.argify("new Target expected"), env), 0); // ADr id 1
+		assertEquals(ADR.run(TestUtilities.argify("new First source expected"), env), 0); // ADR id 2
+		assertEquals(ADR.run(TestUtilities.argify("new Second source expected"), env), 0); // ADR id 3
 
 		// Link the ADRs
 		assertEquals(ADR.run(TestUtilities.argify("link 2 1 -sd \"See also\" -td  \"Referenced by\""), env), 0);
 
 		assertEquals(ADR.run(TestUtilities.argify("link 3 1 -sd \"See also\" -td  \"Referenced by\""), env), 0);
-		
-				
-       // Check the the links are there.
+
+		// Check the the links are there.
 		fail();
 		// TODO - but first extend the unit tests for Record with the links
-		// TODO - may also need to generally change the command file handling so that file with the protocol rsrc: (resource file) are correctly handled. 
-		/* Check if the ADR file has been created
-				assertTrue(Files.exists(fileSystem.getPath("/test/0067-this-is-a-new-record-with-given-author.md")));
-
-				// Read in the file
-				Path adrFile = fileSystem.getPath("/test/0067-this-is-a-new-record-with-given-author.md");
-
-				Stream<String> lines = Files.lines(adrFile);
-				String actualContents = lines.collect(Collectors.joining("\n"));
-				lines.close();
-
-				assertEquals(expectedContents, actualContents);
-		*/
+		// TODO - may also need to generally change the command file handling so that
+		// file with the protocol rsrc: (resource file) are correctly handled.
+		/*
+		 * Check if the ADR file has been created
+		 * assertTrue(Files.exists(fileSystem.getPath(
+		 * "/test/0067-this-is-a-new-record-with-given-author.md")));
+		 * 
+		 * // Read in the file
+		 * Path adrFile =
+		 * fileSystem.getPath("/test/0067-this-is-a-new-record-with-given-author.md");
+		 * 
+		 * Stream<String> lines = Files.lines(adrFile);
+		 * String actualContents = lines.collect(Collectors.joining("\n"));
+		 * lines.close();
+		 * 
+		 * assertEquals(expectedContents, actualContents);
+		 */
 	}
 
-	
-	
 }

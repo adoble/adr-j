@@ -1,20 +1,11 @@
 package org.doble.adr;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
-//import java.lang.reflect.Constructor;
 import java.nio.file.*;
 import java.util.*;
-//import java.util.concurrent.Callable;
-
-//import org.reflections.*;
-//import org.reflections.util.ClasspathHelper;
-//import org.reflections.util.ConfigurationBuilder;
-
 
 import org.doble.commands.*;
-//import org.doble.annotations.*;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Help;
@@ -30,34 +21,33 @@ import picocli.CommandLine.Model.UsageMessageSpec;
  * @author adoble
  *
  */
-public class ADR  {
+public class ADR {
 
 	final static public int MAX_ID_LENGTH = 4;
 	final static String ADR_DIR_NAME = ".adr";
-	
-	public static final Integer ERRORGENERAL =      1;  // General purpose error code
-	public static final Integer ERRORENVIRONMENT=   2;  // Environment variables not correctly set 
-	private Environment env;
-	
 
-      
-	/** ADR tool main entry
+	public static final Integer ERRORGENERAL = 1; // General purpose error code
+	public static final Integer ERRORENVIRONMENT = 2; // Environment variables not correctly set
+	private Environment env;
+
+	/**
+	 * ADR tool main entry
 	 * 
 	 *
-	 * @param args  Command line arguments
+	 * @param args Command line arguments
 	 * 
 	 */
 	public static void main(String[] args) {
 		int errorCode = 0;
-		
+
 		// Determine the editor from the system environment
 		EditorCommandResolver editorCommandResolver = new EditorCommandResolver();
 		String editorCommand = editorCommandResolver.editorCommand();
 		// else leave as null to be picked up later
-		// TODO change this to an optional variable or an entry in the configuration file
-		
-			
-		// Set up the environment that the tool runs in with the 
+		// TODO change this to an optional variable or an entry in the configuration
+		// file
+
+		// Set up the environment that the tool runs in with the
 		// default file system etc.
 		Environment mainEnv = new Environment.Builder(FileSystems.getDefault())
 				.out(System.out)
@@ -68,23 +58,19 @@ public class ADR  {
 				.editorRunner(new SystemEditorRunner())
 				.author(determineAuthor())
 				.build();
-		
-		errorCode = ADR.run(args, mainEnv);
-		
-		System.exit(errorCode);	
-		
 
-    
+		errorCode = ADR.run(args, mainEnv);
+
+		System.exit(errorCode);
 
 	}
-	
-	
-	 static public Integer run(String[] args, Environment env) {
+
+	static public Integer run(String[] args, Environment env) {
 		Integer exitCode = 0;
-		
-		// Set up the command line processing and instantiate the main class using the default file system	
-		// TODO use PrintWriters in the environment instead of PrintStreams
-		
+
+		// Set up the command line processing and instantiate the main class using the
+		// default file system
+
 		CommandLine cmd = new CommandLine(new CommandADR(env))
 				.setOut(new PrintWriter(env.out))
 				.setErr(new PrintWriter(env.err));
@@ -92,106 +78,103 @@ public class ADR  {
 		installEnvironmentVariablesRender(cmd);
 
 		// If there are arguments then execute the subcommand
-		if (args.length == 0) 
-		{ 
-			cmd.usage(env.out); 
+		if (args.length == 0) {
+			cmd.usage(env.out);
 		} else {
 			exitCode = cmd.execute(args);
-		}	
-		
+		}
+
 		return exitCode;
 
 	}
-	 
-	 public Environment getEnvironment() {
-		 return env;
-	 }
-	
 
-	 /** 
-	  * Get the root directory containing the .adr directory. 
-	  * @return Path The root directory
-	  * @throws ADRException Thrown if the root directory cannot be found
-	  */
-	 static public Path getRootPath(Environment env) throws ADRException  {
-		 // NOTE: This examines the directory for the root path each time, 
-		 // rather than storing the value. This is necessary to avoid 
-		 // ProviderMismatchExceptions later due to the filesystems that 
-		 // created the Path being different. 
+	public Environment getEnvironment() {
+		return env;
+	}
 
-		 // The directory containing the .adr directory, 
-		 // i.e. the root of the project 
-		 Optional<Path> rootPath = Optional.empty(); 
+	/**
+	 * Get the root directory containing the .adr directory.
+	 * 
+	 * @return Path The root directory
+	 * @throws ADRException Thrown if the root directory cannot be found
+	 */
+	static public Path getRootPath(Environment env) throws ADRException {
+		// NOTE: This examines the directory for the root path each time,
+		// rather than storing the value. This is necessary to avoid
+		// ProviderMismatchExceptions later due to the filesystems that
+		// created the Path being different.
 
-		 // Find the root path, starting in the directory 
-		 // where the ADR tool has been run.
-		 Path path = env.dir;
+		// The directory containing the .adr directory,
+		// i.e. the root of the project
+		Optional<Path> rootPath = Optional.empty();
 
-		 Path adrFilePath; 
-		 while (path != null) {
-			 adrFilePath = path.resolve(ADR.ADR_DIR_NAME);
+		// Find the root path, starting in the directory
+		// where the ADR tool has been run.
+		Path path = env.dir;
 
-			 if (Files.exists(adrFilePath)) {
-				 rootPath = Optional.of(path);
-				 break;
-			 } else {
-				 // Check the directory above 
-				 path = path.getParent();
-			 }
-		 }
+		Path adrFilePath;
+		while (path != null) {
+			adrFilePath = path.resolve(ADR.ADR_DIR_NAME);
 
+			if (Files.exists(adrFilePath)) {
+				rootPath = Optional.of(path);
+				break;
+			} else {
+				// Check the directory above
+				path = path.getParent();
+			}
+		}
 
-		 if (!rootPath.isPresent()) {
-			 String msg = "ERROR: The .adr directory cannot be found in this or parent directories.\n"
-					 + "Has the command adr init been run?";
-			 env.err.println(msg);
-			 throw new ADRException(msg);
-		 }
+		if (!rootPath.isPresent()) {
+			String msg = "ERROR: The .adr directory cannot be found in this or parent directories.\n"
+					+ "Has the command adr init been run?";
+			env.err.println(msg);
+			throw new ADRException(msg);
+		}
 
-		 return rootPath.get();
+		return rootPath.get();
 
+	}
 
-	 }
-	 
-	 /**
-	  * Get the name of the file contaning the specified id. 
-	 * @param adrId The id of the ADR.
+	/**
+	 * Get the name of the file contaning the specified id.
+	 * 
+	 * @param adrId    The id of the ADR.
 	 * @param docsPath The path containing the ADRs.
 	 * @return The file name of the ADR
 	 */
-	static public String getADRFileName(int adrId, Path docsPath) { 
-		 String fileName;
+	static public String getADRFileName(int adrId, Path docsPath) {
+		String fileName;
 
-		 try { 
-			 Path[] paths = Files.list(docsPath).filter(ADRFilter.filter(adrId)).toArray(Path[]::new);
+		try {
+			Path[] paths = Files.list(docsPath).filter(ADRFilter.filter(adrId)).toArray(Path[]::new);
 
+			if (paths.length == 1) {
+				fileName = paths[0].getFileName().toString();
+			} else { // Gracefully fail and return an empty string
+				fileName = "";
+			}
+		} catch (IOException e) { // Gracefully fail and return an empty string
+			fileName = "";
+		}
 
-			 if (paths.length == 1) { 
-				 fileName = paths[0].getFileName().toString(); 
-			 } 
-			 else { // Gracefully fail and return an empty string 
-				 fileName = ""; 
-			 } 
-		 } 
-		 catch (IOException e) { // Gracefully fail and return an empty string 
-			 fileName =	  ""; 
-		 }
+		return fileName;
 
-		 return fileName;
-
-	 }
+	}
 
 	static private String determineAuthor() {
-		 String author = System.getenv("ADR_AUTHOR");
-		 return author == null ? System.getProperty("user.name") : author;
+		String author = System.getenv("ADR_AUTHOR");
+		return author == null ? System.getProperty("user.name") : author;
 	}
 
 	private static final String SECTION_KEY_ENV_HEADER = "environmentVariablesHeader";
 	private static final String SECTION_KEY_ENV_DETAILS = "environmentVariables";
 
+	// Based on
 	// https://github.com/remkop/picocli/blob/master/picocli-examples/src/main/java/picocli/examples/customhelp/EnvironmentVariablesSection.java
 	private static void installEnvironmentVariablesRender(CommandLine cmd) {
-		cmd.getHelpSectionMap().put(SECTION_KEY_ENV_HEADER, help -> String.format(Locale.ROOT, "Environment Variables:%n"));
+		cmd.getHelpSectionMap().put(SECTION_KEY_ENV_HEADER,
+				help -> String.format(Locale.ROOT, "Environment Variables:%n"));
 		cmd.getHelpSectionMap().put(SECTION_KEY_ENV_DETAILS, new EnvironmentVariablesRenderer());
 		cmd.setHelpSectionKeys(insertKey(cmd.getHelpSectionKeys()));
 	}
@@ -224,17 +207,13 @@ public class ADR  {
 			}
 
 			int keyLength = env.keySet().stream()
-				.mapToInt(String::length)
-				.max()
-				.getAsInt();
+					.mapToInt(String::length)
+					.max()
+					.getAsInt();
 
-			// TextTable textTable = TextTable.forColumns(help.ansi(),
-			// 	new Column(keyLength + 3, 2, Overflow.SPAN),
-			// 	new Column(width(help) - (keyLength + 3), 2, Overflow.WRAP));
-		
 			TextTable textTable = TextTable.forColumns(help.colorScheme(),
-			new Column(keyLength + 3, 2, Overflow.SPAN),
-			new Column(width(help) - (keyLength + 3), 2, Overflow.WRAP));
+					new Column(keyLength + 3, 2, Overflow.SPAN),
+					new Column(width(help) - (keyLength + 3), 2, Overflow.WRAP));
 
 			textTable.setAdjustLineBreaksForWideCJKCharacters(adjustCJK(help));
 

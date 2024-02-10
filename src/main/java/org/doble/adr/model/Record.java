@@ -69,7 +69,7 @@ public class Record {
 	 *         able to extend the already generated ADR with new information (e.g.
 	 *         links, see https://github.com/adoble/adr-j/issues/32). Need to a)
 	 *         generate initial ADT from template and insert commented out meta data
-	 *         b) for existing ADRs, read this in an extended with  the meta data
+	 *         b) for existing ADRs, read this in an extended with the meta data
 	 *         placed in step (a).
 	 */
 	public Path createPeristentRepresentation() throws ADRException {
@@ -152,9 +152,6 @@ public class Record {
 
 		return targetFile;
 	}
-
-
-	
 
 	/**
 	 * Writes the ADR (status section) with id supersededID that it has been
@@ -249,7 +246,6 @@ public class Record {
 		supersedes.add(Integer.valueOf(adrId));
 	}
 
-	
 	/**
 	 * Finds and returns the line in the template that contains the specified
 	 * substitution field. Assumes that all the other associated substitution fields
@@ -278,10 +274,6 @@ public class Record {
 
 		return Optional.ofNullable(templateFragment);
 	}
-
-	/*
-	 * TODO remove this private Optional<String> getTemplate() { return template; }
-	 */
 
 	public static class Builder {
 
