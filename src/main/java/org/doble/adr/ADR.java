@@ -14,6 +14,7 @@ import picocli.CommandLine.Help.Column.Overflow;
 import picocli.CommandLine.Help.TextTable;
 import picocli.CommandLine.IHelpSectionRenderer;
 import picocli.CommandLine.Model.UsageMessageSpec;
+import org.fusesource.jansi.AnsiConsole;
 
 /**
  * Java version of the adr tool at https://github.com/npryce/adr-tools.
@@ -40,6 +41,8 @@ public class ADR {
 	public static void main(String[] args) {
 		int errorCode = 0;
 
+		AnsiConsole.systemInstall(); // Enable colors on Windows
+
 		// Determine the editor from the system environment
 		EditorCommandResolver editorCommandResolver = new EditorCommandResolver();
 		String editorCommand = editorCommandResolver.editorCommand();
@@ -60,6 +63,8 @@ public class ADR {
 				.build();
 
 		errorCode = ADR.run(args, mainEnv);
+
+		AnsiConsole.systemUninstall(); // Cleanup when done
 
 		System.exit(errorCode);
 

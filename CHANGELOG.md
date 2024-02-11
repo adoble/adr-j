@@ -11,8 +11,9 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 * Nothing added as yet
 
 ### Changed
-* Updated to use Java 21
+* Fixed [issue 45](https://github.com/adoble/adr-j/issues/45).
 * Updated the installation instructions to show how JBang can be used to simpify installation. See [issue 44](https://github.com/adoble/adr-j/issues/44) (many thanks to [maxandersen](https://github.com/maxandersen) for showing how this can be done). 
+* Updated to use Java 21.
 
 ### Fixed
 * Nothing fixed as yet
