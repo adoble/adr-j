@@ -11,17 +11,17 @@
 package org.doble.adr;
 
 public final class Version {
-    /**********************************************************
-     * VERSION NUMBER
-     * 
-     * Version numbers adhere to to Semantic Versioning:
-     * https://semver.org/spec/v2.0.0.html
-     *
-     ***********************************************************/
-    private final static String version = "3.2.3-alpha"; // Minor release, backwards compatible
+  /**********************************************************
+   * VERSION NUMBER
+   * 
+   * Version numbers adhere to to Semantic Versioning:
+   * https://semver.org/spec/v2.0.0.html
+   *
+   ***********************************************************/
+  private final static String version = "3.2.3"; // Minor release, backwards compatible
 
-    public static String get_version() {
-        return version;
-    }
+  public static String get_version() {
+    return version;
+  }
 
 }

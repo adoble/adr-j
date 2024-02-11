@@ -5,18 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and from version 4.0.0 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.2.3]
 
 ### Addded
 * Nothing added as yet
 
 ### Changed
-* Fixed [issue 45](https://github.com/adoble/adr-j/issues/45).
 * Updated the installation instructions to show how JBang can be used to simpify installation. See [issue 44](https://github.com/adoble/adr-j/issues/44) (many thanks to [maxandersen](https://github.com/maxandersen) for showing how this can be done). 
+* Added new Version class to make it clearer where version numbers are changed.
 * Updated to use Java 21.
 
 ### Fixed
-* Nothing fixed as yet
+* Fixed [issue 45](https://github.com/adoble/adr-j/issues/45).
 
 ## [3.2.2]
 
