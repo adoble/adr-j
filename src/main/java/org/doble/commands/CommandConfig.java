@@ -10,6 +10,8 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 
+import static java.util.Objects.requireNonNullElse;
+
 /**
  * Subcommand to configure the properties
 *
@@ -71,6 +73,17 @@ public class CommandConfig  implements Callable<Integer> {
 		properties.store();
 
 
+	}
+
+	@Command(description = "Change the default email of the ADR author.")
+	void authorEmail(@Parameters(paramLabel = "<authorEmail>") String authorEmail) throws Exception {
+
+		ADRProperties properties = loadProperties();
+
+		authorEmail = requireNonNullElse(authorEmail, "").trim();
+
+		properties.setProperty("authorEmail", authorEmail);
+		properties.store();
 	}
 
 	@Command(description = "Change the location where future ADRs are stored.")
