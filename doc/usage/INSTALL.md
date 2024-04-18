@@ -2,7 +2,7 @@
 
 ## Installation using JBang
 
-The easier way to installl is to use [JBang](https://www.jbang.dev/).
+The easiest way to install is to use [JBang](https://www.jbang.dev/).
 
 1. If not already installed, then [install JBang](https://www.jbang.dev/download/) .
 2. Run 

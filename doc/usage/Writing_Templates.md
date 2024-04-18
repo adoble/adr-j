@@ -62,7 +62,7 @@ Description: The name of the ADR
 
 Type: field
 
-Description: The data the ADR was created                 
+Description: The date the ADR was created                 
 
 ### `author`
 
