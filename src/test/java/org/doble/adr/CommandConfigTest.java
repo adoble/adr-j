@@ -94,6 +94,18 @@ public class CommandConfigTest {
 	}
 
 	@Test
+	void testConfigAuthorEmail() throws Exception {
+
+		int exitCode = ADR.run(TestUtilities.argify("config authorEmail andrew.l.doble@gmail.com"), env);
+		assertEquals(0, exitCode);
+
+		ADRProperties properties = new ADRProperties(env);
+		properties.load();
+
+		assertEquals("andrew.l.doble@gmail.com", properties.getProperty("authorEmail"));
+	}
+
+	@Test
 	void testDocPath() throws Exception {
 		int exitCode = ADR.run(TestUtilities.argify("config docPath documents/ADRs"), env);
 		assertEquals(0, exitCode);

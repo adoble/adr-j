@@ -25,6 +25,7 @@ public class Record {
 	private final String name;
 	private final LocalDate date;
 	private final String author;
+	private final String authorEmail;
 	private final String status;
 	private final DateTimeFormatter dateFormatter;
 
@@ -45,6 +46,7 @@ public class Record {
 		this.name = builder.name;
 		this.date = builder.date;
 		this.author = builder.author;
+		this.authorEmail = builder.authorEmail;
 		this.status = builder.status;
 		this.dateFormatter = builder.dateFormatter;
 
@@ -131,6 +133,7 @@ public class Record {
 					.map(line -> line.replaceAll("\\{\\{name\\}\\}", name))
 					.map(line -> line.replaceAll("\\{\\{status\\}\\}", status))
 					.map(line -> line.replaceAll("\\{\\{author\\}\\}", author))
+					.map(line -> line.replaceAll("\\{\\{author.email\\}\\}", authorEmail))
 					.map(line -> line.replaceAll("\\{\\{date\\}\\}", dateFormatter.format(date)))
 					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0)) // Remove lines
 																									// which will be
@@ -285,6 +288,8 @@ public class Record {
 		private String name;
 
 		private String author = System.getProperty("user.name");
+		private String authorEmail;
+
 		private LocalDate date = LocalDate.now();
 		private String status = "Proposed";
 		private DateTimeFormatter dateFormatter;
@@ -332,6 +337,11 @@ public class Record {
 
 		public Builder author(String author) {
 			this.author = author;
+			return this;
+		}
+
+		public Builder authorEmail(String authorEmail) {
+			this.authorEmail = authorEmail;
 			return this;
 		}
 

@@ -16,3 +16,5 @@ This consists of a header with the creation date followed by property value pair
 `templateFile` Path to the template file used to create new ADRs.
 
 `docPath`  Relative path to the location where ADRs are stored.
+
+`authorEmail`  The email of the initial author of the ADR.

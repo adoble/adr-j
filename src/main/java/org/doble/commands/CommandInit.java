@@ -146,12 +146,16 @@ public class CommandInit implements Callable<Integer> {
 		// If a template is specified and an initial template is specified create an
 		// initial ADR using the specified initial template
 		if (template != null && initialTemplate != null) {
+			// Set up the author's email
+	    String authorEmail = properties.getProperty("authorEmail", "").trim();
+
 			Record record = new Record.Builder(docsPath, dateFormatter)
 					.template(initialTemplate)
 					.id(1)
 					.name("Record architecture decisions")
 					.date(LocalDate.now())
 					.author(env.author)
+					.authorEmail(authorEmail)
 					.build();
 
 			record.createPeristentRepresentation();

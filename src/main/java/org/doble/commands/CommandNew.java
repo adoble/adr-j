@@ -124,12 +124,16 @@ public class CommandNew implements Callable<Integer> {
 		// Create the ADR title from the arguments
 		adrTitle = adrTitleParts.stream().collect(Collectors.joining(" "));
 
+		// Set up the author's email
+		String authorEmail = properties.getProperty("authorEmail", "").trim();
+
 		// Build the record
 		Record record = new Record.Builder(docsPath, dateFormatter)
 				.id(highestIndex() + 1)
 				.name(adrTitle)
 				.date(LocalDate.now())
 				.author(env.author)
+				.authorEmail(authorEmail)
 				.template(templatePathName)
 				.build();
 

@@ -352,5 +352,37 @@ public class RecordTest {
 		fail("Not yet implmented");
 		//TODO implement this
 	}
-		
+
+	@Test
+	@Order(11)
+	public void testRecordConstructionWithGivenAuthorAndAuthorEmail() throws Exception {
+		String expectedContents = """
+			# 68. This is a new record with given author and authorEmail
+
+			Author: Andrew Doble <andrew.l.doble@gmail.com>""";
+
+		// Build the record
+		Record record = new Record.Builder(docPath, dateFormatter)
+				.id(68)
+				.name("This is a new record with given author and authorEmail")
+				.author("Andrew Doble")
+				.authorEmail("andrew.l.doble@gmail.com")
+				.template("rsrc:template_with_author_email.md")
+				.build();
+
+		record.createPeristentRepresentation();
+
+		// Check if the ADR file has been created
+		assertTrue(Files.exists(fileSystem.getPath("/test/0068-this-is-a-new-record-with-given-author-and-authoremail.md")));
+
+		// Read in the file
+		Path adrFile = fileSystem.getPath("/test/0068-this-is-a-new-record-with-given-author-and-authoremail.md");
+
+		String actualContents;
+		try (Stream<String> lines = Files.lines(adrFile)) {
+			actualContents = lines.collect(Collectors.joining("\n"));
+		}
+
+		assertEquals(expectedContents, actualContents);
+	}
 }

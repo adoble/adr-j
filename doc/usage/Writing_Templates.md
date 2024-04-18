@@ -72,6 +72,12 @@ Description: The initial author of the ADR; it is determined in the following or
  1. the value of the environment variable `ADR_AUTHOR`
  2. the value of the JVM system property "user.name"
 
+### `author.email`
+
+Type: field
+
+Description: The email of the initial author of the ADR
+
 ### `supersedes.id`
 
 Type: list
