@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and from version 4.0.0 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0]
+
+### Added 
+* Added author.email as template attibute and the correspoding configuration (see [issue 49])(https://github.com/adoble/adr-j/issues/49). Many thanks to  
+[Sebastian Davis](https://github.com/sdavids) for the PR.
+
 ## [3.2.3]
 
 ### Addded
