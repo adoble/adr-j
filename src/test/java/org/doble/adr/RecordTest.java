@@ -385,4 +385,40 @@ public class RecordTest {
 
 		assertEquals(expectedContents, actualContents);
 	}
+
+	@Test
+	@Order(12)
+	public void testRecordConstructionWithGivenAuthorAndAuthorEmailAndYear() throws Exception {
+		String expectedContents = """
+			<!--
+			SPDX-FileCopyrightText: © 2024 Andrew Doble <andrew.l.doble@gmail.com>
+			SPDX-License-Identifier: MIT
+			-->
+			# 69. ADR templates should support REUSE file header""";
+
+		// Build the record
+		Record record = new Record.Builder(docPath, dateFormatter)
+			.id(69)
+			.name("ADR templates should support REUSE file header")
+			.date(LocalDate.of(2024, 4, 12))
+			.author("Andrew Doble")
+			.authorEmail("andrew.l.doble@gmail.com")
+			.template("rsrc:template_with_REUSE_file_header.md")
+			.build();
+
+		record.createPeristentRepresentation();
+
+		// Check if the ADR file has been created
+		assertTrue(Files.exists(fileSystem.getPath("/test/0069-adr-templates-should-support-reuse-file-header.md")));
+
+		// Read in the file
+		Path adrFile = fileSystem.getPath("/test/0069-adr-templates-should-support-reuse-file-header.md");
+
+		String actualContents;
+		try (Stream<String> lines = Files.lines(adrFile)) {
+			actualContents = lines.collect(Collectors.joining("\n"));
+		}
+
+		assertEquals(expectedContents, actualContents);
+	}
 }
