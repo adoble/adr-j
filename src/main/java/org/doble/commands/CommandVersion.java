@@ -39,7 +39,11 @@ public class CommandVersion implements Callable<Integer> {
 		int exitCode = 0;
 
 		env = commandADR.getEnvironment();
-		String msg = "Version " + Version.get_version();
+		// String msg = "Version " + Version.get_version();
+		Version version = new Version();
+		String version_number = version.getVersion()[0];
+		String msg = "Version " + version_number;
+
 		env.err.println(msg);
 
 		return exitCode;
