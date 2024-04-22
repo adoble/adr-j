@@ -16,6 +16,8 @@ import org.doble.adr.LinkSpecificationException;
 import org.doble.adr.TemplateProvider;
 
 public class Record {
+	private static final DateTimeFormatter YEAR_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
+
 	private final Path docsPath; // Where the adr files are stored
 	private final Optional<String> template; // Using String type instead of Path as the default template is a resource.
 												// Resources are not correctly supported by Path.
@@ -135,6 +137,7 @@ public class Record {
 					.map(line -> line.replaceAll("\\{\\{author\\}\\}", author))
 					.map(line -> line.replaceAll("\\{\\{author.email\\}\\}", authorEmail))
 					.map(line -> line.replaceAll("\\{\\{date\\}\\}", dateFormatter.format(date)))
+					.map(line -> line.replaceAll("\\{\\{year\\}\\}", YEAR_FORMATTER.format(date)))
 					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0)) // Remove lines
 																									// which will be
 																									// blank

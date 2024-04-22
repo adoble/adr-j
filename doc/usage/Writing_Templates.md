@@ -64,6 +64,12 @@ Type: field
 
 Description: The date the ADR was created                 
 
+### `year`
+
+Type: field
+
+Description: The year the ADR was created
+
 ### `author`
 
 Type: field

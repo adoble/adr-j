@@ -9,6 +9,8 @@ List of the currently set properties.
 
 `author`        Change the default name of the ADR author.
 
+`authorEmail`   Change the default email of the ADR author.
+
 `dateFormat`    Change how the dates in the ADRs are represented.
 
 `docPath`       Change the location where future ADRs are stored.
