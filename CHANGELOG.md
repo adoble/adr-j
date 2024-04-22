@@ -9,13 +9,8 @@ and from version 4.0.0 this project adheres to [Semantic Versioning](https://sem
 
 ### Added
 
-* Added year as template attribute (see [issue 49])(https://github.com/adoble/adr-j/issues/49). Many thanks to [Sebastian Davis](https://github.com/sdavids) for the PR.
-
-## [3.3.0]
-
-### Added 
-* Added author.email as template attibute and the correspoding configuration (see [issue 49])(https://github.com/adoble/adr-j/issues/49). Many thanks to  
-[Sebastian Davis](https://github.com/sdavids) for the PR.
+* Added year as template attribute (see [issue 49])(https://github.com/adoble/adr-j/issues/49). Many thanks to [Sebastian Davids](https://github.com/sdavids) for the PR.
+* Added author.email as template attibute and the correspoding configuration (see [issue 49])(https://github.com/adoble/adr-j/issues/49). Many thanks to [Sebastian Davids](https://github.com/sdavids) for the PR.
 
 ## [3.2.3]
 
