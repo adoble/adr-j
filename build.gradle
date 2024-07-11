@@ -13,9 +13,9 @@ graal {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21 
-    mainClassName =   "org.doble.adr.ADR"  
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    mainClassName =   "org.doble.adr.ADR"
 }
 
 group = 'org.doble'
