@@ -63,7 +63,10 @@ public class CommandList implements Callable<Integer> {
 		Path docsPath = rootPath.resolve(properties.getProperty("docPath"));
 
 		try (Stream<Path> stream = Files.list(docsPath)) {
-			stream.map(Path::getFileName).filter(ADRFilter.filter()).forEachOrdered(env.out::println);
+			// stream.map(Path::getFileName).filter(ADRFilter.filter()).forEachOrdered(env.out::println);
+			// Using sorted() here as oppsowd to forEachOrdered() to correct issue 54
+			// (https://github.com/adoble/adr-j/issues/54)
+			stream.map(Path::getFileName).filter(ADRFilter.filter()).sorted().forEach(env.out::println);
 		} catch (IOException e) {
 			env.out.println("FATAL: Cannot access directory. Exception message ->" + e.getMessage());
 			return ADR.ERRORGENERAL;
