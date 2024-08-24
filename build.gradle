@@ -63,6 +63,8 @@ compileJava {
 shadowJar {
     transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer)
     //classifier 'fat' 
+    exclude 'META-INF/maven/org.fusesource.jansi/jansi/pom.xml'
+    exclude 'META-INF/maven/org.fusesource.jansi/jansi/pom.properties'
 }
 
 task releaseJar(dependsOn: "shadowJar", type: Copy) {
