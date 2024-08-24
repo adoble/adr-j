@@ -2,7 +2,7 @@ plugins {
     java
     application
     `jvm-test-suite`
-    id("com.gradleup.shadow") version "8.3.0"
+    alias(libs.plugins.shadow)
 }
 
 configurations {
@@ -12,8 +12,8 @@ configurations {
 }
 
 dependencies {
-    implementation("info.picocli:picocli:4.7.6")
-    implementation("org.fusesource.jansi:jansi:2.4.1")
+    implementation(libs.picocli)
+    implementation(libs.jansi)
 }
 
 group = "org.doble"
@@ -54,10 +54,10 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
 testing {
     suites {
         val test by getting(JvmTestSuite::class) {
-            useJUnitJupiter("5.11.0")
+            useJUnitJupiter(libs.versions.junit)
             dependencies {
-                implementation("org.hamcrest:hamcrest:3.0")
-                implementation("com.google.jimfs:jimfs:1.3.0")
+                implementation(libs.hamcrest)
+                implementation(libs.jimfs)
             }
             targets {
                 all {
