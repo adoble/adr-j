@@ -43,7 +43,7 @@ dependencies {
     implementation 'info.picocli:picocli:4.7.6'
 
     // Jansi used for handling ANSO escape codes - even on Windows
-    implementation 'org.fusesource.jansi:jansi:1.8'
+    implementation 'org.fusesource.jansi:jansi:2.4.1'
     
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.hamcrest:hamcrest:3.0'
