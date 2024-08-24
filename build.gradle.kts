@@ -5,6 +5,12 @@ plugins {
     id("com.gradleup.shadow") version "8.3.0"
 }
 
+configurations {
+    implementation {
+        resolutionStrategy.failOnNonReproducibleResolution()
+    }
+}
+
 dependencies {
     implementation("info.picocli:picocli:4.7.6")
     implementation("org.fusesource.jansi:jansi:2.4.1")
@@ -19,10 +25,25 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
         vendor = JvmVendorSpec.ADOPTIUM
     }
+
+    consistentResolution {
+        useCompileClasspathVersions()
+    }
 }
 
 application {
     mainClass = "org.doble.adr.ADR"
+}
+
+tasks.withType<AbstractArchiveTask>().configureEach {
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+    filePermissions {
+        unix(644)
+    }
+    dirPermissions {
+        unix(755)
+    }
 }
 
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
