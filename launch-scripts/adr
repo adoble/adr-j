@@ -1,2 +1,2 @@
 #!/bin/bash
-java -jar $ADR_HOME/build/releases/adr-j.jar "$@"
+java -jar "$ADR_HOME/build/releases/adr-j.jar" "$@"
