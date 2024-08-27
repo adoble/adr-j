@@ -12,6 +12,13 @@ and from version 3.2 this project adheres to [Semantic Versioning](https://semve
 * [Issue 54](https://github.com/adoble/adr-j/issues/54) corrected. Many thanks to [Wesley Viana](https://github.com/wviana) for first identifying this and to [Sebastian Davids](https://github.com/sdavids) for providing the solution.
 
 
+### Changed
+* [Issue 56](https://github.com/adoble/adr-j/pull/56) Upgraded to use version 8.10 of Gradle and changed the gradle build script to use Kotlin. Build script is now `build.gradle.kts`. Also the dependencies have been updated. Thanks to  [Sebastian Davids](https://github.com/sdavids) for PR [#56](https://github.com/adoble/adr-j/pull/56). 
+
+### Removed
+* Build support for GraalVM **HAS BEEN DROPPED**. See [details as to why](https://github.com/adoble/adr-j/pull/56#issuecomment-2308536265).
+
+
 ## [3.3.0]
 
 ### Added
