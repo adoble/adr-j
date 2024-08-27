@@ -35,6 +35,12 @@ application {
     mainClass = "org.doble.adr.ADR"
 }
 
+tasks.named<JavaCompile>("compileJava") {
+    options.apply {
+        release = 11
+    }
+}
+
 tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
