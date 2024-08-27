@@ -17,7 +17,7 @@ dependencies {
 }
 
 group = "org.doble"
-version = "3.2.3-alpha"
+version = "3.3.1"
 description = "adr-j"
 
 java {
@@ -29,6 +29,7 @@ java {
     consistentResolution {
         useCompileClasspathVersions()
     }
+
 }
 
 application {
