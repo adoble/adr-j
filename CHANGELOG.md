@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and from version 3.2 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+* Build has been modified to be backward compatible with Java 11, but still use Java 21 for development. Thanks to [Sebastian Davids](https://github.com/sdavids) for the [PR #57](https://github.com/adoble/adr-j/pull/57). 
+
+### Deprecated
+* Java version 11 will not be supported in new releases that use Java 25 (the next planned LTS) and beyond. 
+
+
 ## [3.3.1]
 
 ### Fixed
