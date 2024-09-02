@@ -22,6 +22,7 @@ description = "adr-j"
 
 java {
     toolchain {
+        // Development Java version is the latest LTS version
         languageVersion = JavaLanguageVersion.of(21)
         vendor = JvmVendorSpec.ADOPTIUM
     }
@@ -37,6 +38,7 @@ application {
 }
 
 tasks.named<JavaCompile>("compileJava") {
+    // Binary compatability with LTS version - 2 
     options.apply {
         release = 11
     }
