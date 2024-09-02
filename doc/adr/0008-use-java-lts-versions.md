@@ -7,6 +7,7 @@ Date: 10 Apr 2022
 Accepted
 
 * Supersedes [ADR 2](0002-implement-as-Java.md)
+* Extended by [ADR 10](0010-binary-compatability-to-java-lts-version-minus-2.md) 
 
 ## Context
 
