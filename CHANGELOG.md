@@ -8,10 +8,10 @@ and from version 3.2 this project adheres to [Semantic Versioning](https://semve
 ## [Unreleased]
 
 ### Changed
-* Build has been modified to be backward compatible with Java 11, but still use Java 21 for development. Thanks to [Sebastian Davids](https://github.com/sdavids) for the [PR #57](https://github.com/adoble/adr-j/pull/57). 
+* Build has been modified to be backward compatible with Java 11, but still use Java 21 for development. Thanks to [Sebastian Davids](https://github.com/sdavids) for  [PR #57](https://github.com/adoble/adr-j/pull/57) and [PR #59](https://github.com/adoble/adr-j/pull/59). 
 
 ### Deprecated
-* Java version 11 will not be supported in new releases that use Java 25 (the next planned LTS) and beyond. 
+* Binary compatabilty with Java 11 
 
 
 ## [3.3.1]
