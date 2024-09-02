@@ -46,10 +46,10 @@ tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
     filePermissions {
-        unix(644)
+        unix("rw-r--r--")
     }
     dirPermissions {
-        unix(755)
+        unix("rwxr-xr-x")
     }
 }
 
