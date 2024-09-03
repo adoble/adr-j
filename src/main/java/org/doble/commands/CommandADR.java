@@ -32,8 +32,10 @@ import picocli.CommandLine.Option;
 				CommandEdit.class,
 				CommandConfig.class,
 				CommandLink.class,
+				CommandGenerate.class,
 				HelpCommand.class // Built in help command
 		})
+
 public class CommandADR implements Callable<Integer> {
 	@Option(names = { "-V", "--version" }, versionHelp = true, description = " Prints the version of adr-j.")
 	boolean versionRequested;
