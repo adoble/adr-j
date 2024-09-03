@@ -14,29 +14,29 @@ import static java.util.Objects.requireNonNullElse;
 
 /**
  * Subcommand to configure the properties
-*
+ *
  * @author adoble
  *
  */
 
-@Command(name = "config",
-description = "List of the currently set properties.")
-public class CommandConfig  implements Callable<Integer> {
+@Command(name = "config", description = "List of the currently set properties.")
+public class CommandConfig implements Callable<Integer> {
 	@ParentCommand
 	CommandADR commandADR;
 
 	private Environment env;
 	private ADRProperties properties;
 
-    /**
+	/**
 	 *
 	 */
-	public CommandConfig()  {
+	public CommandConfig() {
 
 	}
 
-	/* The commmand
-	 *   <code>adr config </code>
+	/*
+	 * The commmand
+	 * <code>adr config </code>
 	 * lists the currently set properties in the properties file.
 	 *
 	 * It take the subcommands author, docPath, templateFile and dateFormat.
@@ -47,7 +47,7 @@ public class CommandConfig  implements Callable<Integer> {
 
 		ADRProperties properties = loadProperties();
 
-		Set<String> propertyKeys= properties.stringPropertyNames();
+		Set<String> propertyKeys = properties.stringPropertyNames();
 		String propStr = "";
 		for (String key : propertyKeys) {
 			propStr = key + "=" + properties.getProperty(key);
@@ -63,15 +63,13 @@ public class CommandConfig  implements Callable<Integer> {
 		ADRProperties properties = loadProperties();
 
 		String authorFullName = "";
-		for (String	authorPart : author)
-		{
+		for (String authorPart : author) {
 			authorFullName += authorPart + " ";
 		}
 		authorFullName = authorFullName.trim();
 
 		properties.setProperty("author", authorFullName);
 		properties.store();
-
 
 	}
 
@@ -106,12 +104,11 @@ public class CommandConfig  implements Callable<Integer> {
 
 		ADRProperties properties = loadProperties();
 
-
 		properties.setProperty("dateFormat", dateFormatterType.name());
 		properties.store();
 	}
 
-	@Command(description = "Change the template file used to created ADRs.")
+	@Command(description = "Change the template file used to create ADRs.")
 	void templateFile(@Parameters(paramLabel = "<templateFile>") String templateFile) throws Exception {
 
 		ADRProperties properties = loadProperties();
@@ -120,7 +117,16 @@ public class CommandConfig  implements Callable<Integer> {
 		properties.store();
 	}
 
-	private ADRProperties loadProperties()  throws ADRException {
+	@Command(description = "Change the template file used to create a table of contents.")
+	void tocTemplateFile(@Parameters(paramLabel = "<tocTemplateFile>") String tocTemplateFile) throws Exception {
+
+		ADRProperties properties = loadProperties();
+
+		properties.setProperty("tocTemplateFile", tocTemplateFile);
+		properties.store();
+	}
+
+	private ADRProperties loadProperties() throws ADRException {
 		env = commandADR.getEnvironment();
 
 		properties = new ADRProperties(env);
@@ -131,8 +137,5 @@ public class CommandConfig  implements Callable<Integer> {
 		return properties;
 
 	}
-
-
-
 
 }

@@ -194,4 +194,15 @@ public class CommandConfigTest {
 		assertEquals("/usr/templates/project_template.adoc", properties.getProperty("templateFile"));
 	}
 
+	@Test
+	void testTocTemplateFile() throws Exception {
+
+		int exitCode = ADR.run(TestUtilities.argify("config tocTemplateFile /usr/templates/toc_template.adoc"), env);
+		assertEquals(0, exitCode);
+
+		ADRProperties properties = new ADRProperties(env);
+		properties.load();
+		assertEquals("/usr/templates/toc_template.adoc", properties.getProperty("tocTemplateFile"));
+	}
+
 }
