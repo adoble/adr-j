@@ -12,12 +12,17 @@ configurations {
 }
 
 dependencies {
+    // Dependency versions can be found at {project root}/gradle/libs.versions.toml 
     implementation(libs.picocli)
     implementation(libs.jansi)
+    implementation(libs.commonstext)
+    implementation(libs.handlebars)
+    implementation(libs.slf4j)
+    implementation(libs.commonsio)
 }
 
 group = "org.doble"
-version = "3.3.1"
+version = "3.4.0-alpha"
 description = "adr-j"
 
 java {
