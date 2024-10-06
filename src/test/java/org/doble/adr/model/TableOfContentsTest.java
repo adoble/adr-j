@@ -17,34 +17,34 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
+import org.junit.jupiter.api.io.TempDir;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 
 public class TableOfContentsTest {
+    final static String tocTemplateName = "toc_template.md";
+    final static String tocName = "toc.md";
     final static private Path docsPath = Path.of("project/doc/adr");
-    final static private DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
-
     final static private Path templatesPath = Path.of("project/templates");
 
-    private Path tempDir;
+    // private Path tempDir;
+    @TempDir(cleanup = CleanupMode.NEVER)
+    Path tempDir;
+
+    final static private DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+
     // The complete path for the adrs
     private Path adrsDirectory;
     private Path templatesDirectory;
 
     @BeforeEach
     void setUp() throws Exception {
-        this.tempDir = Files.createTempDirectory("adr-j-test-");
+
         this.adrsDirectory = tempDir.resolve(docsPath);
 
-        // Path templatesDirectory = tempDir.resolve("project/templates");
         this.templatesDirectory = tempDir.resolve(templatesPath);
-
-    }
-
-    @AfterEach
-    void tearDown() {
-        // todo
 
     }
 
@@ -92,7 +92,7 @@ public class TableOfContentsTest {
                 ADR {{id}}: {{filename}} "{{title}}"
                 {{/each}}""";
 
-        Path templatePath = templatesDirectory.resolve("toc_template.md");
+        Path templatePath = templatesDirectory.resolve(TableOfContentsTest.tocTemplateName);
         Files.writeString(templatePath, templateContent,
                 StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING,
@@ -141,12 +141,7 @@ public class TableOfContentsTest {
 
         String classpath = System.getProperty("java.class.path");
 
-        // Path tempDir = Files.createTempDirectory("adr-j-test-");
-
         Path rootPath = tempDir.resolve("project");
-
-        // Path docPath = rootPath.resolve("doc/adr");
-        // Path adrsPath = fileSystem.getPath(docsPath.toString());
 
         Path adrsPath = rootPath.resolve("doc/adr");
 
@@ -154,20 +149,6 @@ public class TableOfContentsTest {
 
         Files.createDirectories(adrsPath);
         Files.createDirectories(templatesPath);
-
-        // Create a temp template in the temporary filesystems
-        // String templateContent = """
-        // # TOC from {{date}}
-
-        // {{#each entries}}
-        // ADR {{id}}: {{filename}} "{{title}}"
-        // {{/each}}""";
-
-        // Path templatePath = templatesPath.resolve("toc_template.md");
-        // Files.writeString(templatePath, templateContent,
-        // StandardOpenOption.CREATE,
-        // StandardOpenOption.TRUNCATE_EXISTING,
-        // StandardOpenOption.WRITE);
 
         // Set a test date
         Instant fixedInstant = Instant.parse("2024-10-01T00:00:00Z");
