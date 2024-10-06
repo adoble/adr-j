@@ -30,7 +30,7 @@ public class TableOfContentsTest {
     final static private Path templatesPath = Path.of("project/templates");
 
     // private Path tempDir;
-    @TempDir(cleanup = CleanupMode.NEVER)
+    @TempDir(cleanup = CleanupMode.ALWAYS)
     Path tempDir;
 
     final static private DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
@@ -136,7 +136,6 @@ public class TableOfContentsTest {
     };
 
     @Test
-    @Disabled
     void testCreatePersistentRepresentationFromResource() throws Exception {
 
         String classpath = System.getProperty("java.class.path");
@@ -170,21 +169,19 @@ public class TableOfContentsTest {
         String expectedContents = """
                 # List of ADRs
 
-                {{#entries}}
-                * [ADR {{id}}]({{filename}}) : {{title}}
-                {{/entries}}
-                * [ADR 1](0001-record-architecture-decisions.md) : "Record Architecture Decisions"
 
-                * [ADR 2](0002-implement-as-Java.md) : "Implement As Java"
+                * [ADR 1](0001-record-architecture-decisions.md) : Record Architecture Decisions
 
-                * [ADR 3](0003-single-command-with-subcommands.md) : "Single Command With Subcommands"
+                * [ADR 2](0002-implement-as-Java.md) : Implement As Java
 
-                * [ADR 4](0004-markdown-format.md) : "Markdown Format"
+                * [ADR 3](0003-single-command-with-subcommands.md) : Single Command With Subcommands
 
-                * [ADR 5](0005-help-comments.md) : "Help Comments"
+                * [ADR 4](0004-markdown-format.md) : Markdown Format
 
-                Created: 2024-10-01
-                """;
+                * [ADR 5](0005-help-comments.md) : Help Comments
+
+
+                Created: 2024-10-01""";
 
         String content = Files.readString(outputPath);
 

@@ -88,8 +88,9 @@ public class TableOfContents {
             templateLoader = new FileTemplateLoader(parentFile, extension);
         } else {
             extension = ".md";
-            basename = "default_toc.md";
-            templateLoader = new ClassPathTemplateLoader("resources", extension);
+            basename = "default_toc_template";
+            // templateLoader = new ClassPathTemplateLoader("resources", extension);
+            templateLoader = new ClassPathTemplateLoader("", extension);
         }
 
         Handlebars handlebars = new Handlebars(templateLoader);
