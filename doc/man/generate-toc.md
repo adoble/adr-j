@@ -1,4 +1,4 @@
-WARING: Command not yet implemented!
+WARNING: Command not yet implemented!
 
 # Usage
 

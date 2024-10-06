@@ -1,6 +1,6 @@
 # List of ADRs 
 
-* [ADR {{{id}}}]({{{adr.path}}}) : {{{adr.name}}}
+* [ADR {{{id}}}]({{{adr.filename}}}) : {{{adr.title}}}
 
 Created: {{date}}
 
