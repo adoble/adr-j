@@ -10,19 +10,13 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.List;
 import java.util.Optional;
 
 import org.doble.adr.TestUtilities;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
-
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
 
 public class TableOfContentsTest {
     final static String tocTemplateName = "toc_template.md";
@@ -30,7 +24,6 @@ public class TableOfContentsTest {
     final static private Path docsPath = Path.of("project/doc/adr");
     final static private Path templatesPath = Path.of("project/templates");
 
-    // private Path tempDir;
     @TempDir(cleanup = CleanupMode.ALWAYS)
     Path tempDir;
 
@@ -138,8 +131,6 @@ public class TableOfContentsTest {
 
     @Test
     void testCreatePersistentRepresentationFromResource() throws Exception {
-
-        String classpath = System.getProperty("java.class.path");
 
         Path rootPath = tempDir.resolve("project");
 

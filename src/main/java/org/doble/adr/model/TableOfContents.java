@@ -19,15 +19,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Date;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class TableOfContents {
     private static final String TOC_FILE_NAME = "toc";
-    // private static final DateTimeFormatter YEAR_FORMATTER =
-    // DateTimeFormatter.ofPattern("yyyy");
+
     private final LocalDate date;
 
     private final DateTimeFormatter dateFormatter;
@@ -74,10 +72,7 @@ public class TableOfContents {
         String basename;
 
         if (templatePath.isPresent()) {
-            // String name = templatePath.get().toString();
-            // String parentPath = FilenameUtils.getFullPath(name);
-            // basename = FilenameUtils.getBaseName(name);
-            // extension = "." + FilenameUtils.getExtension(name);
+
             Path parentPath = templatePath.get().getParent();
             basename = FilenameUtils.getBaseName(templatePath.get().toString());
             extension = "." + FilenameUtils.getExtension(templatePath.get().toString());
@@ -118,7 +113,6 @@ public class TableOfContents {
 
 }
 
-// * [ADR {{{id}}}]({{{adr.filename}}}) : {{{adr.title}}}
 class TocEntry {
 
     private final int id;
@@ -144,7 +138,6 @@ class TocEntry {
     }
 
     public void format() {
-        // Stub TODO
         String displayedTitle = StringUtils.capitalize(title);
         System.out.println("[ADR " + id + "]" + "(" + filename + ") : " + displayedTitle);
     }
