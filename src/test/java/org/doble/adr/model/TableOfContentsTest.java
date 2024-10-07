@@ -27,9 +27,7 @@ public class TableOfContentsTest {
     @TempDir(cleanup = CleanupMode.ALWAYS)
     Path tempDir;
 
-    final static private DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
-
-    // The complete path for the adrs
+    // The complete path for the ADRs
     private Path adrsDirectory;
     private Path templatesDirectory;
 
@@ -45,6 +43,8 @@ public class TableOfContentsTest {
     @Test
     public void testCreation() throws Exception {
 
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+
         TableOfContents toc = new TableOfContents(docsPath, dateFormatter);
 
         assertEquals(Path.of("project/doc/adr"), toc.getDocsPath());
@@ -52,6 +52,7 @@ public class TableOfContentsTest {
 
     @Test
     void testAddEntry() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
         TableOfContents toc = new TableOfContents(docsPath, dateFormatter);
 
         toc.addEntry(1, "0001-record-architecture-decisions.md", "Record Architecture Decisions");
@@ -96,6 +97,8 @@ public class TableOfContentsTest {
         Instant fixedInstant = Instant.parse("2024-10-01T00:00:00Z");
         ZoneId zoneId = ZoneId.systemDefault();
         Clock fixedClock = Clock.fixed(fixedInstant, zoneId);
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
         TableOfContents toc = new TableOfContents(adrsDirectory, dateFormatter, fixedClock);
 
@@ -146,6 +149,7 @@ public class TableOfContentsTest {
         ZoneId zoneId = ZoneId.systemDefault();
         Clock fixedClock = Clock.fixed(fixedInstant, zoneId);
 
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
         TableOfContents toc = new TableOfContents(adrsPath, dateFormatter, fixedClock);
 
         toc.addEntry(1, "0001-record-architecture-decisions.md", "Record Architecture Decisions");
@@ -182,6 +186,79 @@ public class TableOfContentsTest {
         content = TestUtilities.trimContent(content);
 
         assertEquals(expectedContents, content);
+    };
+
+    @Test
+    void testDateFormattingDefault() throws Exception {
+
+        Files.createDirectories(this.adrsDirectory);
+        Files.createDirectories(this.templatesDirectory);
+
+        // Create a temp template in the temporary filesystems
+        String templateContent = "{{date}}";
+
+        Path templatePath = templatesDirectory.resolve(TableOfContentsTest.tocTemplateName);
+        Files.writeString(templatePath, templateContent,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING,
+                StandardOpenOption.WRITE);
+
+        // Set a test date
+        Instant fixedInstant = Instant.parse("2024-10-01T00:00:00Z");
+        ZoneId zoneId = ZoneId.systemDefault();
+        Clock fixedClock = Clock.fixed(fixedInstant, zoneId);
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        TableOfContents toc = new TableOfContents(adrsDirectory, dateFormatter, fixedClock);
+
+        Path outputPath = toc.createPersistentRepresentation(Optional.of(templatePath));
+
+        assertEquals(tempDir.resolve(Path.of("project/doc/adr/toc.md")), outputPath);
+
+        String expectedContents = "2024-10-01";
+
+        String content = Files.readString(outputPath);
+
+        assertEquals(expectedContents, content);
+
+    };
+
+    @Test
+
+    void testDateFormattingAlternate() throws Exception {
+
+        Files.createDirectories(this.adrsDirectory);
+        Files.createDirectories(this.templatesDirectory);
+
+        // Create a temp template in the temporary filesystems
+        String templateContent = "{{date}}";
+
+        Path templatePath = templatesDirectory.resolve(TableOfContentsTest.tocTemplateName);
+        Files.writeString(templatePath, templateContent,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING,
+                StandardOpenOption.WRITE);
+
+        // Set a test date
+        Instant fixedInstant = Instant.parse("2024-10-01T11:11:00Z");
+        ZoneId zoneId = ZoneId.systemDefault();
+        Clock fixedClock = Clock.fixed(fixedInstant, zoneId);
+
+        // Alternate date format
+        DateTimeFormatter alternativeDateFormatter = DateTimeFormatter.BASIC_ISO_DATE;
+
+        TableOfContents toc = new TableOfContents(adrsDirectory, alternativeDateFormatter, fixedClock);
+
+        Path outputPath = toc.createPersistentRepresentation(Optional.of(templatePath));
+
+        assertEquals(tempDir.resolve(Path.of("project/doc/adr/toc.md")), outputPath);
+
+        String expectedContents = "20241001";
+
+        String content = Files.readString(outputPath);
+
+        assertEquals(expectedContents, content);
+
     };
 
 }

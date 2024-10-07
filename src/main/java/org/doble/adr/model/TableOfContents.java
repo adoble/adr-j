@@ -10,6 +10,7 @@ import org.doble.adr.ADRException;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.Formatter;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 
@@ -21,6 +22,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class TableOfContents {
@@ -89,6 +91,17 @@ public class TableOfContents {
         }
 
         Handlebars handlebars = new Handlebars(templateLoader);
+
+        // Format dates
+        handlebars.with(new Formatter() {
+            public Object format(Object value, Chain next) {
+                if (value instanceof LocalDate) {
+                    return ((LocalDate) value).format(dateFormatter);
+                    // return dateFormatter.format((LocalDate) value);
+                }
+                return next.format(value);
+            }
+        });
 
         Path outputPath = docsPath.resolve(TOC_FILE_NAME + extension);
 
