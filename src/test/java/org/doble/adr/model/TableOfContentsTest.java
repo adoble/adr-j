@@ -13,6 +13,7 @@ import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Optional;
 
+import org.doble.adr.TestUtilities;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -183,7 +184,11 @@ public class TableOfContentsTest {
 
                 Created: 2024-10-01""";
 
+        expectedContents = TestUtilities.trimContent(expectedContents);
+
         String content = Files.readString(outputPath);
+
+        content = TestUtilities.trimContent(content);
 
         assertEquals(expectedContents, content);
     };
