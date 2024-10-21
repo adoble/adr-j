@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 
+import picocli.CommandLine;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -207,7 +209,16 @@ public class CommandGenerateTocTest {
 
 	@Test
 	void testCommandWithNonExistingTemplateFile() {
-		fail("TO DO");
+
+		// Run the generate toc command witha non-existing template
+		String[] argsGenerate = { "generate",
+				"toc",
+				"-template",
+				tempDir.resolve("templates/template.md").toString()
+		};
+		int exitCode = ADR.run(argsGenerate, env);
+		assertEquals(CommandLine.ExitCode.SOFTWARE, exitCode);
+
 	}
 
 	@Test
