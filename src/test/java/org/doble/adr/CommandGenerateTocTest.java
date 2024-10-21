@@ -159,7 +159,7 @@ public class CommandGenerateTocTest {
 		int exitCode = ADR.run(argsConfig, env);
 		assertEquals(0, exitCode);
 
-		// Now run the generate toc command without specifiing the template
+		// Now run the generate toc command without specifing the template
 		String[] argsGenerate = { "generate", "toc" };
 		exitCode = ADR.run(argsGenerate, env);
 		assertEquals(0, exitCode);
@@ -180,10 +180,29 @@ public class CommandGenerateTocTest {
 
 	}
 
+	// Should use the template default in resources
 	@Test
-	void testCommandWithNoTemplateSpecified() {
+	void testCommandWithNoTemplateSpecified() throws Exception {
 
-		fail("TO DO - should use resource");
+		// Run the generate toc command without specifing the template
+		String[] args = { "generate", "toc" };
+		int exitCode = ADR.run(args, env);
+		assertEquals(0, exitCode);
+
+		Path tocPath = tempDir.resolve("project/doc/adr/toc.md");
+
+		// Check if the TOC file has been created
+		assertTrue(Files.exists(tocPath));
+
+		// Sample check the expected contents
+		String expectedSample1 = "# List of ADRs";
+		String expectedSample2 = "* [ADR 6](0006-some-functional-name.md) : some functional name";
+
+		String actual = Files.readString(tocPath);
+
+		assert (actual.contains(expectedSample1));
+		assert (actual.contains(expectedSample2));
+
 	}
 
 	@Test
