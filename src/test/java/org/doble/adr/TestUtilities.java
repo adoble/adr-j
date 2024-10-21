@@ -3,14 +3,14 @@ package org.doble.adr;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class TestUtilities {
 
@@ -179,4 +179,37 @@ public class TestUtilities {
 
 		return result.toString();
 	}
+
+	/**
+	 * 
+	 * Removes all files (and NOT directories) in a specified directory.
+	 * The function throws an exception if the provided path is not a valid
+	 * directory.
+	 */
+
+	public static void removeAllFilesInDirectory(Path directory) throws IOException {
+
+		// Ensure the directory exists
+		if (!Files.isDirectory(directory)) {
+			throw new IllegalArgumentException("The provided path is not a directory.");
+		}
+
+		// Use Files.walkFileTree to iterate over the files
+		Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				// Delete each file
+				Files.delete(file);
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+				// Handle file visit failure (e.g., permission issues)
+				System.err.println("Failed to access file: " + file + " due to " + exc.getMessage());
+				return FileVisitResult.CONTINUE;
+			}
+		});
+	}
+
 }

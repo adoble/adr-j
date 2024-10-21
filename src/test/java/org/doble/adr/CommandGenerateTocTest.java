@@ -3,6 +3,8 @@ package org.doble.adr;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -222,8 +224,56 @@ public class CommandGenerateTocTest {
 	}
 
 	@Test
-	void testCommandWhenNoADRsCreated() {
-		fail("TO DO");
+	void testCommandWhenNoADRsCreated() throws Exception {
+
+		// Remove all ADRS
+		Path adrPath = tempDir.resolve("project/doc/adr");
+		TestUtilities.removeAllFilesInDirectory(adrPath);
+
+		// Create a template for test
+		String testTemplateContent = """
+				# ADR files
+				Test empty TOC
+
+				## Entries
+				{{#entries}}
+				* ADR {{id}} : {{filename}}
+				{{/entries}}
+				End of entries
+				""";
+
+		Path testTemplatePath = tempDir.resolve(templatesPath).resolve("test_template.md");
+		Files.createFile(testTemplatePath);
+		Files.writeString(testTemplatePath, testTemplateContent);
+
+		String[] args = { "generate", "toc", "-t", testTemplatePath.toString() };
+
+		int exitCode = ADR.run(args, env);
+		assertEquals(0, exitCode);
+
+		Path tocPath = tempDir.resolve("project/doc/adr/toc.md");
+
+		// Check if the TOC file has been created
+		assertTrue(Files.exists(tocPath));
+
+		// Sample check the expected contents
+		String expectedSample1 = "Test empty TOC";
+		String actual = Files.readString(tocPath);
+
+		assert (actual.contains(expectedSample1));
+
+		// Use a regex to extract the content between the string "##Entries" and "End of
+		// entries"
+		String regex = "## Entries(.*?)End of entries";
+		java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex, java.util.regex.Pattern.DOTALL);
+		java.util.regex.Matcher matcher = pattern.matcher(actual);
+
+		if (matcher.find()) {
+			assertEquals("", matcher.group(1).trim()); // Extract the content between the markers
+		} else {
+			fail("TOC entries is not empty: " + matcher.group(1).trim());
+		}
+
 	}
 
 }
