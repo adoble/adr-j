@@ -18,3 +18,5 @@ This consists of a header with the creation date followed by property value pair
 `docPath`  Relative path to the location where ADRs are stored.
 
 `authorEmail`  The email of the initial author of the ADR.
+
+`tocTemplateFile`   The template file used to create a table of contents (TOC)
