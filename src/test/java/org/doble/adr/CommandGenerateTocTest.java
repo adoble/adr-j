@@ -139,8 +139,45 @@ public class CommandGenerateTocTest {
 	}
 
 	@Test
-	void testCommandWithTemplateInProperties() {
-		fail("TO DO");
+	void testCommandWithTemplateInProperties() throws Exception {
+		// Create a template for test
+		String testTemplateContent = """
+				# ADR files
+				Test template in properties
+
+				{{#entries}}
+				* ADR {{id}} : {{filename}}
+				{{/entries}}
+				""";
+
+		Path testTemplatePath = tempDir.resolve(templatesPath).resolve("test_template.md");
+		Files.createFile(testTemplatePath);
+		Files.writeString(testTemplatePath, testTemplateContent);
+
+		// Now add the template to to the properties
+		String[] argsConfig = { "config", "tocTemplateFile", testTemplatePath.toString() };
+		int exitCode = ADR.run(argsConfig, env);
+		assertEquals(0, exitCode);
+
+		// Now run the generate toc command without specifiing the template
+		String[] argsGenerate = { "generate", "toc" };
+		exitCode = ADR.run(argsGenerate, env);
+		assertEquals(0, exitCode);
+
+		Path tocPath = tempDir.resolve("project/doc/adr/toc.md");
+
+		// Check if the TOC file has been created
+		assertTrue(Files.exists(tocPath));
+
+		// Sample check the expected contents
+		String expectedSample1 = "Test template in properties";
+		String expectedSample2 = "* ADR 6 : 0006-some-functional-name.md";
+
+		String actual = Files.readString(tocPath);
+
+		assert (actual.contains(expectedSample1));
+		assert (actual.contains(expectedSample2));
+
 	}
 
 	@Test
