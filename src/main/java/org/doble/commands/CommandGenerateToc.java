@@ -33,7 +33,7 @@ public class CommandGenerateToc implements Callable<Integer> {
 
     private static final String DEFAULT_TOC_TEMPLATE = "default_toc_template.md";
 
-    @Option(names = { "-t", "-template" }, description = "The template used to crate the table of contents.")
+    @Option(names = { "-t", "-template" }, description = "The template used to create the table of contents.")
     Optional<String> templatePathName;;
 
     @ParentCommand
