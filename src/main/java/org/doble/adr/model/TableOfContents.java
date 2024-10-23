@@ -130,12 +130,12 @@ class TocEntry {
 
     private final int id;
     private final String filename;
-    private final String title;
+    private String title;
 
     TocEntry(int id, String filename, String title) {
         this.id = id;
         this.filename = filename;
-        this.title = title;
+        setTitle(title);
     }
 
     public int getId() {
@@ -148,6 +148,18 @@ class TocEntry {
 
     public String getTitle() {
         return title;
+    }
+
+    // Capitalises the first character in the title.
+    // This is a temporary solution for tables of content until we can extract the
+    // real title from an ADR.
+    private void setTitle(String title) {
+        if (title != null && !title.isEmpty()) {
+            this.title = title.substring(0, 1).toUpperCase() + title.substring(1);
+        } else {
+            this.title = "";
+        }
+
     }
 
     public void format() {

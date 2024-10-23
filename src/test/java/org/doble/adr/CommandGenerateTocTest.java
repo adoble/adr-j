@@ -96,7 +96,7 @@ public class CommandGenerateTocTest {
 		assertTrue(Files.exists(tocPath));
 
 		// Sample check the expected contents
-		String expectedSample = "* [ADR 6](0006-some-functional-name.md) : some functional name";
+		String expectedSample = "* [ADR 6](0006-some-functional-name.md) : Some functional name";
 
 		String actual = Files.readString(tocPath);
 
@@ -200,7 +200,7 @@ public class CommandGenerateTocTest {
 
 		// Sample check the expected contents
 		String expectedSample1 = "# List of ADRs";
-		String expectedSample2 = "* [ADR 6](0006-some-functional-name.md) : some functional name";
+		String expectedSample2 = "* [ADR 6](0006-some-functional-name.md) : Some functional name";
 
 		String actual = Files.readString(tocPath);
 
