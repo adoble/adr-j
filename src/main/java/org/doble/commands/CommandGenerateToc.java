@@ -149,32 +149,6 @@ public class CommandGenerateToc implements Callable<Integer> {
 
     }
 
-    // /**
-    // * Returns the path to the default TOC template.
-    // * This works in IDEs, Gradle, standalone programs, or executable JARs.
-    // *
-    // * @return An optional Path to the resource. Empty if it cannot be found and
-    // an
-    // * message is sent to the user.
-    // */
-    // private Optional<Path> getDefaultFromResourcePath() {
-    // // Use the class loader to load the resource
-    // var resourceURL =
-    // CommandGenerateToc.class.getClassLoader().getResource(DEFAULT_TOC_TEMPLATE);
-
-    // if (resourceURL == null) {
-    // env.err.println("FATAL ERROR: Invalid syntax for the default TOC template: "
-    // + DEFAULT_TOC_TEMPLATE);
-    // return Optional.empty();
-    // }
-
-    // try {
-    // // Convert the resource URL to a Path object
-    // return Optional.of(Paths.get(Objects.requireNonNull(resourceURL).toURI()));
-    // } catch (URISyntaxException e) {
-    // env.err.println("Invalid URI syntax for resource: " + DEFAULT_TOC_TEMPLATE);
-    // return Optional.empty();
-    // }
-    // }
+    
 
 }

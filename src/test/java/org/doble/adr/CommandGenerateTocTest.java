@@ -3,8 +3,11 @@ package org.doble.adr;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +35,7 @@ public class CommandGenerateTocTest {
 
 	final static private Path templatesPath = Path.of("project/templates");
 
-	@TempDir(cleanup = CleanupMode.NEVER)
+	@TempDir(cleanup = CleanupMode.ALWAYS)
 	Path tempDir;
 
 	// The complete path for the ADRs
@@ -272,6 +275,43 @@ public class CommandGenerateTocTest {
 			assertEquals("", matcher.group(1).trim()); // Extract the content between the markers
 		} else {
 			fail("TOC entries is not empty: " + matcher.group(1).trim());
+		}
+
+	}
+
+	@Test
+	void testWithNoDateFormatter() throws Exception {
+		String testTemplateContent = "{{date}}";
+
+		Path testTemplatePath = tempDir.resolve(templatesPath).resolve("test_template.md");
+		Files.createFile(testTemplatePath);
+		Files.writeString(testTemplatePath, testTemplateContent);
+
+		// Force the date formatter to be not specified
+		// Cannot currently use the config command as this produces an exception
+		// when set with an empty value (see issue 61)
+		String config = "docPath=doc/adr";
+		Path configPath = tempDir.resolve(rootPath).resolve(".adr/adr.properties");
+		Files.writeString(configPath, config);
+
+		// Now run the generate toc command with the test template
+		String[] argsGenerate = { "generate", "toc", "-t", testTemplatePath.toString() };
+		int exitCode = ADR.run(argsGenerate, env);
+		assertEquals(0, exitCode);
+
+		Path tocPath = tempDir.resolve("project/doc/adr/toc.md");
+
+		// Check if the TOC file has been created
+		assertTrue(Files.exists(tocPath));
+
+		String actual = Files.readString(tocPath);
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
+		// Will parse if the date is in the default format otherwise will fail
+		try {
+			LocalDate.parse(actual, formatter);
+		} catch (DateTimeParseException e) {
+			fail("Incorrect date format:" + actual);
 		}
 
 	}

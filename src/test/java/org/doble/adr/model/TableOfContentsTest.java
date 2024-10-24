@@ -77,6 +77,22 @@ public class TableOfContentsTest {
     }
 
     @Test
+    void testAddEntryWithNulls() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+        TableOfContents toc = new TableOfContents(docsPath, dateFormatter);
+        toc.addEntry(1, null, null);
+
+        TocEntry expectedEntry = new TocEntry(1,
+                "",
+                "");
+
+        assertEquals(expectedEntry.getId(), toc.entries.get(0).getId());
+        assertEquals(expectedEntry.getFilename(), toc.entries.get(0).getFilename());
+        assertEquals(expectedEntry.getTitle(), toc.entries.get(0).getTitle());
+
+    }
+
+    @Test
     void testCreatePersistentRepresentation() throws Exception {
 
         Files.createDirectories(this.adrsDirectory);

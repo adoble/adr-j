@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.doble.adr.ADRException;
 
 import com.github.jknack.handlebars.io.FileTemplateLoader;
@@ -22,7 +21,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class TableOfContents {
@@ -134,7 +132,9 @@ class TocEntry {
 
     TocEntry(int id, String filename, String title) {
         this.id = id;
-        this.filename = filename;
+
+        this.filename = (filename != null) ? filename : "";
+
         setTitle(title);
     }
 
@@ -162,8 +162,4 @@ class TocEntry {
 
     }
 
-    public void format() {
-        String displayedTitle = StringUtils.capitalize(title);
-        System.out.println("[ADR " + id + "]" + "(" + filename + ") : " + displayedTitle);
-    }
 }
