@@ -1,14 +1,12 @@
 package org.doble.commands;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
@@ -74,17 +72,25 @@ public class CommandGenerateToc implements Callable<Integer> {
 
     }
 
+    // TODO this is a duplication of the function in CommandNew. Refactor this so
+    // that it is only defined once.
+    // Proposal would be to have it in ADRProperties.
     private DateTimeFormatter determineDateFormatter() throws ADRException {
-        // Determine the date formatter
         String dateFormat = properties.getProperty("dateFormat");
-        DateTimeFormatter dateFormatter;
         try {
-            DateFormatEnum dateFormatEnum = DateFormatEnum.valueOf(dateFormat);
-            dateFormatter = dateFormatEnum.getDateTimeFormatter();
+            if (dateFormat == null || dateFormat.isEmpty()) {
+                // preserve behavior of 3.0
+                return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+            } else {
+                DateFormatEnum dateFormatEnum = DateFormatEnum.valueOf(dateFormat);
+                DateTimeFormatter formatter = dateFormatEnum.getDateTimeFormatter();
+                return formatter;
+
+            }
         } catch (IllegalArgumentException e) {
             throw new ADRException("ERROR: Can not parse dateFormat \'" + dateFormat + "\'");
         }
-        return dateFormatter;
+
     }
 
     private TableOfContents buildTableOfContents(Path docsPath, DateTimeFormatter dateFormatter) {
