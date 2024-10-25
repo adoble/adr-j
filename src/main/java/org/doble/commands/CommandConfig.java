@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 
 import org.doble.adr.*;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
@@ -58,9 +59,15 @@ public class CommandConfig implements Callable<Integer> {
 	}
 
 	@Command(description = "Change the default name of the ADR author.")
-	void author(@Parameters(paramLabel = "<author>") String[] author) throws Exception {
+	int author(@Parameters(paramLabel = "<author>") String[] author) throws Exception {
 
 		ADRProperties properties = loadProperties();
+
+		if (author == null || author.length == 0) {
+			String msg = "ERROR: An author has not been specified.";
+			env.err.println(msg);
+			return CommandLine.ExitCode.USAGE;
+		}
 
 		String authorFullName = "";
 		for (String authorPart : author) {
@@ -70,6 +77,8 @@ public class CommandConfig implements Callable<Integer> {
 
 		properties.setProperty("author", authorFullName);
 		properties.store();
+
+		return 0;
 
 	}
 

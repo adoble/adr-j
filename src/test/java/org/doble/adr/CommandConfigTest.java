@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 
+import picocli.CommandLine;
+
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,6 +93,12 @@ public class CommandConfigTest {
 		properties.load();
 
 		assertEquals("William Shakespeare the Bard", properties.getProperty("author"));
+	}
+
+	@Test
+	void testConfigAuthorNoName() throws Exception {
+		int exitCode = ADR.run(TestUtilities.argify("config author"), env);
+		assertEquals(CommandLine.ExitCode.USAGE, exitCode);
 	}
 
 	@Test
