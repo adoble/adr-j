@@ -22,7 +22,7 @@ dependencies {
 }
 
 group = "org.doble"
-version = "3.4.0-alpha"
+version = "3.4.0"
 description = "adr-j"
 
 java {
