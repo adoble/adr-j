@@ -8,7 +8,7 @@ and from version 3.2 this project adheres to [Semantic Versioning](https://semve
 ## [Unreleased]
 
 ### Added
-* Added new command `adr generate toc` to generate a table of contents (TOC).
+* Added new command `adr generate toc` to generate a table of contents (TOC). See [issue 60](https://github.com/adoble/adr-j/issues/60). 
 * To generate the TOC the [handlebars](https://github.com/jknack/handlebars.java) library is used and the templating language for TOCs (not ADRs) has been changed. This is documented in [ADR 11](doc/adr/0011-use-an-existing-templating-library.md).
 
 ### Changed
