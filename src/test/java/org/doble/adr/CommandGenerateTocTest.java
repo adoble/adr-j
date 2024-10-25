@@ -306,7 +306,7 @@ public class CommandGenerateTocTest {
 
 		String actual = Files.readString(tocPath);
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd MMM yyyy]" + "[MMM dd, yyyy]", Locale.ENGLISH);
 		// Will parse if the date is in the default format otherwise will fail
 		try {
 			LocalDate.parse(actual, formatter);
