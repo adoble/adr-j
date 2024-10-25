@@ -26,12 +26,16 @@ import org.doble.adr.DateFormatEnum;
 import org.doble.adr.Environment;
 import org.doble.adr.model.TableOfContents;
 
-@Command(name = "toc", description = "Generate a table of contents (TOC) in the same directory as the ADRs.")
+@Command(name = "toc", description = "Generate a table of contents (TOC) listing each ADR. "
+        + "The table of contents is generated in the same directory as the ADRs.")
 public class CommandGenerateToc implements Callable<Integer> {
 
     private static final String DEFAULT_TOC_TEMPLATE = "default_toc_template.md";
 
-    @Option(names = { "-t", "-template" }, description = "The template used to create the table of contents.")
+    @Option(names = { "-t", "-template" }, description = "The template used to create the table of contents. "
+            + "If no template is specified then:\n"
+            + "- The template specified with `adr config tocTempateFile [path to template]` is used \n"
+            + "- If no template has been configured then a default template using markdown is generated.")
     Optional<String> templatePathName;;
 
     @ParentCommand
@@ -148,7 +152,5 @@ public class CommandGenerateToc implements Callable<Integer> {
         return templatePath;
 
     }
-
-    
 
 }
