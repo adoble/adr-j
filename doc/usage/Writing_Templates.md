@@ -4,6 +4,9 @@ Users can write their own templates for the architecture decision records and sp
 
 Templates use their own markup for specifying the substitutions the `adr-j` tool uses.
 
+> [!NOTE]
+> Templates for table of contents (TOCs) use a different format. See [Writing TOC Templates](Writing_TOC_Templates.md).
+
 ## Field substitution
 
 `{{field}}` is substituted with the value of `field`, e.g.
@@ -43,7 +46,7 @@ The reasons the above is **not** valid are:
 * No link.id field
 * Fields are on separate lines.  
 
-## ADR-J fields
+## ADR-J fields for ADRs
 
 ### `id`
 
