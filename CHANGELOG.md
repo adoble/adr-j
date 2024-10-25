@@ -7,11 +7,18 @@ and from version 3.2 this project adheres to [Semantic Versioning](https://semve
 
 ## [Unreleased]
 
+### Added
+* Added new command `adr generate toc` to generate a table of contents (TOC).
+* To generate the TOC the [handlebars](https://github.com/jknack/handlebars.java) library is used and the templating language for TOCs (not ADRs) has been changed. This is documented in [ADR 11](doc/adr/0011-use-an-existing-templating-library.md).
+
 ### Changed
-* Build has been modified to be backward compatible with Java 11, but still use Java 21 for development. Thanks to [Sebastian Davids](https://github.com/sdavids) for  [PR #57](https://github.com/adoble/adr-j/pull/57) and [PR #59](https://github.com/adoble/adr-j/pull/59). 
+* Build has been modified to be backward compatible with Java 11, but still use Java 21 for development. This is documented in [ADR 10](doc/adr/0010-binary-compatability-to-java-lts-version-minus-2.md). Thanks to [Sebastian Davids](https://github.com/sdavids) for  [PR #57](https://github.com/adoble/adr-j/pull/57) and [PR #59](https://github.com/adoble/adr-j/pull/59).
+
+### Fixed
+* Corrected [issue 61](https://github.com/adoble/adr-j/issues/61).
 
 ### Deprecated
-* Binary compatabilty with Java 11 
+* Binary compatability with Java 11 
 
 
 ## [3.3.1]
