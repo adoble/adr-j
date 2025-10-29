@@ -42,9 +42,9 @@ public class ADRProperties extends Properties {
 	 */
 	public void load() throws ADRException {
 
-		// Get the root directory by looking for an .adr directory
-
-		Path rootPath = env.dir;
+		// Get the root directory by looking for an .adr directory in the current directory
+		// and its parents.
+		Path rootPath = ADR.getRootPath(env);
 
 		Path propertiesRelPath = env.fileSystem.getPath(ADR.ADR_DIR_NAME, "adr.properties");
 

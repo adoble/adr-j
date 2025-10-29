@@ -241,8 +241,10 @@ public class CommandNew implements Callable<Integer> {
 		OptionalInt highestIndex;
 
 		Path docPath = env.fileSystem.getPath(properties.getProperty("docPath"));
+
 		Path rootPath = ADR.getRootPath(env);
 		Path adrPath = rootPath.resolve(docPath);
+
 
 		try {
 			highestIndex = Files.list(adrPath).filter(CommandNew::wellFormedADR).mapToInt(CommandNew::toInt).max();

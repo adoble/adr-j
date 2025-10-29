@@ -20,7 +20,7 @@ public final class Version implements IVersionProvider {
    * https://semver.org/spec/v2.0.0.html
    *
    ***********************************************************/
-  private final static String version = "3.4.0"; // New command, backwards compatible
+  private final static String version = "3.4.1-alpha1"; // New command, backwards compatible
 
   @Override
   public String[] getVersion() throws Exception {
