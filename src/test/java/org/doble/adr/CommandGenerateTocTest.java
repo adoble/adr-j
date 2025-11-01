@@ -222,7 +222,10 @@ public class CommandGenerateTocTest {
 				tempDir.resolve("templates/template.md").toString()
 		};
 		int exitCode = ADR.run(argsGenerate, env);
-		assertEquals(CommandLine.ExitCode.SOFTWARE, exitCode);
+
+		System.out.println("DEBUG::Exit code: " + exitCode);
+		//assertEquals(CommandLine.ExitCode.SOFTWARE, exitCode);
+		assertEquals(ADR.ERRORGENERAL, exitCode);
 
 	}
 
@@ -306,7 +309,7 @@ public class CommandGenerateTocTest {
 
 		String actual = Files.readString(tocPath);
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd MMM yyyy]" + "[MMM dd, yyyy]", Locale.ENGLISH);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd MMM yyyy]" + "[MMM dd, yyyy]" + "[MMM d, yyyy]", Locale.ENGLISH);
 		// Will parse if the date is in the default format otherwise will fail
 		try {
 			LocalDate.parse(actual, formatter);

@@ -5,10 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and from version 3.2 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.4.1-alpha1]
+## [3.4.1]
 
 ### Fixed
 * Corrected [issue 62](https://github.com/adoble/adr-j/issues/62). The `adr new` command can now be used whilst working in a non-default documents directory. Thanks to [chipbite](https://github.com/chipbite) for pointing this out. 
+* Corrected some problems with the documentation and operation of the `adr generate toc`command.
+* Provided more detail on using `jbang`to install.
 
 ## [3.4.0]
 

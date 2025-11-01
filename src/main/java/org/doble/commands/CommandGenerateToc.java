@@ -68,9 +68,16 @@ public class CommandGenerateToc implements Callable<Integer> {
 
         TableOfContents toc = buildTableOfContents(docsPath, dateFormatter);
 
-        Optional<Path> templatePath = determineTemplatePath(properties);
+        
+        try {
+            Optional<Path> templatePath = determineTemplatePath(properties);
 
-        toc.createPersistentRepresentation(templatePath);
+            toc.createPersistentRepresentation(templatePath);}
+        catch (ADRException e) { 
+            env.err.println(e.getMessage());
+            return ADR.ERRORGENERAL;
+
+        }
 
         return 0;
 
@@ -144,7 +151,8 @@ public class CommandGenerateToc implements Callable<Integer> {
 
         if (templatePath.isPresent()) {
             if (!Files.exists(templatePath.get())) {
-                throw new ADRException("ERROR: The template file \'" + templatePathName + " does not exist.");
+                Path missingTemplatePath = templatePath.get();
+                throw new ADRException("ERROR: The template file \'" + missingTemplatePath.toString() + "\' does not exist.");
 
             }
         }

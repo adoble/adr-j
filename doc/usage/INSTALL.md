@@ -11,6 +11,12 @@ The easiest way to install is to use [JBang](https://www.jbang.dev/).
     jbang app install adr@adoble
     ```
 
+    If a version of `adr-j` has already been installed with `jbang` then use the following to overwrite it:
+
+    ```
+    jbang app install --force adr@adoble
+    ```
+
 3. Set up the [environment variables](#setting-up-environment-variables) depending on your OS.
 
 4. Run `adr`, e.g.:
