@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and from version 3.2 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+* Corrected [issue 63](https://github.com/adoble/adr-j/issues/63). Template files can now be specified (for instance with `adr init`) as both absolute and relative paths. Thanks  again to [chipbite](https://github.com/chipbite) for discovering this. 
+
+
 ## [3.4.1]
 
 ### Fixed

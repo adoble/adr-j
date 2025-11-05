@@ -106,7 +106,10 @@ public class CommandNew implements Callable<Integer> {
 		String templatePathName = properties.getProperty("templateFile");
 
 		if (templatePathName != null) {
-			templatePath = env.fileSystem.getPath(templatePathName);
+			// templatePath = env.fileSystem.getPath(templatePathName);
+			templatePath = rootPath.resolve(templatePathName);
+
+
 			if (!Files.exists(templatePath)) {
 				String msg = "The project has been initialised with the template \'" +
 						templatePathName +
@@ -115,7 +118,7 @@ public class CommandNew implements Callable<Integer> {
 				throw new ADRException(msg);
 			}
 
-		}
+		} 
 
 		// Set up the date formatter
 		String dateFormat = properties.getProperty("dateFormat");
@@ -128,7 +131,7 @@ public class CommandNew implements Callable<Integer> {
 		String authorEmail = properties.getProperty("authorEmail", "").trim();
 
 		// Build the record
-		Record record = new Record.Builder(docsPath, dateFormatter)
+		Record record = new Record.Builder(rootPath, docsPath, dateFormatter)
 				.id(highestIndex() + 1)
 				.name(adrTitle)
 				.date(LocalDate.now())

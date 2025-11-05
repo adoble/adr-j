@@ -80,20 +80,10 @@ public class CommandNewTest {
 		int exitCode = ADR.run(args, env);
 		assertEquals(0, exitCode);
 
-		// Check if the ADR file has been created
+		// Check if the ADR file has been created.
+		// ADR id is 2 as the first ADR was setup during init.
 		assertTrue(
-				Files.exists(fileSystem.getPath("/project/adr/doc/adr/0002-this-is-a-test-architecture-decision.md"))); // ADR
-																														// id
-																														// is
-																														// 2
-																														// as
-																														// the
-																														// first
-																														// ADR
-																														// was
-																														// setup
-																														// during
-																														// init.
+				Files.exists(fileSystem.getPath("/project/adr/doc/adr/0002-this-is-a-test-architecture-decision.md"))); 
 	}
 
 	@Test

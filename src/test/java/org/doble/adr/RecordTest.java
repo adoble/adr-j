@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RecordTest {
 	private FileSystem fileSystem;
 	private Path docPath = null;
+	private Path rootPath = null;
 	private DateTimeFormatter dateFormatter;
 
 	@BeforeEach
@@ -71,7 +72,7 @@ public class RecordTest {
 		expectedContents = expectedContents.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()));
 
 		// Build the record
-		Record record = new Record.Builder(docPath, dateFormatter).id(7).name("This is a new record").build();
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter).id(7).name("This is a new record").build();
 
 		record.createPeristentRepresentation();
 
@@ -117,7 +118,7 @@ public class RecordTest {
 				"See Michael Nygard's article, linked above.";
 		expectedContents = expectedContents.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(date));
 		
-		Record record = new Record.Builder(docPath, dateFormatter).id(42)
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter).id(42)
 				.name("This is a complex record")
 				.date(date)
 				.status("Accepted")
@@ -141,7 +142,7 @@ public class RecordTest {
 	@Order(3)
 	public void nameIsLowerCased() throws Exception {
 
-		Record record = new Record.Builder(docPath, dateFormatter).id(8).name("CDR is stored in a relational database").build();
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter).id(8).name("CDR is stored in a relational database").build();
 
 		record.createPeristentRepresentation();
 
@@ -165,7 +166,7 @@ public class RecordTest {
 		
 	
 		
-		Record record = new Record.Builder(docPath, dateFormatter).id(102).name("Contains some links").build();
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter).id(102).name("Contains some links").build();
         record.createPeristentRepresentation();
         
 		// <target_adr>:<link_description>
@@ -197,7 +198,7 @@ public class RecordTest {
 		expectedContents = expectedContents.replace("{{author}}", System.getProperty("user.name"));
 
 		// Build the record
-		Record record = new Record.Builder(docPath, dateFormatter)
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter)
 				.id(66)
 				.name("This is a new record with default author")
 				.template("rsrc:template_with_author.md")
@@ -226,7 +227,7 @@ public class RecordTest {
 				"Author: Andrew Doble";
 
 		// Build the record
-		Record record = new Record.Builder(docPath, dateFormatter)
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter)
 				.id(67)
 				.name("This is a new record with given author")
 				.author("Andrew Doble")
@@ -259,7 +260,7 @@ public class RecordTest {
 		expectedContents = expectedContents.replace("{{date}}", dateFormatter.format(LocalDate.now()));
 
 		// Build the record
-		Record record = new Record.Builder(docPath, dateFormatter)
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter)
 				.id(77)
 				.name("Only date")
 				.template("rsrc:template_only_date.md")
@@ -294,7 +295,7 @@ public class RecordTest {
 		adrTestFilePath = docPath.resolve("0002-second-link-target-expected.md");
 		Files.createFile(adrTestFilePath);
 	
-		Record record = new Record.Builder(docPath, dateFormatter)
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter)
 				                  .id(3).
 				                  name(name)
 				                  .template("rsrc:template_link.md")
@@ -362,7 +363,7 @@ public class RecordTest {
 			Author: Andrew Doble <andrew.l.doble@gmail.com>""";
 
 		// Build the record
-		Record record = new Record.Builder(docPath, dateFormatter)
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter)
 				.id(68)
 				.name("This is a new record with given author and authorEmail")
 				.author("Andrew Doble")
@@ -397,7 +398,7 @@ public class RecordTest {
 			# 69. ADR templates should support REUSE file header""";
 
 		// Build the record
-		Record record = new Record.Builder(docPath, dateFormatter)
+		Record record = new Record.Builder(rootPath, docPath, dateFormatter)
 			.id(69)
 			.name("ADR templates should support REUSE file header")
 			.date(LocalDate.of(2024, 4, 12))

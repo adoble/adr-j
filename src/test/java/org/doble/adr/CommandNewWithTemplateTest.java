@@ -196,4 +196,65 @@ public class CommandNewWithTemplateTest {
 	    // Compare
 		assertEquals(expectedContents, actualContents);
 	}
-}
+
+
+	/**
+	 * Test running the new command in a directory that is not the root AND with a custom template.
+	 * This is a test of [issue 63](https://github.com/adoble/adr-j/issues/63) 
+	 * 
+	 *  @throws Exception
+	 */
+	@Test	
+    public void testNewInNonRootDirectory () throws Exception{
+
+		// TODO this test does not correctly run the command in a sub-directory. Find out why!
+		String templateContent = "# {{id}}. {{name}}\n" + 
+		"Date: {{date}}\n" + 
+		"## Status\n" + 
+		"{{status}}\n" + 
+		"## Description" + 
+		"Some general content. ";
+		
+		// Create a template
+		TestUtilities.createTemplateFile(env.fileSystem, "/usr/adoble/templates/template.md", templateContent);
+		assertTrue(Files.exists(env.fileSystem.getPath("/usr/adoble/templates/template.md")));
+		
+		// Now init with the template
+		String[] args = TestUtilities.argify("init -t /usr/adoble/templates/template.md");
+		int exitCode = ADR.run(args, env);
+		assertEquals(exitCode, 0);
+		
+		// Change to a sub-directory
+		Path subDir = env.fileSystem.getPath(rootPathName, "subdir1", "subdir2");
+		Files.createDirectories(subDir);
+		
+		// CD to default doc directory
+		env = new Environment.Builder(fileSystem)
+		.out(System.out)
+		.err(System.err)
+		.in(System.in)
+		// .userDir(rootPathName + "/doc")
+		.userDir(subDir.toString())
+		.editorCommand("dummyEditor")
+		.editorRunner(new TestEditorRunner())
+		.build();
+		
+
+		    // env = new Environment.Builder(env)
+		    		// .userDir(subDir.toString())
+		    		// .build();
+		    
+		    // Run the "new" command
+		    args = TestUtilities.argify("new ADR created in subdirectory");
+		    exitCode = ADR.run(args, env);
+
+		    assertEquals(0, exitCode);
+
+		    // Check if the ADR file has been created
+		    Path newADRFile = fileSystem.getPath("/new_project/adr/doc/adr/0001-adr-created-in-subdirectory.md");
+		    
+		    TestUtilities.ls(env.fileSystem.getPath("/new_project/adr/doc/adr"));
+		    assertTrue(Files.exists(newADRFile)); 
+		
+	}	
+}	

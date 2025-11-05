@@ -223,7 +223,6 @@ public class CommandGenerateTocTest {
 		};
 		int exitCode = ADR.run(argsGenerate, env);
 
-		System.out.println("DEBUG::Exit code: " + exitCode);
 		//assertEquals(CommandLine.ExitCode.SOFTWARE, exitCode);
 		assertEquals(ADR.ERRORGENERAL, exitCode);
 

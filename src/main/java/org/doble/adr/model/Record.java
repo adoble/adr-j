@@ -17,7 +17,7 @@ import org.doble.adr.TemplateProvider;
 
 public class Record {
 	private static final DateTimeFormatter YEAR_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
-
+    private final Path rootPath; // The root path of the project, i.e.  where the .adr directory is located. 
 	private final Path docsPath; // Where the adr files are stored
 	private final Optional<String> template; // Using String type instead of Path as the default template is a resource.
 												// Resources are not correctly supported by Path.
@@ -41,6 +41,7 @@ public class Record {
 	 */
 	private Record(Record.Builder builder) throws URISyntaxException {
 		// final String defaultTemplateName = ADRProperties.defaultTemplateName;
+		this.rootPath = builder.rootPath;
 		this.docsPath = builder.docsPath;
 		// this.template = builder.template;
 		this.id = builder.id;
@@ -126,8 +127,10 @@ public class Record {
 		}
 
 		// Now substitute the fields in the template and write to the ADR
-		TemplateProvider templateProvider = new TemplateProvider(docsPath.getFileSystem(),
-				ADRProperties.defaultTemplateName);
+		TemplateProvider templateProvider = new TemplateProvider(
+			    docsPath.getFileSystem(),
+				ADRProperties.defaultTemplateName,
+				this.rootPath);
 		List<String> targetContent = new ArrayList<String>();
 
 		try (Stream<String> lines = Files.lines(templateProvider.getPath(this.template))) {
@@ -138,15 +141,10 @@ public class Record {
 					.map(line -> line.replaceAll("\\{\\{author.email\\}\\}", authorEmail))
 					.map(line -> line.replaceAll("\\{\\{date\\}\\}", dateFormatter.format(date)))
 					.map(line -> line.replaceAll("\\{\\{year\\}\\}", YEAR_FORMATTER.format(date)))
-					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0)) // Remove lines
-																									// which will be
-																									// blank
-					.filter(line -> !(line.contains("{{{superseded.id}}}") && supersededFragments.size() == 0)) // Remove
-																												// lines
-																												// which
-																												// will
-																												// be
-																												// blank
+					// Remove lines which wiöö be blank because there are no links
+					.filter(line -> !(line.contains("{{{link.id}}}") && linkFragments.size() == 0)) 
+					// Remove lines which will be blank because there are no superseded ADRs
+					.filter(line -> !(line.contains("{{{superseded.id}}}") && supersededFragments.size() == 0)) 
 					.map(line -> line.contains("{{{link.id}}}") ? linkSectionString : line)
 					.map(line -> line.contains("{{{superseded.id}}}") ? supersededSectionString : line)
 					.collect(Collectors.toList());
@@ -265,8 +263,10 @@ public class Record {
 	private Optional<String> getFragment(String substitutionField) throws ADRException {
 		String templateFragment;
 
-		TemplateProvider templateProvider = new TemplateProvider(docsPath.getFileSystem(),
-				ADRProperties.defaultTemplateName);
+		TemplateProvider templateProvider = new TemplateProvider(
+			docsPath.getFileSystem(),
+			ADRProperties.defaultTemplateName, 
+			this.rootPath);
 
 		try {
 			Path templatePath = templateProvider.getPath(this.template);
@@ -282,7 +282,7 @@ public class Record {
 	}
 
 	public static class Builder {
-
+		private Path rootPath;
 		private Path docsPath;
 		private Optional<String> template = Optional.empty();
 		private String templateExtension = "md"; // Default to markdown
@@ -297,7 +297,8 @@ public class Record {
 		private String status = "Proposed";
 		private DateTimeFormatter dateFormatter;
 
-		public Builder(Path docsPath, DateTimeFormatter dateFormatter) {
+		public Builder(Path rootPath, Path docsPath, DateTimeFormatter dateFormatter) {
+			this.rootPath = rootPath;
 			this.docsPath = docsPath;
 			this.dateFormatter = dateFormatter;
 		}

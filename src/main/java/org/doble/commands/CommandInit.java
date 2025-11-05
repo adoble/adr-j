@@ -133,7 +133,7 @@ public class CommandInit implements Callable<Integer> {
 		// If no template is specified and no initial template is specified create
 		// an initial ADR using the default (Nygard) form
 		if (template == null && initialTemplate == null) {
-			Record record = new Record.Builder(docsPath, dateFormatter)
+			Record record = new Record.Builder(env.dir, docsPath, dateFormatter)
 					.template("rsrc:" + ADRProperties.defaultInitialTemplateName)
 					.id(1)
 					.name("Record architecture decisions")
@@ -149,7 +149,7 @@ public class CommandInit implements Callable<Integer> {
 			// Set up the author's email
 	    String authorEmail = properties.getProperty("authorEmail", "").trim();
 
-			Record record = new Record.Builder(docsPath, dateFormatter)
+			Record record = new Record.Builder(env.dir, docsPath, dateFormatter)
 					.template(initialTemplate)
 					.id(1)
 					.name("Record architecture decisions")

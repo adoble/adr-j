@@ -22,7 +22,7 @@ import java.util.stream.*;
 public class TemplateProvider  {
 	String defaultTemplateName;
 	FileSystem fileSystem;  // The file system for the normal files
-	
+	Path rootPath; // The root path of the project, i.e.  where the .adr directory is located. 
 	FileSystem jarFileSystem = null;
 	
 	Stream<String> lineStream;
@@ -32,15 +32,17 @@ public class TemplateProvider  {
 	 * @param fileSystem  The file system being used to get the "normal" files
 	 * @param defaultTemplateFileName  The name of the resource
 	 */
-	public TemplateProvider(FileSystem fileSystem, String defaultTemplateFileName) {
+	public TemplateProvider(FileSystem fileSystem, String defaultTemplateFileName, Path rootPath) {
 		super();
 		this.defaultTemplateName = defaultTemplateFileName;
 		this.fileSystem  = fileSystem;
+		this.rootPath = rootPath;
 	}
 
 	/**
-	 * Get a Path from the template file specified in the file <code>templateFileName</code>. A Path is
-	 * returned independent of if the template file is a normal file or a resource and 
+	 * Get a Path from the template file specified in the file <code>templateFileName</code>. The 
+	 * path speified needs to be a full path and NOT a relative path. 
+	 * A Path is returned independent of if the template file is a normal file or a resource and 
 	 * independent of if the resource file is packaged in a JAR or not. 
 	 * Rules are: 
 	 * - If the template specified is a normal file (i.e. a normal file path) then a Path to that is 
@@ -54,18 +56,20 @@ public class TemplateProvider  {
 	 * if the resource file is in a JAR or not.
 	 */
    public Path getPath(Optional<String> templateFileName) throws IOException, URISyntaxException{
-	   
-	   Path templatePath;
-		if (templateFileName.isPresent() && !templateFileName.get().substring(0,5).equals("rsrc:")) {
-			// Template has been specified by user and is a normal file
-			templatePath =  fileSystem.getPath(templateFileName.get());
-			
+
+	Path templatePath;
+	if (templateFileName.isPresent() && !templateFileName.get().substring(0,5).equals("rsrc:")) {
+		// Template has been specified by user and is a normal file. 
+		templatePath =  fileSystem.getPath(templateFileName.get());
+		// Make sure that the the template path is absolute.
+		templatePath = this.rootPath.resolve(templatePath);
+		
+
 		} else if (templateFileName.isPresent() && templateFileName.get().substring(0,5).equals("rsrc:")) {
 			// Template is user specified resource.
 			String templateResourceName = templateFileName.get().substring(5, templateFileName.get().length()); // Remove the 'resource" indicator
 			
 			templatePath = getResourcePath(templateResourceName);
-			
 			
 		} else {
 			// Template has not been specified so get an input stream to the default template resource
