@@ -8,8 +8,16 @@ and from version 3.2 this project adheres to [Semantic Versioning](https://semve
 ## [Unreleased]
 
 ### Fixed
-* Corrected [issue 63](https://github.com/adoble/adr-j/issues/63). Template files can now be specified (for instance with `adr init`) as both absolute and relative paths. Thanks  again to [chipbite](https://github.com/chipbite) for discovering this. 
+* Corrected [issue 63](https://github.com/adoble/adr-j/issues/63) and added appropiate unit tests. Template files can now be specified (for instance with `adr init`) as both absolute and relative paths. Thanks  again to [chipbite](https://github.com/chipbite) for discovering this. 
+* Also corrected an undocumented error with initial templates having a relative path. 
+* Removed build dependency on a specific SDK vendor.
 
+### Added
+* Added tests to check the operation in non-root directories
+* Added tests to check operation with relative path name of templates
+
+### Changed
+* Updated man page of new command to reference use of relative paths. 
 
 ## [3.4.1]
 
