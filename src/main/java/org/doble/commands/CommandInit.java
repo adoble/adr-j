@@ -59,6 +59,10 @@ public class CommandInit implements Callable<Integer> {
 		this.env = commandADR.getEnvironment();
 		properties = new ADRProperties(env);
 
+		// Whilst running the init command, the root path is, by definition, the current user directory
+		Path rootPath = env.dir;
+
+
 		if (env.editorCommand == null) {
 			String msg = "WARNING: Editor for the ADR has not been found in the environment variables.\n"
 					+ "Have you set the environment variable EDITOR or VISUAL with the editor program you want to use?\n";
@@ -92,9 +96,12 @@ public class CommandInit implements Callable<Integer> {
 			return ADR.ERRORGENERAL;
 		}
 
-		// Check that any template file specified really exists
+
+
+		// Check that any template file specified really exists. The template file path can either be an 
+		// absolute path or a path relative to the root path. 
 		if (template != null) {
-			Path templatePath = env.fileSystem.getPath(template);
+			Path templatePath = rootPath.resolve(env.fileSystem.getPath(template));
 			if (!Files.exists(templatePath)) {
 				env.err.println("ERROR: The template file "
 						+ template
@@ -103,9 +110,10 @@ public class CommandInit implements Callable<Integer> {
 			}
 		}
 
-		// Check that any initial template file specifed really exists
+		// Check that any initial template file specified really exists. Again the template file path can either be an 
+		// absolute path or a path relative to the root path. 
 		if (initialTemplate != null) {
-			Path initialTemplatePath = env.fileSystem.getPath(initialTemplate);
+			Path initialTemplatePath = rootPath.resolve(env.fileSystem.getPath(initialTemplate));
 			if (!Files.exists(initialTemplatePath)) {
 				env.err.println("ERROR: The initial template file "
 						+ initialTemplate

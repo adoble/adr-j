@@ -165,7 +165,7 @@ public class CommandNewTest {
 
 	}
 
-	// Test to check if issue 48 has been corrected.
+	// Test to check if [issue 48](https://github.com/adoble/adr-j/issues/48) has been corrected.
 	@Test
 	public void testEditorEnvironmentVariable() {
 

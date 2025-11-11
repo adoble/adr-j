@@ -207,7 +207,6 @@ public class CommandNewWithTemplateTest {
 	@Test	
     public void testNewInNonRootDirectory () throws Exception{
 
-		// TODO this test does not correctly run the command in a sub-directory. Find out why!
 		String templateContent = "# {{id}}. {{name}}\n" + 
 		"Date: {{date}}\n" + 
 		"## Status\n" + 
@@ -257,4 +256,145 @@ public class CommandNewWithTemplateTest {
 		    assertTrue(Files.exists(newADRFile)); 
 		
 	}	
+
+	/**
+	 * Test the new command using relative templates 
+	 * 
+	 * *This is a test of issue #63
+	 * @throws Exception
+	 */
+	@Test 
+	public void testRelativeTemplate () throws Exception {
+		String templateContent = "# {{id}}. {{name}}\n" + 
+				"Date: {{date}}\n" + 
+				"## Status\n" + 
+				"{{status}}\n" + 
+				"## Links\n" + 
+				"* {{{link.comment}}} [ADR {{{link.id}}}]({{{link.file}}})\n" + 
+				"## Superseded\n" +
+				"* Supersedes [ADR {{{superseded.id}}}]({{{superseded.file}}})\n" + 
+				"## Content" + 
+				"Some general content. ";
+		
+		String expectedContents = "# 1. ADR created with template\n" + 
+				"Date: {{date}}\n" + 
+				"## Status\n" + 
+				"Proposed\n" + 
+				"## Links\n" + 
+				"## Superseded\n" +
+				"## Content" + 
+				"Some general content. ";
+		expectedContents = expectedContents.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()));
+		
+		// Create a template within the root of the project
+		TestUtilities.createTemplateFile(env.fileSystem, rootPathName + "/templates/template.md", templateContent);
+	    assertTrue(Files.exists(env.fileSystem.getPath(rootPathName + "/templates/template.md")));
+
+		// "cd" to root directory
+		env = new Environment.Builder(fileSystem)
+				.out(System.out)
+				.err(System.err)
+				.in(System.in)
+				.userDir(rootPathName)
+				.editorCommand("dummyEditor")
+				.editorRunner(new TestEditorRunner())
+				.build();
+	    
+
+
+	    // Now init with the template using a relative path
+	    String[] args = TestUtilities.argify("init -t ./templates/template.md");
+	    int exitCode = ADR.run(args, env);
+	    assertEquals(0, exitCode);
+	    
+	    // Check that the template has been added to the properties. 
+        ADRProperties properties = new ADRProperties(env);
+		properties.load(); 
+		String tFile = properties.getProperty("templateFile");
+        assertNotNull(tFile);
+		assertEquals(tFile, "./templates/template.md" );
+   
+	    		
+	    // Run the "new" command
+	    args = TestUtilities.argify("new ADR created with template");
+	    exitCode = ADR.run(args, env);
+	    assertEquals(0, exitCode);
+
+	    // Check if the ADR file has been created
+	    Path newADRFile = fileSystem.getPath("/new_project/adr/doc/adr/0001-adr-created-with-template.md");
+	    
+	    TestUtilities.ls(env.fileSystem.getPath("/new_project/adr/doc/adr"));
+	    assertTrue(Files.exists(fileSystem.getPath("/new_project/adr/doc/adr/0001-adr-created-with-template.md"))); 
+	    	
+		// Read in the file
+	    Stream<String> lines= Files.lines(newADRFile);
+		String actualContents = lines.collect(Collectors.joining("\n"));
+		lines.close();
+	    
+	    // Compare
+		assertEquals(expectedContents, actualContents);
+	 		
+	}
+
+	/**
+	 * Test the new command using relative intial templates 
+	 * 
+	 * @throws Exception
+	 */
+	@Test 
+	public void testRelativeInitialTemplate () throws Exception {
+		String templateContent = "# {{id}}. {{name}}\n" + 
+				"Date: {{date}}\n" + 
+				"## Description" ;
+		String initialTemplateContent = "# {{id}}. {{name}}\n" + 
+				"Date: {{date}}\n" + 
+				"## Description" + 
+				"Test initial template.";
+		
+		String expectedContentsOfInitialFile = "# 1. Record architecture decisions\n" + 
+				"Date: {{date}}\n" + 
+				"## Description" + 
+				"Test initial template.";
+		expectedContentsOfInitialFile = expectedContentsOfInitialFile.replace("{{date}}", DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now()));
+		
+		// Create an initial template within the root of the project
+		TestUtilities.createTemplateFile(env.fileSystem, rootPathName + "/templates/initial_template.md", initialTemplateContent);
+	    assertTrue(Files.exists(env.fileSystem.getPath(rootPathName + "/templates/initial_template.md")));
+
+		// Create a template within the root of the project
+		TestUtilities.createTemplateFile(env.fileSystem, rootPathName + "/templates/template.md", templateContent);
+	    assertTrue(Files.exists(env.fileSystem.getPath(rootPathName + "/templates/template.md")));
+
+		// "cd" to root directory
+		env = new Environment.Builder(fileSystem)
+				.out(System.out)
+				.err(System.err)
+				.in(System.in)
+				.userDir(rootPathName)
+				.editorCommand("dummyEditor")
+				.editorRunner(new TestEditorRunner())
+				.build();
+	    
+
+
+	    // Now init with the initial template using a relative path
+	    String[] args = TestUtilities.argify("init -i ./templates/initial_template.md -t ./templates/template.md");
+	    int exitCode = ADR.run(args, env);
+	    assertEquals(0, exitCode);
+	    
+	    // Check if the initial adr file has been created
+	    Path newADRFile = fileSystem.getPath("/new_project/adr/doc/adr/0001-record-architecture-decisions.md");
+	    //TestUtilities.ls(env.fileSystem.getPath("/new_project/adr/doc/adr"));
+	    assertTrue(Files.exists(fileSystem.getPath("/new_project/adr/doc/adr/0001-record-architecture-decisions.md"))); 
+	    	
+		// Read in the file
+	    Stream<String> lines= Files.lines(newADRFile);
+		String actualContents = lines.collect(Collectors.joining("\n"));
+		lines.close();
+	    
+	    // Compare
+		assertEquals(expectedContentsOfInitialFile, actualContents);
+	 		
+	}
+
 }	
