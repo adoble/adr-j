@@ -29,7 +29,7 @@ java {
     toolchain {
         // Development Java version is the latest LTS version
         languageVersion = JavaLanguageVersion.of(21)
-        vendor = JvmVendorSpec.ADOPTIUM
+        //vendor = JvmVendorSpec.ADOPTIUM
     }
 
     consistentResolution {
