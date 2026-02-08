@@ -59,6 +59,11 @@ public class CommandNew implements Callable<Integer> {
 			+ " Multiple -s options can be given, so that the new ADR can supersede multiple existing ADRs")
 	ArrayList<Integer> supersedes = new ArrayList<Integer>();
 
+	@Option(names = {"-n", "-number" }, 
+			description = "The ADR number to use for the ADR to be created. The default is one greater than the "
+				+ "greatest existing ADR.")
+	Integer manualADRNumber;
+
 	@ParentCommand
 	CommandADR commandADR;
 
@@ -130,9 +135,11 @@ public class CommandNew implements Callable<Integer> {
 		// Set up the author's email
 		String authorEmail = properties.getProperty("authorEmail", "").trim();
 
+		Integer adrNumber = manualADRNumber != null ? manualADRNumber : highestIndex() + 1;
+
 		// Build the record
 		Record record = new Record.Builder(rootPath, docsPath, dateFormatter)
-				.id(highestIndex() + 1)
+				.id(adrNumber)
 				.name(adrTitle)
 				.date(LocalDate.now())
 				.author(env.author)
