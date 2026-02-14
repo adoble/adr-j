@@ -192,4 +192,21 @@ public class CommandNewTest {
 
 	}
 
+
+	// Test for [PR #64 - Manually set ADR number](https://github.com/adoble/adr-j/pull/64)
+	@Test
+	public void testSetManualADRNumber() throws Exception {
+		String adrTitle = "This is a number five";
+
+		String[] args = TestUtilities.argify("new " + "-n 5 " + adrTitle);
+
+		int exitCode = ADR.run(args, env);
+		assertEquals(0, exitCode);
+
+		// Check if  ADR #5 file has been created.
+		
+		assertTrue(
+				Files.exists(fileSystem.getPath("/project/adr/doc/adr/0005-this-is-a-number-five.md"))); 
+	}
+
 }
