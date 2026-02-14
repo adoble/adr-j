@@ -9,7 +9,7 @@ A Java based command-line tool for working with [Architecture Decision Records][
 
 ADR-J is based on the [script based tools from Nat Pryce](https://github.com/npryce/adr-tools). It has been extended so that:
 
-- Custom ADR templates can be created that fit into in-house development guidelines.
+- Custom ADR templates can be created that fit into either in-house development guidelines or standard templates such as the [Nyquest form](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) or [MADR](https://www.ozimmer.ch/practices/2022/11/22/MADRTemplatePrimer.html) or **any other**.
 
 - Different markup formats can be used in the templates (for instance **Markdown** and **AsciiDoc**) meaning that the ADRs can be used with different in-house documentation tools.  
 
