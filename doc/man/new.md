@@ -1,6 +1,6 @@
 # Usage
 
-`adr new [-l=<links>]... [-s=<supersedes>]... TITLETEXT...`
+`adr new [-l=<links>]... [-s=<supersedes>]... [-n <ADR number>] TITLETEXT...`
 
 # Description
 
@@ -20,3 +20,5 @@ Creates a new, numbered ADR.  The `<title_text>` arguments are concatenated to f
 Multiple `-l` options can be given, so that the new ADR can link to multiple existing ADRs
 
 `-s, supersedes=<supersedes>` A reference (number) of a previous decision that the new decision supersedes. A markdown to the superseded ADR is inserted into the Status section.	The status of the superseded ADR is changed to record that it has been superseded by the new ADR. Multiple `-s` options can be given, so that the new ADR can supersede multiple existing ADRs
+
+`-n, -number <ADR number>` The ADR number to use for the ADR to be created. The default is one greater than the greatest existing ADR number.
