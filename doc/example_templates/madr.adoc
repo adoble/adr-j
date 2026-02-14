@@ -1,0 +1,117 @@
+// Inspired by https://adr.github.io/madr/decisions/adr-template.html
+// Based on https://github.com/aeimer/asciidoc-templates/blob/main/template-adr.adoc
+// proposed ⚙️
+// rejected 🚫
+// accepted ✅
+// deprecated ☑️
+// superseded ⏭️
+// discarded 🗑️
+= ADR {{id}}: {{name}}
+
+[cols="1,3"]
+|===
+|*status*
+// `proposed` / `rejected` / `accepted` / `deprecated` / `discarded` / superseded by xref:page$0001-docs.adoc[ADR-0001]
+| {{status}}
+
+|*date*
+// YYYY-MM-DD when the decision was last updated
+| {{date}}
+
+|*deciders*
+a|
+// list everyone involved in the decision
+* #DECIDER#
+
+|*consulted*
+a|
+// list everyone whose opinions are sought (typically subject-matter experts); and with whom there is a two-way communication
+* _n/a_
+
+|*informed*
+a|
+// list everyone who is kept up-to-date on progress; and with whom there is a one-way communication
+* _n/a_
+|===
+
+== Context and problem statement [[context]]
+
+////
+Describe the context and problem statement, e.g., in free form using two to three sentences or in the form of an illustrative story.
+You may want to articulate the problem in form of a question and add links to collaboration boards or issue management systems.
+////
+
+// This is an optional element. Feel free to remove.
+== Decision drivers [[decision-drivers]]
+
+* {decision driver 1, e.g., a force, facing concern, …}
+* {decision driver 2, e.g., a force, facing concern, …}
+* … => numbers of drivers can vary
+
+== Considered options [[considered-options]]
+
+// Leave these options as they are!
+// The rendered output will have the section names with links in place.
+* <<option-1>>
+* <<option-2>>
+* … => numbers of options can vary
+
+== Decision outcome [[decision-outcome]]
+
+Chosen option: "<<option-1>>", because
+{justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force | … | comes out best (see below)}.
+
+// This is an optional element. Feel free to remove.
+=== Consequences
+
+* Good, because {positive consequence, e.g., improvement of one or more desired qualities, …}
+* Bad, because {negative consequence, e.g., compromising one or more desired qualities, …}
+* … => numbers of consequences can vary
+
+// This is an optional element. Feel free to remove.
+=== Confirmation
+
+////
+Describe how the implementation of/compliance with the ADR is confirmed. E.g., by a review or an ArchUnit test.
+Although we classify this element as optional, it is included in most ADRs.
+////
+
+// This is an optional element. Feel free to remove.
+== Pros and cons of the options [[pros-cons]]
+
+=== {title of option 1} [[option-1]]
+
+// This is an optional element. Feel free to remove.
+{example | description | pointer to more information | …}
+
+* Good, because {argument a}
+* Good, because {argument b}
+// use "neutral" if the given argument weights neither for good nor bad
+* Neutral, because {argument c}
+* Bad, because {argument d}
+* … => numbers of pros and cons can vary
+
+=== {title of option 2} [[option-2]]
+
+{example | description | pointer to more information | …}
+
+* Good, because {argument a}
+* Good, because {argument b}
+* Neutral, because {argument c}
+* Bad, because {argument d}
+* …
+
+// This is an optional element. Feel free to remove.
+== More information [[more-info]]
+
+////
+You might want to provide additional evidence/confidence for the decision outcome here and/or
+document the team agreement on the decision and/or
+define when/how this decision the decision should be realized and if/when it should be re-visited.
+Links to other decisions and resources might appear here as well.
+////
+
+=== Links
+
+* {{{link.comment}}} [ADR {{{link.id}}}]({{{link.file}}})
+
