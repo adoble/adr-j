@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and from version 3.2 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0]
+
+### Added 
+* Extended `adr new` command to manually set an ADR number and added test. Many thanks to [Michael McDermott](https://github.com/michaeljmcd) for [PR #64](https://github.com/adoble/adr-j/pull/64).
+* Added `ASCIIDOC` template example. Shout out to [Alex Eimer](https://github.com/aeimer) whose [template](https://github.com/aeimer/asciidoc-templates/blob/main/template-adr.adoc) was adapted. 
+
+### Changed 
+* Documentation changes:
+
+  * Updated man page for `adr new`
+  * Updated README so that it is clear that standard templates (such as MADR) can be used. 
+
+
 ## [3.4.2]
 
 ### Fixed
