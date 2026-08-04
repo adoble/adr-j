@@ -7,6 +7,9 @@ and from version 3.2 this project adheres to [Semantic Versioning](https://semve
 
 ## [Unreleased]
 
+### Added
+* Spanish version of README. Many thanks to [webbrain-one](https://github.com/webbrain-one) for [PR #65](https://github.com/adoble/adr-j/pull/65). 
+
 
 ## [3.5.0]
 
